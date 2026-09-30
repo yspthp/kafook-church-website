@@ -1,0 +1,373 @@
+/* 迦福堂 - 主樣式表 (style.css) */
+@import url('variables.css');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--kf-font-sans);
+  background-color: var(--kf-bg);
+  color: var(--kf-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--kf-font-serif);
+  font-weight: 600;
+  color: var(--kf-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: var(--kf-transition-fast);
+}
+
+.container {
+  max-width: var(--kf-max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* 導航列樣式 */
+.site-header {
+  position: sticky;
+  top: 0;
+  background: rgba(247, 242, 234, 0.92);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  border-bottom: 1px solid var(--kf-border-subtle);
+  transition: var(--kf-transition);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  max-width: var(--kf-max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-emblem {
+  width: 42px;
+  height: 42px;
+  background: var(--kf-primary);
+  color: var(--kf-gold);
+  border-radius: var(--kf-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--kf-font-serif);
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.logo-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-church-name {
+  font-family: var(--kf-font-serif);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--kf-primary);
+  letter-spacing: 0.05em;
+}
+
+.logo-subtext {
+  font-size: 0.72rem;
+  color: var(--kf-text-muted);
+  letter-spacing: 0.02em;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-link {
+  font-size: 0.95rem;
+  color: var(--kf-text-secondary);
+  font-weight: 500;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--kf-primary);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--kf-secondary);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-btn {
+  background: var(--kf-primary);
+  color: var(--kf-text-inverse);
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--kf-radius-pill);
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: var(--kf-transition-fast);
+}
+
+.nav-btn:hover {
+  background: var(--kf-primary-light);
+  transform: translateY(-1px);
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--kf-primary);
+  cursor: pointer;
+}
+
+/* 主視覺 Hero */
+.hero-section {
+  position: relative;
+  padding: 5rem 0 6rem;
+  background: linear-gradient(180deg, var(--kf-bg) 0%, var(--kf-bg-alt) 100%);
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-subtitle {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--kf-secondary);
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  line-height: 1.25;
+  margin-bottom: 1.5rem;
+  color: var(--kf-primary);
+}
+
+.hero-desc {
+  font-size: 1.15rem;
+  color: var(--kf-text-secondary);
+  margin-bottom: 2.5rem;
+  line-height: 1.8;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2rem;
+  border-radius: var(--kf-radius-pill);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--kf-transition-fast);
+}
+
+.btn-primary {
+  background: var(--kf-primary);
+  color: var(--kf-text-inverse);
+  box-shadow: var(--kf-shadow-sm);
+}
+
+.btn-primary:hover {
+  background: var(--kf-primary-light);
+  transform: translateY(-2px);
+  box-shadow: var(--kf-shadow);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--kf-primary);
+  border: 1px solid var(--kf-border);
+}
+
+.btn-secondary:hover {
+  background: rgba(74, 53, 38, 0.04);
+  border-color: var(--kf-primary);
+}
+
+/* 崇拜時間面板 */
+.worship-panel {
+  background: var(--kf-card-bg);
+  border-radius: var(--kf-radius-lg);
+  box-shadow: var(--kf-shadow-card);
+  padding: 2.5rem;
+  margin-top: -3.5rem;
+  position: relative;
+  z-index: 10;
+  border: 1px solid var(--kf-border-subtle);
+}
+
+.worship-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  text-align: center;
+}
+
+.worship-item {
+  padding: 1rem;
+}
+
+.worship-title {
+  font-size: 1.2rem;
+  color: var(--kf-primary);
+  margin-bottom: 0.5rem;
+}
+
+.worship-time {
+  font-size: 1.5rem;
+  font-family: var(--kf-font-serif);
+  color: var(--kf-secondary);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.worship-location {
+  font-size: 0.85rem;
+  color: var(--kf-text-muted);
+}
+
+/* 卡片與區塊 */
+.section {
+  padding: 5rem 0;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 3.5rem;
+}
+
+.section-subtitle {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--kf-secondary);
+  margin-bottom: 0.8rem;
+  font-weight: 600;
+}
+
+.section-title {
+  font-size: 2.2rem;
+  color: var(--kf-primary);
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background: var(--kf-card-bg);
+  border-radius: var(--kf-radius-md);
+  padding: 2.5rem;
+  box-shadow: var(--kf-shadow-card);
+  border: 1px solid var(--kf-border-subtle);
+  transition: var(--kf-transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--kf-shadow-md);
+}
+
+/* 頁尾 */
+.site-footer {
+  background: var(--kf-surface-dark);
+  color: var(--kf-text-inverse);
+  padding: 4.5rem 0 2rem;
+  margin-top: 5rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 3rem;
+  margin-bottom: 3.5rem;
+}
+
+.footer-col-title {
+  font-size: 1.1rem;
+  color: var(--kf-gold-light);
+  margin-bottom: 1.5rem;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+  color: var(--kf-text-inverse);
+  padding-left: 4px;
+}
+
+.footer-info-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+}

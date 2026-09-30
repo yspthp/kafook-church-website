@@ -1,0 +1,24 @@
+/* Original deployed visual styles, retained separately from responsive overrides.
+   Legacy token names (forest/olive) kept for compatibility; values are now walnut/timber. */
+:root {
+  --kf-forest: #4A3526;
+  --kf-forest-light: #6B4A30;
+  --kf-olive: #8A6B4E;
+  --kf-sand: #F7F2EA;
+  --kf-sand-muted: #EFE5D6;
+  --kf-warm-gold: #B8975A;
+  --kf-deep-gold: #7A5334;
+  --kf-paper: #F9F5EE;
+  --kf-ink: #2E2118;
+  --kf-ink-soft: #5E4D3F;
+  --kf-ink-muted: #725F4D;
+  --kf-border-paper: #E4D8C6;
+}
+.redesign-body { background-color: var(--kf-paper); color: var(--kf-ink); }
+.arch-visual-container { position: relative; display: flex; justify-content: center; align-items: center; padding: 3rem 0; }
+.arch-svg-frame { max-width: 680px; width: 100%; height: auto; }
+.editorial-header { text-align: center; margin-bottom: 3rem; }
+.editorial-title { font-family: var(--kf-font-serif); font-size: 2.8rem; color: var(--kf-forest); letter-spacing: 0.04em; margin-bottom: 1rem; }
+.editorial-lead { font-size: 1.15rem; color: var(--kf-ink-soft); max-width: 650px; margin: 0 auto; line-height: 1.8; }
+.gold-accent-line { width: 60px; height: 2px; background: var(--kf-warm-gold); margin: 1.5rem auto; }
+.nav-editorial { border-bottom: 1px solid var(--kf-border-paper); background: rgba(249, 245, 238, 0.94); }

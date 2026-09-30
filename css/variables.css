@@ -1,0 +1,69 @@
+/**
+ * 五旬節聖潔會迦福堂 - 色彩與設計規範變數庫
+ * 溫暖原木風格 (Warm Timber) 設計系統核心：木色、原木、大地色；不使用藍綠色
+ */
+
+:root {
+  /* 胡桃木主色調 (Primary - Walnut) */
+  --kf-primary: #4A3526;
+  --kf-primary-dark: #33251A;
+  --kf-primary-light: #6B4A30;
+  --kf-primary-rgb: 74, 53, 38;
+
+  /* 原木輔色調 (Secondary - Natural Timber) */
+  --kf-secondary: #8C5F38;
+  --kf-secondary-dark: #7A5334;
+  --kf-secondary-light: #CDAF88;
+  --kf-secondary-rgb: 140, 95, 56;
+
+  /* 麥金點綴 (Wheat Gold Accents) */
+  --kf-gold: #B8975A;
+  --kf-gold-light: #E3CFA6;
+  --kf-gold-subtle: rgba(184, 151, 90, 0.15);
+
+  /* 靜謐底色與表面 (Backgrounds & Surfaces) */
+  --kf-bg: #F7F2EA;          /* 米白紙底色 */
+  --kf-bg-alt: #EFE5D6;      /* 淺橡木輔助底色 */
+  --kf-card-bg: #FFFCF7;     /* 暖白卡片底色 */
+  --kf-card-hover: #FBF6EE;  /* 卡片懸浮微調 */
+  --kf-surface-dark: #2E2118;/* 深色區塊底色 (頁尾、重點呼召) */
+
+  /* 文字階層色彩 (Typography Colors) */
+  --kf-text-primary: #33261C;   /* 內文主要深色 */
+  --kf-text-secondary: #6B5847; /* 次要說明淺灰 */
+  --kf-text-muted: #725F4D;     /* 輔助標註、日期 */
+  --kf-text-inverse: #ffffff;   /* 深底反白文字 */
+  --kf-text-gold: #8C5F38;      /* 襯線標題強調金 */
+
+  /* 邊框與分隔線 (Borders & Dividers) */
+  --kf-border: #E4D8C6;
+  --kf-border-subtle: #EEE5D8;
+  --kf-border-gold: rgba(184, 151, 90, 0.4);
+
+  /* 字型體系 (Typography Families) */
+  --kf-font-serif: "Noto Serif TC", "Noto Serif HK", "Songti TC", Georgia, "Times New Roman", serif;
+  --kf-font-sans: "Noto Sans TC", "PingFang HK", "Microsoft JhengHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --kf-font-en-serif: "Playfair Display", "Cinzel", Georgia, serif;
+
+  /* 陰影規範 (Elevation Shadows) */
+  --kf-shadow-sm: 0 2px 8px rgba(74, 53, 38, 0.04);
+  --kf-shadow: 0 6px 24px rgba(74, 53, 38, 0.06);
+  --kf-shadow-md: 0 12px 32px rgba(74, 53, 38, 0.08);
+  --kf-shadow-lg: 0 20px 48px rgba(74, 53, 38, 0.12);
+  --kf-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.05);
+
+  /* 圓角規範 (Border Radius) */
+  --kf-radius-sm: 4px;
+  --kf-radius: 8px;
+  --kf-radius-md: 12px;
+  --kf-radius-lg: 16px;
+  --kf-radius-pill: 9999px;
+
+  /* 動態與轉場 (Transitions) */
+  --kf-transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  --kf-transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --kf-transition-slow: 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* 容器寬度 */
+  --kf-max-width: 1200px;
+}

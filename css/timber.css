@@ -1,0 +1,317 @@
+/**
+ * 迦福堂 - 溫暖原木視覺層 (timber.css)
+ * 參考 Lifehouse Tokyo 的全幅照片、大標題與區塊節奏；配色只用木色、原木、大地色。
+ * 載入於 mobile-fix.css 之後，供首頁與內頁共用。
+ */
+
+:root {
+  --tb-espresso: #2E2118;
+  --tb-walnut: #4A3526;
+  --tb-timber: #8C5F38;
+  --tb-oak: #CDAF88;
+  --tb-oak-pale: #EFE5D6;
+  --tb-wheat: #E3CFA6;
+  --tb-paper: #F7F2EA;
+  --tb-shade: linear-gradient(180deg, rgba(46, 33, 24, 0.30) 0%, rgba(46, 33, 24, 0.10) 35%, rgba(46, 33, 24, 0.78) 100%);
+  --tb-section: clamp(72px, 10vw, 136px);
+}
+
+body { background: var(--tb-paper); }
+
+/* ---------- 共用：標籤、按鈕、圓形連結 ---------- */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--kf-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--kf-secondary-dark);
+  margin-bottom: 18px;
+}
+.eyebrow.light { color: var(--tb-wheat); }
+
+.btn { gap: 10px; letter-spacing: 0.06em; }
+.btn-wheat { background: var(--tb-wheat); color: var(--tb-espresso); }
+.btn-wheat:hover { background: #F0DFBD; transform: translateY(-2px); }
+.btn-ghost-light { color: #fff; border: 1px solid rgba(255, 255, 255, 0.7); background: rgba(46, 33, 24, 0.12); }
+.btn-ghost-light:hover { background: rgba(255, 255, 255, 0.14); border-color: #fff; }
+.btn-walnut { background: var(--tb-walnut); color: #fff; }
+.btn-walnut:hover { background: var(--kf-primary-light); transform: translateY(-2px); }
+.btn-line { color: var(--tb-walnut); border: 1px solid var(--tb-oak); background: transparent; }
+.btn-line:hover { border-color: var(--tb-walnut); background: rgba(74, 53, 38, 0.05); }
+
+.text-link {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--tb-walnut); font-weight: 600; letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--tb-oak); padding-bottom: 4px;
+}
+.text-link:hover { border-color: var(--tb-walnut); gap: 12px; }
+
+.round-link {
+  display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 1px solid rgba(227, 207, 166, 0.5); color: var(--tb-wheat); font-size: 22px;
+}
+.round-link:hover { background: var(--tb-wheat); color: var(--tb-espresso); }
+
+/* ---------- 頁尾：深胡桃木 ---------- */
+.site-footer { background: var(--tb-espresso); margin-top: 0; }
+.footer-top { padding-bottom: 40px; border-bottom: 1px solid rgba(227, 207, 166, 0.16); }
+.footer-top h2 { font-size: clamp(26px, 3.4vw, 40px); font-weight: 500; }
+.footer-col-title { color: var(--tb-wheat); }
+.footer-links li { margin-bottom: 0; }
+@media (min-width: 1025px) {
+  .footer-links a { min-height: 32px; }
+}
+
+/* ---------- 首頁：透明導覽列 ---------- */
+.photo-top .site-header {
+  position: fixed; inset: 0 0 auto 0;
+  background: transparent; border-bottom-color: transparent; backdrop-filter: none;
+}
+.photo-top .site-header:not(.scrolled) .logo-church-name,
+.photo-top .site-header:not(.scrolled) .logo-subtext,
+.photo-top .site-header:not(.scrolled) .brand-mark,
+.photo-top .site-header:not(.scrolled) .mobile-menu-toggle { color: #fff; }
+.photo-top .site-header:not(.scrolled) .nav-btn { background: rgba(255, 255, 255, 0.14); border: 1px solid rgba(255, 255, 255, 0.6); }
+.photo-top .site-header.scrolled,
+.photo-top .site-header:has(.nav-menu.active) {
+  background: rgba(247, 242, 234, 0.94); backdrop-filter: blur(12px);
+  border-bottom-color: var(--kf-border);
+}
+.photo-top .site-header:has(.nav-menu.active) .logo-church-name,
+.photo-top .site-header:has(.nav-menu.active) .logo-subtext,
+.photo-top .site-header:has(.nav-menu.active) .brand-mark,
+.photo-top .site-header:has(.nav-menu.active) .mobile-menu-toggle { color: var(--tb-walnut); }
+@media (min-width: 1401px) {
+  .photo-top .site-header:not(.scrolled) .nav-link { color: rgba(255, 255, 255, 0.86); }
+  .photo-top .site-header:not(.scrolled) .nav-link:hover,
+  .photo-top .site-header:not(.scrolled) .nav-link.active { color: #fff; }
+  .photo-top .site-header:not(.scrolled) .nav-link.active::after { background: var(--tb-wheat); }
+}
+.brand-mark { color: var(--tb-walnut); }
+
+/* ---------- 教會標誌：淺底用胡桃木色，照片上的透明導覽列用白色 ---------- */
+.brand-logo { display: inline-flex; flex: 0 0 auto; width: 46px; }
+.brand-logo img { display: block; width: 100%; height: auto; }
+.brand-logo .logo-on-dark { display: none; }
+.photo-top .site-header:not(.scrolled):not(:has(.nav-menu.active)) .brand-logo .logo-on-light { display: none; }
+.photo-top .site-header:not(.scrolled):not(:has(.nav-menu.active)) .brand-logo .logo-on-dark { display: block; }
+.footer-logo { display: block; width: 72px; height: auto; margin-bottom: 20px; opacity: 0.92; }
+@media (max-width: 600px) {
+  .brand-logo { width: 38px; }
+}
+
+/* ---------- 首頁：全幅主視覺 ---------- */
+.tb-hero {
+  position: relative; isolation: isolate;
+  min-height: min(100svh, 980px); min-height: max(620px, min(100svh, 980px));
+  display: flex; align-items: flex-end;
+  color: #fff; overflow: hidden;
+}
+.tb-hero-media, .tb-hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tb-hero-media { z-index: -2; }
+.tb-hero-media img { object-fit: cover; object-position: center 35%; transform: scale(1.04); animation: tb-settle 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.tb-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(46, 33, 24, 0.72) 0%, rgba(46, 33, 24, 0.35) 45%, rgba(46, 33, 24, 0) 75%), var(--tb-shade); }
+.tb-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: #8C5F38; mix-blend-mode: soft-light; opacity: 0.35; }
+.tb-hero-inner { width: 100%; max-width: 1320px; margin: 0 auto; padding: 160px clamp(20px, 5vw, 64px) clamp(56px, 9vh, 104px); }
+.tb-hero h1 {
+  color: #fff; font-weight: 600;
+  font-size: clamp(38px, 6.4vw, 88px); line-height: 1.12; letter-spacing: 0.02em;
+  max-width: 13em; margin-bottom: 24px; text-wrap: balance;
+}
+.tb-hero p { max-width: 34em; font-size: clamp(16px, 1.3vw, 19px); line-height: 1.9; color: rgba(255, 255, 255, 0.88); margin-bottom: 36px; }
+.tb-hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.tb-hero-scroll {
+  position: absolute; right: clamp(20px, 5vw, 64px); bottom: clamp(56px, 9vh, 104px);
+  writing-mode: vertical-rl; font-size: 11px; letter-spacing: 0.3em; color: rgba(255, 255, 255, 0.7);
+}
+.tb-hero-scroll::after { content: ""; display: block; width: 1px; height: 64px; margin: 14px auto 0; background: rgba(255, 255, 255, 0.5); }
+@keyframes tb-settle { to { transform: scale(1); } }
+
+/* ---------- 首頁：主日聚會 ---------- */
+.tb-section { padding: var(--tb-section) 0; }
+.tb-section.alt { background: var(--tb-oak-pale); }
+.tb-wide { width: 100%; max-width: 1320px; margin: 0 auto; padding-inline: clamp(20px, 5vw, 64px); }
+.tb-heading { font-size: clamp(30px, 4.4vw, 60px); line-height: 1.2; font-weight: 600; color: var(--tb-walnut); letter-spacing: 0.02em; text-wrap: balance; }
+.tb-lead { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.95; color: var(--kf-text-secondary); max-width: 36em; }
+
+.tb-services-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 32px 64px; align-items: end; margin-bottom: 56px; }
+.tb-service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.tb-service {
+  position: relative; padding: 36px 32px 32px; background: #FFFCF7;
+  border: 1px solid var(--kf-border); border-top: 3px solid var(--tb-oak);
+  transition: var(--kf-transition);
+}
+.tb-service:hover { border-top-color: var(--tb-timber); transform: translateY(-4px); box-shadow: var(--kf-shadow-md); }
+.tb-service-day { font-size: 13px; letter-spacing: 0.16em; color: var(--kf-secondary-dark); font-weight: 600; }
+.tb-service-time { font-family: var(--kf-font-serif); font-size: clamp(44px, 4.6vw, 64px); line-height: 1; color: var(--tb-walnut); margin: 18px 0 14px; letter-spacing: 0.02em; }
+.tb-service h3 { font-size: 20px; margin-bottom: 8px; }
+.tb-service p { font-size: 15px; line-height: 1.8; color: var(--kf-text-secondary); }
+.tb-visit {
+  margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px;
+  padding: 28px 32px; background: var(--tb-walnut); color: #F7F2EA;
+}
+.tb-visit strong { display: block; font-family: var(--kf-font-serif); font-size: 20px; font-weight: 500; color: #fff; margin-bottom: 4px; }
+.tb-visit span { font-size: 15px; color: #E3D5C2; }
+.tb-visit-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* ---------- 首頁：圖文分割（第一次來、牧者） ---------- */
+.tb-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
+.tb-split.reverse .tb-split-media { order: 2; }
+.tb-split-media { position: relative; }
+.tb-split-media img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.tb-split-media.landscape img { aspect-ratio: 4 / 3; }
+.tb-split-media::after { content: ""; position: absolute; inset: 24px -24px -24px 24px; border: 1px solid var(--tb-oak); z-index: -1; }
+.tb-split.reverse .tb-split-media::after { inset: 24px 24px -24px -24px; }
+.tb-points { list-style: none; margin: 32px 0 40px; border-top: 1px solid var(--kf-border); }
+.tb-points li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 4px 16px; padding: 20px 0; border-bottom: 1px solid var(--kf-border); }
+.tb-points b { grid-row: span 2; font-family: var(--kf-font-serif); font-size: 15px; color: var(--tb-timber); font-weight: 500; padding-top: 3px; }
+.tb-points h3 { font-size: 19px; }
+.tb-points p { font-size: 15px; color: var(--kf-text-secondary); line-height: 1.8; }
+
+/* ---------- 首頁：教會生活照片牆 ---------- */
+.tb-life-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 48px; }
+.tb-mosaic { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); grid-auto-rows: clamp(120px, 14vw, 200px); gap: 12px; }
+.tb-mosaic figure { position: relative; overflow: hidden; margin: 0; background: var(--tb-oak-pale); }
+.tb-mosaic img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.tb-mosaic figure:hover img { transform: scale(1.05); }
+.tb-mosaic figcaption {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 18px 14px;
+  font-size: 13px; letter-spacing: 0.1em; color: #fff;
+  background: linear-gradient(transparent, rgba(46, 33, 24, 0.7));
+}
+.tb-m1 { grid-column: span 5; grid-row: span 3; }
+.tb-m2 { grid-column: span 4; grid-row: span 2; }
+.tb-m3 { grid-column: span 3; grid-row: span 2; }
+.tb-m4 { grid-column: span 3; grid-row: span 1; }
+.tb-m5 { grid-column: span 4; grid-row: span 1; }
+
+/* ---------- 首頁：事工卡片 ---------- */
+.tb-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.tb-card { display: flex; flex-direction: column; background: #FFFCF7; border: 1px solid var(--kf-border); transition: var(--kf-transition); }
+.tb-card:hover { transform: translateY(-4px); box-shadow: var(--kf-shadow-md); }
+.tb-card-media { overflow: hidden; aspect-ratio: 3 / 2; }
+.tb-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.tb-card:hover .tb-card-media img { transform: scale(1.05); }
+.tb-card-body { padding: 28px 28px 32px; display: flex; flex-direction: column; flex: 1; }
+.tb-card-body h3 { font-size: 22px; margin-bottom: 10px; }
+.tb-card-body p { font-size: 15px; line-height: 1.85; color: var(--kf-text-secondary); margin-bottom: 24px; flex: 1; }
+
+/* ---------- 首頁：動態消息 ---------- */
+.tb-news .cms-list { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.tb-news .cms-item { background: #FFFCF7; border-radius: 0; border-top: 3px solid var(--tb-oak); padding: 28px; }
+.tb-news-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; }
+.tb-news-cols h3 { font-size: 20px; margin-bottom: 20px; }
+
+/* ---------- 全幅呼召區 ---------- */
+.tb-banner { position: relative; isolation: isolate; color: #fff; padding: clamp(96px, 14vw, 180px) 0; text-align: center; overflow: hidden; }
+.tb-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; filter: sepia(0.28) saturate(0.8); }
+.tb-banner::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(46, 33, 24, 0.62); }
+.tb-banner h2 { color: #fff; font-size: clamp(32px, 5vw, 64px); line-height: 1.25; margin-bottom: 20px; font-weight: 600; }
+.tb-banner p { max-width: 32em; margin: 0 auto 36px; color: rgba(255, 255, 255, 0.86); line-height: 1.9; }
+.tb-banner .tb-hero-actions { justify-content: center; }
+
+/* ---------- 內頁：照片頁首 ---------- */
+.page-hero.has-photo { position: relative; isolation: isolate; overflow: hidden; padding: clamp(120px, 16vw, 200px) 0 clamp(56px, 7vw, 88px); background: var(--tb-espresso); }
+.page-hero.has-photo > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; filter: sepia(0.18) saturate(0.88); }
+.page-hero.has-photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(46, 33, 24, 0.7) 0%, rgba(46, 33, 24, 0.3) 50%, rgba(46, 33, 24, 0) 80%), linear-gradient(180deg, rgba(46, 33, 24, 0.35), rgba(46, 33, 24, 0.72)); }
+.news-filter-btn { width: auto; min-width: 0; flex: 0 0 auto; }
+.page-hero.has-photo .page-hero-content { max-width: 1320px; padding-inline: clamp(20px, 5vw, 64px); }
+.page-hero.has-photo .page-title { color: #fff; font-size: clamp(34px, 5vw, 64px); }
+.page-hero.has-photo .page-eyebrow { color: var(--tb-wheat); letter-spacing: 0.24em; text-transform: uppercase; font-size: 12px; font-weight: 600; }
+.page-hero.has-photo .page-description { color: rgba(255, 255, 255, 0.86); max-width: 36em; }
+
+/* ---------- 關於迦福：教牧團隊 ---------- */
+.team-initial {
+  width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--tb-oak-pale); color: var(--tb-timber); font-family: var(--kf-font-serif); font-size: 2rem;
+}
+.team-role { display: block; margin-bottom: 1rem; font-size: 0.9rem; font-weight: 600; color: var(--tb-timber); }
+
+/* ---------- 捲動淡入（只在 JS 可用且未要求減少動態時啟用） ---------- */
+.js-reveal [data-reveal] { opacity: 0; transform: translateY(28px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.js-reveal [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ---------- 響應式 ---------- */
+@media (max-width: 1024px) {
+  .tb-services-head, .tb-split, .tb-news-cols { grid-template-columns: minmax(0, 1fr); }
+  .tb-split.reverse .tb-split-media { order: 0; }
+  .tb-split-media img { aspect-ratio: 4 / 3; }
+  .tb-service-grid, .tb-card-grid { grid-template-columns: minmax(0, 1fr); }
+  .tb-service-grid { gap: 12px; }
+  .tb-mosaic { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: clamp(120px, 26vw, 220px); }
+  .tb-m1 { grid-column: span 6; grid-row: span 2; }
+  .tb-m2, .tb-m3, .tb-m4, .tb-m5 { grid-column: span 3; grid-row: span 1; }
+}
+@media (max-width: 600px) {
+  .tb-hero-inner { padding-top: 120px; }
+  .tb-hero-actions .btn { width: 100%; }
+  .tb-hero-scroll { display: none; }
+  .tb-service { padding: 28px 24px; }
+  .tb-visit { padding: 24px; }
+  .tb-visit-actions, .tb-visit-actions .btn { width: 100%; }
+  .tb-split-media::after { display: none; }
+  .tb-mosaic { gap: 8px; grid-auto-rows: 150px; }
+  .tb-m1 { grid-row: span 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-hero-media img { transform: none; animation: none; }
+}
+
+/* 最新動態：無 JS／減少動態時保持靜態可讀 */
+.tb-ticker { background: var(--tb-walnut, #4a3526); color: #fff; padding: 18px 0; }
+.tb-ticker-inner { display: flex; align-items: center; gap: 24px; }
+.tb-ticker h2 { font-size: 1rem; white-space: nowrap; color: inherit; margin: 0; }
+.tb-ticker-window { min-width: 0; flex: 1; overflow: hidden; }
+.tb-ticker-track { display: flex; gap: 48px; width: max-content; max-width: 100%; flex-wrap: wrap; }
+.tb-ticker-track a { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
+.tb-ticker.is-animated .tb-ticker-track { max-width: none; flex-wrap: nowrap; animation: ticker-travel 32s linear infinite; }
+.tb-ticker.is-animated .tb-ticker-track a { white-space: nowrap; }
+.tb-ticker:hover .tb-ticker-track, .tb-ticker:focus-within .tb-ticker-track,
+.tb-ticker.is-paused .tb-ticker-track { animation-play-state: paused; }
+.tb-ticker:focus-within .tb-ticker-track { transform: none; animation: none; max-width: 100%; flex-wrap: wrap; }
+.tb-ticker:focus-within .tb-ticker-track a { white-space: normal; }
+.tb-ticker button { flex-shrink: 0; border: 1px solid #c8b394; border-radius: 4px; background: transparent; color: #fff; padding: 8px 12px; cursor: pointer; font: inherit; font-size: .8rem; }
+.tb-ticker button[hidden] { display: none; }
+.tb-ticker a:focus-visible, .tb-ticker button:focus-visible { outline: 2px solid #f4d9ad; outline-offset: 3px; }
+@keyframes ticker-travel { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (max-width: 600px) {
+  .tb-ticker-inner { gap: 12px; flex-wrap: wrap; }
+  .tb-ticker-window { flex-basis: calc(100% - 100px); }
+  .tb-ticker button { margin-left: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tb-ticker.is-animated .tb-ticker-track { animation: none; max-width: 100%; flex-wrap: wrap; }
+  .tb-ticker.is-animated .tb-ticker-track a { white-space: normal; }
+}
+
+.tb-ticker-track { gap: 0; }
+.tb-ticker-group { display: flex; gap: 48px; padding-right: 48px; flex-shrink: 0; align-items: center; }
+.tb-ticker-copy { display: none; }
+.tb-ticker.is-animated .tb-ticker-copy { display: flex; }
+.tb-ticker:focus-within .tb-ticker-copy { display: none; }
+.tb-ticker:focus-within .tb-ticker-group { flex-wrap: wrap; flex-shrink: 1; gap: 16px; padding-right: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .tb-ticker.is-animated .tb-ticker-copy { display: none; }
+  .tb-ticker-group { flex-wrap: wrap; flex-shrink: 1; gap: 16px; padding-right: 0; }
+}
+
+/* 浮動聯絡入口：鍵盤、觸控與滑鼠均可使用 */
+.tb-contact-float { position: fixed; right: max(24px, env(safe-area-inset-right)); bottom: max(24px, env(safe-area-inset-bottom)); z-index: 90; display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 14px 18px; border: 1px solid #dfc69f; border-radius: 32px; background: #4a3526; color: #fff; box-shadow: 0 6px 24px #241b1933; font-size: .9rem; }
+.tb-contact-float:hover { color: #fff; background: #654833; }
+.tb-contact-float:focus-visible { outline: 3px solid #b48448; outline-offset: 4px; }
+.tb-contact-hint { position: absolute; right: 0; bottom: calc(100% + 12px); white-space: nowrap; padding: 10px 14px; border-radius: 8px; color: #4a3526; background: #fff9ed; box-shadow: 0 3px 15px #241b1926; visibility: hidden; opacity: 0; }
+.tb-contact-float:hover .tb-contact-hint, .tb-contact-float:focus-visible .tb-contact-hint { visibility: visible; opacity: 1; }
+#contactForm { scroll-margin-top: 120px; }
+body.home .site-footer { padding-bottom: 110px; }
+@media (max-width: 600px) { .tb-contact-float { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); padding: 12px 16px; } }
+@media (hover: none) { .tb-contact-hint { visibility: visible; opacity: 1; font-size: .8rem; padding: 6px 10px; } }
+
+/* Full official church name on every screen, without truncation. */
+.logo-text-group { min-width: 0; }
+.logo-subtext { text-transform: none; letter-spacing: .015em; white-space: normal; }
+@media (min-width: 1401px) { .logo-link { flex-shrink: 0; } .logo-subtext { font-size: 11px; } }
+@media (max-width: 600px) { .logo-subtext { max-width: 210px; font-size: 10px; line-height: 1.35; } }

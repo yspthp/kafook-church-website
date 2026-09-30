@@ -1,0 +1,19 @@
+
+/* Official-source summaries and date-specific exceptions. */
+.source-note { color: var(--kf-text-muted); font-size: .85rem; line-height: 1.8; margin: 20px 0; }
+.source-note a, .official-notice a, .card a { text-decoration: underline; text-underline-offset: 3px; }
+.verified-services { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 24px; }
+.verified-notices { display: grid; gap: 24px; }
+.official-notice { padding: 24px; margin: 28px 0; border-left: 4px solid #8c5f38; background: #efe5d6; color: #2e2118; }
+.official-notice p { margin: 10px 0 0; }
+.verified-steps { padding-left: 24px; line-height: 1.9; }
+.verified-steps li { margin: 12px 0; }
+.footer-related { margin: 36px 0; padding-top: 28px; border-top: 1px solid #ffffff25; }
+.footer-related .footer-links { display: flex; flex-wrap: wrap; gap: 8px 28px; }
+.card { overflow-wrap: anywhere; }
+.tb-service-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media(max-width:700px) {
+  .verified-services, .tb-service-grid { grid-template-columns: minmax(0,1fr); }
+  .official-notice { padding: 20px; }
+  .footer-related .footer-links { display: grid; gap: 10px; }
+}
