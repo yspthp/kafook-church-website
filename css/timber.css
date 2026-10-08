@@ -315,3 +315,22 @@ body.home .site-footer { padding-bottom: 110px; }
 .logo-subtext { text-transform: none; letter-spacing: .015em; white-space: normal; }
 @media (min-width: 1401px) { .logo-link { flex-shrink: 0; } .logo-subtext { font-size: 11px; } }
 @media (max-width: 600px) { .logo-subtext { max-width: 210px; font-size: 10px; line-height: 1.35; } }
+
+/* Service schedule: a blurred worship-hall image sits behind a calm readable surface. */
+.tb-services-photo { position:relative; isolation:isolate; overflow:hidden; background:#4a3526; }
+.tb-services-photo::before { content:""; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,rgba(46,33,24,.86),rgba(46,33,24,.68)),url("../images/photos/worship-hall-1280.webp") center/cover; filter:blur(2px); transform:scale(1.03); }
+.tb-services-photo::after { content:""; position:absolute; inset:0; z-index:-1; background:rgba(46,33,24,.25); }
+.tb-services-photo .eyebrow,.tb-services-photo .tb-heading,.tb-services-photo .tb-lead,.tb-services-photo .tb-service-day,.tb-services-photo .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p,.tb-services-photo .tb-visit,.tb-services-photo .tb-visit strong,.tb-services-photo .tb-visit span { color:#fff; }
+.tb-services-photo .tb-service { background:rgba(255,250,241,.93); color:var(--tb-walnut); border-color:rgba(255,255,255,.42); }
+.tb-services-photo .tb-service .tb-service-day,.tb-services-photo .tb-service .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p { color:var(--tb-walnut); }
+.tb-services-photo .tb-visit { background:rgba(46,33,24,.62); border-color:rgba(255,255,255,.3); }
+/* Each service card carries its own quiet decorative photograph. */
+.tb-services-photo { background:var(--tb-paper); }
+.tb-services-photo::before,.tb-services-photo::after { display:none; }
+.tb-services-photo .eyebrow,.tb-services-photo .tb-heading,.tb-services-photo .tb-lead { color:var(--tb-walnut); }
+.tb-services-photo .tb-service { background-size:cover; background-position:center; background-repeat:no-repeat; border-color:var(--kf-border); }
+.tb-services-photo .tb-service:nth-child(1) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/altar-1280.webp"); }
+.tb-services-photo .tb-service:nth-child(2) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/worship-hall-1280.webp"); }
+.tb-services-photo .tb-service:nth-child(3) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/worship-hands-1280.webp"); }
+.tb-services-photo .tb-service:nth-child(4) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/prayer-hands-1280.webp"); }
+.tb-services-photo .tb-service .tb-service-day,.tb-services-photo .tb-service .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p { color:var(--tb-walnut); }

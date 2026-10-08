@@ -6,6 +6,25 @@
   const state = { client: null, user: null, role: 'guest' };
   const esc = (value) => String(value ?? '');
   const fmt = (value) => value ? new Intl.DateTimeFormat('zh-HK', { dateStyle: 'medium' }).format(new Date(value)) : '';
+  const rich = (value) => {
+    const t = document.createElement('template');
+    t.innerHTML = String(value ?? '');
+    const allowed = new Set(['P','BR','STRONG','B','EM','I','U','H2','H3','H4','UL','OL','LI','BLOCKQUOTE','TABLE','THEAD','TBODY','TR','TH','TD','A']);
+    const attrs = new Set(['href','target','rel','colspan','rowspan']);
+    const walk = (root) => [...root.children].forEach((node) => {
+      if (!allowed.has(node.tagName)) {
+        node.replaceWith(document.createTextNode(node.textContent || ''));
+        return;
+      }
+      [...node.attributes].forEach((attr) => {
+        if (!attrs.has(attr.name.toLowerCase())) node.removeAttribute(attr.name);
+      });
+      if (node.tagName === 'A' && !/^(?:https?:|mailto:)/i.test(node.getAttribute('href') || '')) node.removeAttribute('href');
+      walk(node);
+    });
+    walk(t.content);
+    return t.innerHTML;
+  };
   const html = (tag, attrs = {}, text = '') => {
     const el = document.createElement(tag);
     Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
@@ -17,6 +36,22 @@
     el.textContent = text;
     el.className = `cms-status ${kind}`.trim();
   };
+  function registerEditableTargets() {
+    const title = document.querySelector('.page-title');
+    const description = document.querySelector('.page-description');
+    if (title) title.dataset.cmsKey = 'page_title';
+    if (description) description.dataset.cmsKey = 'page_description';
+    if (page === 'index.html') {
+      document.querySelector('.tb-hero-inner > p')?.setAttribute('data-cms-key', 'home_hero_description');
+      document.querySelector('#servicesTitle')?.setAttribute('data-cms-key', 'home_services_heading');
+    }
+  }
+  function applyPageContent(rows) {
+    rows?.forEach((row) => {
+      const target = document.querySelector(`[data-cms-key="${CSS.escape(row.content_key)}"]`);
+      if (target) target.innerHTML = rich(row.content_html);
+    });
+  }
   const addScript = (src) => new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = src; script.onload = resolve; script.onerror = reject;
@@ -24,6 +59,7 @@
   });
   async function boot() {
     injectNav();
+    registerEditableTargets();
     if (!config?.url || !config?.anonKey) return fallback('未設定內容服務連線，保留原有內容。');
     try {
       if (!window.supabase) await addScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
@@ -32,7 +68,8 @@
       await syncUser(data.session?.user || null);
       state.client.auth.onAuthStateChange((_event, session) => syncUser(session?.user || null));
       injectNav();
-      if (document.body.dataset.contentSource === 'official') return;
+      const pageContent = await state.client.from('page_content').select('content_key,content_html').eq('page', page).eq('visibility', 'public');
+      if (!pageContent.error) applyPageContent(pageContent.data);
       if (page === 'index.html' || page === '') await renderHome();
       if (page === 'news.html') await renderNotices(ensureTarget('dynamicNotices', '最新動態通告', 'LIVE NOTICES'));
       if (page === 'events.html') await renderEvents(ensureTarget('dynamicEvents', '特別聚會與焦點活動', 'FEATURED EVENTS'));
@@ -90,7 +127,7 @@
     if (target) return target;
     const main = document.querySelector('main');
     if (!main) return null;
-    const section = html('section', { class: 'cms-section section' });
+    const section = html('section', { class: 'cms-section section is-hidden' });
     const container = html('div', { class: 'container' });
     const heading = html('div', { class: 'section-header' });
     heading.append(html('h2', { class: 'section-title' }, title));
@@ -109,7 +146,7 @@
   function makeNotice(item) {
     const article = html('article', { class: 'cms-item' });
     const meta = html('div', { class: 'cms-item-meta' }, `${esc(item.category || '堂會消息')} · ${fmt(item.published_at)}`);
-    const title = html('h3', {}, item.title); const body = html('p', {}, item.content);
+    const title = html('h3', {}, item.title); const body = html('div', { class: 'cms-rich-content' }); body.innerHTML = rich(item.content);
     article.append(meta, title, body);
     if (item.attachment_path && state.user) {
       const link = html('button', { class: 'cms-download', type: 'button' }, '下載附件 ↗');
@@ -130,7 +167,11 @@
       : state.client.from('notices').select('*').eq('visibility', 'public').order('published_at', { ascending: false });
     const { data, error } = await query;
     if (error) return setStatus(target, '暫時無法載入動態通告，請稍後再試。', 'error');
-    if (!data?.length) return setStatus(target, member ? '目前沒有會友專屬通告。' : '目前沒有新的動態通告。', 'muted');
+    if (!data?.length) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, member ? '目前沒有會友專屬通告。' : '目前沒有新的動態通告。', 'muted');
+    }
+    target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => target.append(makeNotice(item)));
   }
   async function renderEvents(target) {
@@ -138,7 +179,11 @@
     target.replaceChildren();
     const { data, error } = await state.client.from('events').select('*').gte('starts_at', new Date().toISOString()).order('starts_at', { ascending: true }).limit(6);
     if (error) return setStatus(target, '暫時無法載入活動資料。', 'error');
-    if (!data?.length) return setStatus(target, '目前沒有額外的特別聚會。', 'muted');
+    if (!data?.length) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, '目前沒有額外的特別聚會。', 'muted');
+    }
+    target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => {
       const card = html('article', { class: 'cms-item' });
       card.append(html('div', { class: 'cms-item-meta' }, `${esc(item.category || '特別聚會')} · ${fmt(item.starts_at)}`));
@@ -151,11 +196,15 @@
     target.replaceChildren();
     const { data, error } = await state.client.from('prayer_requests').select('*').order('published_at', { ascending: false }).limit(20);
     if (error) return setStatus(target, '暫時無法載入代禱資料。', 'error');
-    if (!data?.length) return setStatus(target, '目前沒有新的代禱事項。', 'muted');
+    if (!data?.length) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, '目前沒有新的代禱事項。', 'muted');
+    }
+    target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => {
       const card = html('article', { class: 'cms-item prayer-cms-item' });
       card.append(html('div', { class: 'cms-item-meta' }, `${esc(item.category || '堂會代禱')} · ${fmt(item.published_at)}`));
-      card.append(html('h3', {}, item.title), html('p', {}, item.content));
+      const content = html('div', { class: 'cms-rich-content' }); content.innerHTML = rich(item.content); card.append(html('h3', {}, item.title), content);
       target.append(card);
     });
   }
@@ -185,6 +234,8 @@
     const gate = document.querySelector('#adminGate'); const app = document.querySelector('#adminApp'); const status = document.querySelector('[data-admin-status]');
     if (!state.user || !['admin', 'staff'].includes(state.role)) { gate?.classList.remove('is-hidden'); app?.classList.add('is-hidden'); return; }
     gate?.classList.add('is-hidden'); app?.classList.remove('is-hidden');
+    await renderPrayerSubmissions();
+    const pageForm = document.querySelector('#pageContentForm');
     const fill = async (form, table) => {
       const values = Object.fromEntries(new FormData(form).entries()); const file = form.querySelector('input[type=file]')?.files?.[0];
       if (file) {
@@ -201,6 +252,32 @@
     document.querySelector('#noticeForm')?.addEventListener('submit', async (e) => { e.preventDefault(); try { await fill(e.currentTarget, 'notices'); } catch (x) { setStatus(status, x.message || '發佈失敗。', 'error'); } });
     document.querySelector('#eventForm')?.addEventListener('submit', async (e) => { e.preventDefault(); try { await fill(e.currentTarget, 'events'); } catch (x) { setStatus(status, x.message || '發佈失敗。', 'error'); } });
     document.querySelector('#prayerFormCms')?.addEventListener('submit', async (e) => { e.preventDefault(); try { await fill(e.currentTarget, 'prayer_requests'); } catch (x) { setStatus(status, x.message || '發佈失敗。', 'error'); } });
+    pageForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const values = Object.fromEntries(new FormData(e.currentTarget).entries());
+      values.created_by = state.user.id;
+      const { error } = await state.client.from('page_content').upsert(values, { onConflict: 'page,content_key' });
+      if (error) return setStatus(status, error.message || '頁面內容儲存失敗。', 'error');
+      e.currentTarget.reset();
+      setStatus(status, '頁面內容已儲存；重新整理公開頁面後會套用。', 'success');
+    });
+  }
+  async function renderPrayerSubmissions() {
+    const target = document.querySelector('#prayerSubmissions');
+    if (!target || !state.client) return;
+    const { data, error } = await state.client.from('prayer_submissions').select('*').order('created_at', { ascending: false }).limit(50);
+    if (error) return setStatus(target, '暫時無法載入代禱提交。', 'error');
+    target.replaceChildren();
+    if (!data?.length) return setStatus(target, '目前沒有新的代禱提交。', 'muted');
+    data.forEach((item) => {
+      const card = html('article', { class: 'cms-item' });
+      card.append(
+        html('div', { class: 'cms-item-meta' }, `${fmt(item.created_at)} · ${item.status}`),
+        html('h3', {}, item.name),
+        html('p', {}, `${item.fellowship ? `${item.fellowship}｜` : ''}${item.content}`)
+      );
+      target.append(card);
+    });
   }
   boot();
 })();
