@@ -6,7 +6,9 @@
 .rich-editor:focus { outline:2px solid var(--kf-secondary,#8c5f38); outline-offset:2px; }
 
 .cms-rich-content { line-height:1.8; }
-.cms-rich-content p { margin:.65rem 0; }
+.cms-rich-content p { margin:.65rem 0; white-space:normal; }
 .cms-rich-content table { width:100%; border-collapse:collapse; margin:1rem 0; }
 .cms-rich-content th,.cms-rich-content td { border:1px solid var(--kf-border,#e4d8c6); padding:.55rem; text-align:left; }
-.cms-rich-content ul,.cms-rich-content ol { padding-left:1.4rem; }
+.cms-rich-content ul,.cms-rich-content ol { padding-left:1.4rem; margin:.5rem 0; }
+.cms-rich-content blockquote { border-left:3px solid var(--kf-secondary,#8c5f38); padding:.5rem 1rem; margin:.75rem 0; background:#fbf6ee; border-radius:0 6px 6px 0; }
+.cms-rich-content img { max-width:100%; height:auto; border-radius:8px; margin:.85rem 0; border:1px solid var(--kf-border,#e4d8c6); display:block; }
