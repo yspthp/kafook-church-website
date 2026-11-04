@@ -1,4 +1,4 @@
-/* Ka Fook dynamic content, auth, member area and staff CMS (with DOMPurify XSS protection). */
+/* Ka Fook dynamic content, auth, member area and staff CMS (Warm Timber + DOMPurify XSS protection). */
 (function () {
   'use strict';
   const config = window.KF_SUPABASE_CONFIG;
@@ -52,9 +52,11 @@
     const description = document.querySelector('.page-description');
     if (title) title.dataset.cmsKey = 'page_title';
     if (description) description.dataset.cmsKey = 'page_description';
-    if (page === 'index.html') {
+    if (page === 'index.html' || page === '') {
       document.querySelector('.tb-hero-inner > p')?.setAttribute('data-cms-key', 'home_hero_description');
       document.querySelector('#servicesTitle')?.setAttribute('data-cms-key', 'home_services_heading');
+      document.querySelector('#newsTickerTrack')?.setAttribute('data-cms-key', 'home_ticker_text');
+      document.querySelector('.official-notice')?.setAttribute('data-cms-key', 'home_official_notice');
     }
   }
   function applyPageContent(rows) {
@@ -132,7 +134,9 @@
       link.classList.toggle('active', page === 'admin.html');
       if (page === 'admin.html') link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
-    } else admin?.remove();
+    } else if (page !== 'admin.html') {
+      admin?.remove();
+    }
   }
   function ensureTarget(id, title) {
     let target = document.getElementById(id);
@@ -167,28 +171,34 @@
   }
   async function renderNotices(target, member = false) {
     if (!target || !state.client) return;
-    target.replaceChildren();
     const query = member
       ? state.client.from('notices').select('*').in('visibility', ['members', 'public']).order('published_at', { ascending: false })
       : state.client.from('notices').select('*').eq('visibility', 'public').order('published_at', { ascending: false });
     const { data, error } = await query;
-    if (error) return setStatus(target, '暫時無法載入動態通告，請稍後再試。', 'error');
+    if (error) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, '暫時無法載入動態通告，請稍後再試。', 'error');
+    }
     if (!data?.length) {
       if (target.dataset.preserve === 'true') return;
       return setStatus(target, member ? '目前沒有會友專屬通告。' : '目前沒有新的動態通告。', 'muted');
     }
+    target.replaceChildren();
     target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => target.append(makeNotice(item)));
   }
   async function renderEvents(target) {
     if (!target || !state.client) return;
-    target.replaceChildren();
     const { data, error } = await state.client.from('events').select('*').gte('starts_at', new Date().toISOString()).order('starts_at', { ascending: true }).limit(6);
-    if (error) return setStatus(target, '暫時無法載入活動資料。', 'error');
+    if (error) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, '暫時無法載入活動資料。', 'error');
+    }
     if (!data?.length) {
       if (target.dataset.preserve === 'true') return;
       return setStatus(target, '目前沒有額外的特別聚會。', 'muted');
     }
+    target.replaceChildren();
     target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => {
       const card = html('article', { class: 'cms-item' });
@@ -200,13 +210,16 @@
   }
   async function renderPrayers(target) {
     if (!target || !state.client) return;
-    target.replaceChildren();
     const { data, error } = await state.client.from('prayer_requests').select('*').order('published_at', { ascending: false }).limit(20);
-    if (error) return setStatus(target, '暫時無法載入代禱資料。', 'error');
+    if (error) {
+      if (target.dataset.preserve === 'true') return;
+      return setStatus(target, '暫時無法載入代禱資料。', 'error');
+    }
     if (!data?.length) {
       if (target.dataset.preserve === 'true') return;
       return setStatus(target, '目前沒有新的代禱事項。', 'muted');
     }
+    target.replaceChildren();
     target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => {
       const card = html('article', { class: 'cms-item prayer-cms-item' });
