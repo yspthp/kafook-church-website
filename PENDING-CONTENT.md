@@ -13,3 +13,8 @@
 | `index.html` | 教會生活相片牆（4：同行） | `home-life-photo-fellowship` | — | 「同行」主題實景相片 |
 | `index.html` | 教會生活相片牆（5：信息） | `home-life-photo-message` | — | 「信息」主題實景相片 |
 | `index.html` | 諾知原中心 (Promised Land) 標誌／相片 | `home-promised-land-media` | `home_promised_land`（文案） | 諾知原中心官方標誌（Logo）及中心活動相片（Facebook / Instagram 官方原圖） |
+| `about.html` | 教牧與幹事團隊：林淑櫻（主任牧師） | `staff-bio-lam-suk-ying` | `staff_bio_1` | 林淑櫻主任牧師自我介紹文案 |
+| `about.html` | 教牧與幹事團隊：林肇楓（牧師） | `staff-bio-lam-shiu-fung` | `staff_bio_2` | 林肇楓牧師自我介紹文案 |
+| `about.html` | 教牧與幹事團隊：蒙潔文（幹事） | `staff-bio-mung-kit-man` | `staff_bio_3` | 蒙潔文幹事自我介紹文案 |
+| `about.html` | 教牧與幹事團隊：黃淽君（幹事） | `staff-bio-wong-tsz-kwan` | `staff_bio_4` | 黃淽君幹事自我介紹文案 |
+| `about.html` | 教牧與幹事團隊：吳天恩（神學生） | `staff-bio-ng-tin-yan` | `staff_bio_5` | 吳天恩神學生自我介紹文案 |

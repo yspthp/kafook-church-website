@@ -13,21 +13,53 @@
 .about-vmv-grid p, .about-muted { color:#725f4d; line-height:1.9; }
 .about-section-head { margin-bottom:42px; }
 .about-section-head .tb-lead { margin-top:20px; }
-.about-care-list { border-top:1px solid #d4c1a8; }
-.about-care-row { display:grid; grid-template-columns: minmax(220px, .7fr) 1.6fr; gap:48px; padding:28px 0; border-bottom:1px solid #d4c1a8; }
+.about-care-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 56px;
+  border-top: 1px solid #d4c1a8;
+  padding-top: 32px;
+}
+.about-care-row {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 0 28px;
+  border-bottom: 1px solid #d4c1a8;
+}
 .about-age { position:relative; padding-left:40px; }
 .about-age > span { position:absolute; left:0; top:4px; font-size:12px; color:#8c5f38; }
-.about-age h3 { font-family:var(--kf-font-serif); font-size:23px; margin-bottom:6px; }
-.about-age p { font-size:14px; color:#806b55; }
+.about-age h3 { font-family:var(--kf-font-serif); font-size:23px; margin-bottom:4px; }
+.about-age p { font-size:14px; color:#806b55; margin:0; }
+.about-care-row > div:last-child { padding-left:40px; }
 .about-care-row h4 { font-size:19px; color:#4a3526; margin-bottom:8px; }
 .about-care-row p { margin:6px 0; }
+.about-subunits {
+  list-style: none;
+  padding: 0 0 0 14px;
+  margin: 8px 0 10px;
+  border-left: 2px solid #cdaf88;
+  display: grid;
+  gap: 4px;
+  color: #4a3526;
+  font-size: 15px;
+}
 .about-section-action { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:20px; margin-top:32px; }
 .about-section-action p { margin:0; color:#725f4d; }
 .about-team-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:24px; }
 .about-portrait { aspect-ratio:4 / 3; height:clamp(220px, 22vw, 340px); background:#eae0d0; border-radius:100px 100px 12px 12px; overflow:hidden; margin-bottom:22px; }
 .about-portrait img { display:block; width:100%; height:100%; object-fit:cover; object-position:center top; }
 .about-person h3 { font-family:var(--kf-font-serif); font-size:24px; margin-bottom:6px; }
-.about-person > p { color:#8c5f38; font-size:14px; letter-spacing:.08em; }
+.about-person > p, .about-person .about-role { color:#8c5f38; font-size:14px; letter-spacing:.08em; }
+.about-person .about-bio {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #e4d8c6;
+  font-size: 14px;
+  color: #725f4d;
+  line-height: 1.75;
+}
+.about-person .about-bio p { margin: 0; }
 .about-history-layout { display:grid; grid-template-columns: .9fr 1.3fr; gap:80px; }
 .about-timeline { list-style:none; padding:0 0 0 32px; margin:0; border-left:1px solid #baa184; }
 .about-timeline li { position:relative; padding:0 0 40px 8px; }
@@ -50,11 +82,17 @@
   .about-team-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
   .about-vmv-grid article { padding-inline:22px; }
 }
+@media(max-width:768px) {
+  .about-care-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+}
 @media(max-width:600px) {
   .about-intro { margin-bottom:32px; }
   .about-vmv-grid { grid-template-columns:1fr; }
   .about-vmv-grid article,.about-vmv-grid article:first-child,.about-vmv-grid article:last-child { border-right:0; border-bottom:1px solid #d9c8b1; padding:24px 0; }
-  .about-care-row { grid-template-columns:1fr; gap:14px; }
+  .about-care-row { gap:12px; }
   .about-care-row > div:last-child { padding-left:40px; }
   .about-team-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 16px; }
   .about-person h3 { font-size:22px; }

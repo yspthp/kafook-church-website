@@ -106,6 +106,13 @@
       document.querySelector('[data-pending="events-gathering-notice"]')?.setAttribute('data-cms-key', 'events_gathering_notice');
       document.querySelector('[data-pending="children-worship-details"]')?.setAttribute('data-cms-key', 'events_children_worship');
     }
+    if (page === 'about.html') {
+      document.querySelector('[data-pending="staff-bio-lam-suk-ying"]')?.setAttribute('data-cms-key', 'staff_bio_1');
+      document.querySelector('[data-pending="staff-bio-lam-shiu-fung"]')?.setAttribute('data-cms-key', 'staff_bio_2');
+      document.querySelector('[data-pending="staff-bio-mung-kit-man"]')?.setAttribute('data-cms-key', 'staff_bio_3');
+      document.querySelector('[data-pending="staff-bio-wong-tsz-kwan"]')?.setAttribute('data-cms-key', 'staff_bio_4');
+      document.querySelector('[data-pending="staff-bio-ng-tin-yan"]')?.setAttribute('data-cms-key', 'staff_bio_5');
+    }
   }
   function applyPageContent(rows) {
     rows?.forEach((row) => {
@@ -144,17 +151,15 @@
       fallback('目前暫時無法連線，仍可瀏覽頁面上的固定內容。');
     }
   }
-  async function syncUser(user) {
-    state.user = user; state.role = 'guest';
-    if (user && state.client) {
-      const { data } = await state.client.from('profiles').select('role,display_name').eq('id', user.id).maybeSingle();
-      state.role = data?.role || user.user_metadata?.role || 'member';
-      state.displayName = data?.display_name || user.email;
-    }
-    injectNav();
-  }
   function fallback(message) {
     document.querySelectorAll('[data-cms-status]').forEach((el) => setStatus(el, message, 'muted'));
+  }
+  async function syncUser(user) {
+    state.user = user;
+    state.role = 'guest';
+    if (!user || !state.client) return;
+    const { data } = await state.client.from('profiles').select('role,display_name').eq('id', user.id).maybeSingle();
+    state.role = data?.role || 'member';
   }
   function injectNav() {
     const nav = document.querySelector('#navMenu');
@@ -163,18 +168,20 @@
     let member = members.shift();
     members.forEach(link => link.closest('li').remove());
     if (!member) {
-      const item = html('li', { class: 'nav-item', 'data-auth-link': '' });
+      const li = html('li', { class: 'nav-item', 'data-auth-link': 'true' });
       member = html('a', { class: 'nav-link', href: 'members.html' });
-      item.append(member); nav.append(item);
+      li.append(member);
+      nav.append(li);
     }
-    member.textContent = '會友專區';
+    member.textContent = state.user ? '會友專區' : '會友登入';
     member.classList.toggle('active', page === 'members.html');
     if (page === 'members.html') member.setAttribute('aria-current', 'page');
     else member.removeAttribute('aria-current');
+
     let admin = nav.querySelector('[data-admin-link]');
-    if (state.user && ['admin', 'staff'].includes(state.role)) {
+    if (['admin', 'staff'].includes(state.role)) {
       if (!admin) {
-        admin = html('li', { class: 'nav-item', 'data-admin-link': '' });
+        admin = html('li', { class: 'nav-item', 'data-admin-link': 'true' });
         admin.append(html('a', { class: 'nav-link', href: 'admin.html' }, '管理後台'));
         nav.append(admin);
       }
@@ -195,8 +202,9 @@
     const container = html('div', { class: 'container' });
     const heading = html('div', { class: 'section-header' });
     heading.append(html('h2', { class: 'section-title' }, title));
-    target = html('div', { id, class: 'cms-list', 'data-cms-status': '' });
-    section.append(container); container.append(heading, target);
+    target = html('div', { id, class: 'cms-list', 'data-cms-status': 'true' });
+    container.append(heading, target);
+    section.append(container);
     main.append(section);
     return target;
   }
@@ -209,9 +217,8 @@
     if (item.attachment_path && state.user) {
       const link = html('button', { class: 'cms-download', type: 'button' }, '下載附件 ↗');
       link.addEventListener('click', async () => {
-        const { data, error } = await state.client.storage.from('member-documents').createSignedUrl(item.attachment_path, 120);
-        if (error) return setStatus(article, '附件暫時無法下載。', 'error');
-        window.open(data.signedUrl, '_blank', 'noopener');
+        const { data, error } = await state.client.storage.from('member-documents').createSignedUrl(item.attachment_path, 60);
+        if (!error && data?.signedUrl) window.open(data.signedUrl, '_blank', 'noopener');
       });
       article.append(link);
     }
@@ -272,17 +279,24 @@
     const login = document.querySelector('#memberLogin');
     const panel = document.querySelector('#memberPanel');
     const status = document.querySelector('[data-member-status]');
-    const refresh = () => {
-      if (state.user) { login?.classList.add('is-hidden'); panel?.classList.remove('is-hidden'); setStatus(status, `已登入：${state.displayName || state.user.email}`, 'success'); renderNotices(document.querySelector('#memberNotices'), true); }
-      else { login?.classList.remove('is-hidden'); panel?.classList.add('is-hidden'); setStatus(status, '請登入以查看會友專區。', 'muted'); }
+    const list = document.querySelector('#memberNotices');
+    const refresh = async () => {
+      if (state.user) {
+        login?.classList.add('is-hidden'); panel?.classList.remove('is-hidden');
+        setStatus(status, `已登入：${state.user.email}（${state.role === 'admin' ? '管理員' : state.role === 'staff' ? '同工' : '會友'}）`, 'success');
+        await renderNotices(list, true);
+      } else {
+        login?.classList.remove('is-hidden'); panel?.classList.add('is-hidden');
+        setStatus(status, '請使用教會發出的會友或同工電郵登入。', 'muted');
+      }
     };
-    refresh();
+    await refresh();
     document.querySelector('#memberLoginForm')?.addEventListener('submit', async (event) => {
       event.preventDefault();
-      const form = event.currentTarget; setStatus(status, '登入中…');
-      const { error } = await state.client.auth.signInWithPassword({ email: form.email.value.trim(), password: form.password.value });
+      const form = new FormData(event.currentTarget);
+      const { data, error } = await state.client.auth.signInWithPassword({ email: String(form.get('email')).trim(), password: String(form.get('password')) });
       if (error) return setStatus(status, '登入失敗，請檢查電郵及密碼。', 'error');
-      await syncUser((await state.client.auth.getUser()).data.user); injectNav(); refresh();
+      await syncUser(data.user); injectNav(); await refresh();
     });
     document.querySelector('#memberLogout')?.addEventListener('click', async () => { await state.client.auth.signOut(); state.user = null; state.role = 'guest'; injectNav(); refresh(); });
   }
