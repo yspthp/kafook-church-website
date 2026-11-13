@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img" aria-label="中性相片佔位圖">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EFE5D6"/>
+      <stop offset="55%" stop-color="#E3CFA6"/>
+      <stop offset="100%" stop-color="#CDAF88"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="580" cy="180" r="140" fill="#FFF9EE" opacity="0.45"/>
+  <path d="M0,450 Q240,360 480,420 T800,380 L800,600 L0,600 Z" fill="#8C5F38" opacity="0.22"/>
+  <path d="M0,500 Q300,430 560,480 T800,450 L800,600 L0,600 Z" fill="#4A3526" opacity="0.26"/>
+  <g transform="translate(330, 160)" fill="none" stroke="#7A5334" stroke-width="3" opacity="0.55">
+    <path d="M0,240 L0,70 A70,70 0 0,1 140,70 L140,240 Z"/>
+    <line x1="70" y1="25" x2="70" y2="165"/>
+    <line x1="36" y1="70" x2="104" y2="70"/>
+  </g>
+</svg>

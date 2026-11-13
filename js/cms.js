@@ -100,9 +100,7 @@
     if (description) description.dataset.cmsKey = 'page_description';
     if (page === 'index.html' || page === '') {
       document.querySelector('.tb-hero-inner > p')?.setAttribute('data-cms-key', 'home_hero_description');
-      document.querySelector('#servicesTitle')?.setAttribute('data-cms-key', 'home_services_heading');
-      document.querySelector('#newsTickerTrack')?.setAttribute('data-cms-key', 'home_ticker_text');
-      document.querySelector('.official-notice')?.setAttribute('data-cms-key', 'home_official_notice');
+      document.querySelector('[data-cms-key="home_promised_land"]')?.setAttribute('data-cms-key', 'home_promised_land');
     }
     if (page === 'events.html') {
       document.querySelector('[data-pending="events-gathering-notice"]')?.setAttribute('data-cms-key', 'events_gathering_notice');
@@ -134,7 +132,7 @@
       await syncUser(data.session?.user || null);
       state.client.auth.onAuthStateChange((_event, session) => syncUser(session?.user || null));
       injectNav();
-      const pageContent = await state.client.from('page_content').select('content_key,content_html').in('page', [page, 'shared']).eq('visibility', 'public');
+      const pageContent = await state.client.from('page_content').select('content_key,content_html').in('page', [page || 'index.html', 'shared']).eq('visibility', 'public');
       if (!pageContent.error) applyPageContent(pageContent.data);
       if (page === 'index.html' || page === '') await renderHome();
       if (page === 'news.html') await renderNotices(ensureTarget('dynamicNotices', '最新動態通告'));
@@ -237,27 +235,6 @@
     target.closest('section')?.classList.remove('is-hidden');
     data.forEach((item) => target.append(makeNotice(item)));
   }
-  async function renderEvents(target) {
-    if (!target || !state.client) return;
-    const { data, error } = await state.client.from('events').select('*').gte('starts_at', new Date().toISOString()).order('starts_at', { ascending: true }).limit(6);
-    if (error) {
-      if (target.dataset.preserve === 'true') return;
-      return setStatus(target, '暫時無法載入活動資料。', 'error');
-    }
-    if (!data?.length) {
-      if (target.dataset.preserve === 'true') return;
-      return setStatus(target, '目前沒有額外的特別聚會。', 'muted');
-    }
-    target.replaceChildren();
-    target.closest('section')?.classList.remove('is-hidden');
-    data.forEach((item) => {
-      const card = html('article', { class: 'cms-item' });
-      const meta = `${esc(item.category || '特別聚會')} · ${fmt(item.starts_at)}${item.location ? ` · ${esc(item.location)}` : ''}`;
-      card.append(html('div', { class: 'cms-item-meta' }, meta));
-      card.append(html('h3', {}, item.title), makeRichNode(item.content_html, item.description));
-      target.append(card);
-    });
-  }
   function makePrayerCard(item) {
     const card = html('article', { class: 'cms-item prayer-cms-item' });
     card.append(html('div', { class: 'cms-item-meta' }, `${esc(item.category || '堂會代禱')} · ${fmt(item.published_at)}`));
@@ -290,7 +267,6 @@
   }
   async function renderHome() {
     await renderNotices(ensureTarget('dynamicHomeNotices', '最新動態通告'));
-    await renderEvents(ensureTarget('dynamicHomeEvents', '近期特別聚會'));
   }
   async function initMembers() {
     const login = document.querySelector('#memberLogin');

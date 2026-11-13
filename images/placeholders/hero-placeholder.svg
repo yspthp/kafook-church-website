@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 960" width="1600" height="960" role="img" aria-label="首頁主視覺彩色相片佔位圖">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3E5C76"/>
+      <stop offset="38%" stop-color="#C87D55"/>
+      <stop offset="72%" stop-color="#E6B36B"/>
+      <stop offset="100%" stop-color="#6B8E78"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="68%" cy="34%" r="48%">
+      <stop offset="0%" stop-color="#FFF3D1" stop-opacity="0.92"/>
+      <stop offset="45%" stop-color="#F2C57C" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#C87D55" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hills1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5B7562" stop-opacity="0.82"/>
+      <stop offset="100%" stop-color="#354739" stop-opacity="0.95"/>
+    </linearGradient>
+    <linearGradient id="hills2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8C5F38" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#4A3526" stop-opacity="0.96"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="960" fill="url(#sky)"/>
+  <rect width="1600" height="960" fill="url(#sun)"/>
+  <!-- 彩繪玻璃幾何光束 -->
+  <polygon points="920,0 1280,0 1600,620 1120,620" fill="#FFF7E2" opacity="0.16"/>
+  <polygon points="620,0 940,0 1320,760 820,760" fill="#F6D58E" opacity="0.14"/>
+  <circle cx="1090" cy="320" r="170" fill="#FFF8E6" opacity="0.28"/>
+  <!-- 遠山與原木波紋 -->
+  <path d="M0,640 Q360,510 760,600 T1600,540 L1600,960 L0,960 Z" fill="url(#hills1)"/>
+  <path d="M0,730 Q480,610 980,700 T1600,660 L1600,960 L0,960 Z" fill="url(#hills2)"/>
+  <!-- 簡約拱窗與十字架剪影（無人物） -->
+  <g transform="translate(1010, 190)" opacity="0.45">
+    <path d="M0,360 L0,130 A130,130 0 0,1 260,130 L260,360 Z" fill="none" stroke="#FFF8EA" stroke-width="4"/>
+    <line x1="130" y1="55" x2="130" y2="275" stroke="#FFF8EA" stroke-width="5"/>
+    <line x1="72" y1="125" x2="188" y2="125" stroke="#FFF8EA" stroke-width="5"/>
+  </g>
+</svg>
