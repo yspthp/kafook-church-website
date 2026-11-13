@@ -71,11 +71,44 @@
 .calendar-card { display:flex; flex-wrap:wrap; align-items:center; gap:18px 28px; }
 .calendar-card p { flex:1 1 100%; margin:0; }
 
+.calendar-grid {
+  flex: 1 1 100%;
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 24px;
+}
+.calendar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 20px;
+  background: #fbf6ee;
+  border: 1px solid #d9c8b1;
+  border-left: 3px solid #8c5f38;
+  border-radius: 8px;
+}
+.calendar-date {
+  font-size: 13px;
+  color: #8c5f38;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.calendar-event {
+  font-family: var(--kf-font-serif);
+  font-size: 17px;
+  color: #4a3526;
+  font-weight: 600;
+}
+@media(max-width:768px) {
+  .calendar-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
 .prayer-submit { background:#efe7da; }
 .local-prayer-form { display:grid; gap:18px; }
 .prayer-preview { margin-top:24px; }
-
-.calendar-table { width:100%; border-collapse:collapse; margin:28px 0; }
-.calendar-table th,.calendar-table td { border:1px solid #d9c8b1; padding:12px 14px; text-align:left; vertical-align:top; }
-.calendar-table th { background:#efe7da; color:#4a3526; font-weight:600; }
-@media(max-width:600px){.calendar-table th,.calendar-table td{padding:10px 8px;font-size:14px;}.calendar-table th:first-child,.calendar-table td:first-child{width:45%;}}

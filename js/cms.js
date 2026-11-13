@@ -7,13 +7,46 @@
   const esc = (value) => String(value ?? '');
   const fmt = (value) => value ? new Intl.DateTimeFormat('zh-HK', { dateStyle: 'medium' }).format(new Date(value)) : '';
 
+  const SHARED_FAQ_ITEMS = [
+    {
+      num: '01',
+      q: '崇拜會做什麼？',
+      a: '我們會一同唱詩歌敬拜、同心禱告，並聆聽牧者按聖經分享信息；透過詩歌與真道親近神，彼此祝福。不用擔心不熟悉流程，現場均有投影及同工協助。'
+    },
+    {
+      num: '02',
+      q: '崇拜時間有多長？',
+      a: '約1小時30分鐘，包括詩歌敬拜和講道。'
+    },
+    {
+      num: '03',
+      q: '崇拜有服飾要求嗎？',
+      a: '沒有特別要求，穿您覺得舒適的衣服就好。請避免衣著暴露，也不適宜穿著拖鞋。'
+    },
+    {
+      num: '04',
+      q: '我可以帶同孩子參與嗎？',
+      a: '歡迎！週日午堂崇拜（11:15）同時設有兒童崇拜，讓小朋友在適合他們的群體中敬拜和學習聖經；禮堂亦設有直播間，方便家長攜同幼兒參與崇拜。若您的孩子已踏入青少年階段，我們也設有青少年崇拜（週六 17:30–18:30，主要對象為中學及大專學生）。'
+    },
+    {
+      num: '05',
+      q: '兒童崇拜適合甚麼年齡的小朋友參加？',
+      a: '兒童崇拜由幼稚園 K1 開始，適合幼稚園及小學階段的小朋友參與（於週日 11:15 與午堂崇拜同時舉行）。'
+    },
+    {
+      num: '06',
+      q: '奉獻是崇拜過程必須的嗎？',
+      a: '不需要。奉獻是在明白奉獻意義的情況下自願的回應，並非必須。'
+    }
+  ];
+
   const rich = (value) => {
     const raw = String(value ?? '').trim();
     if (!raw) return '';
     if (window.DOMPurify) {
       return window.DOMPurify.sanitize(raw, {
         USE_PROFILES: { html: true },
-        ADD_ATTR: ['target', 'rel', 'loading']
+        ADD_ATTR: ['target', 'rel', 'loading', 'open']
       });
     }
     const fallback = document.createElement('div');
@@ -47,6 +80,19 @@
     el.textContent = text;
     el.className = `cms-status ${kind}`.trim();
   };
+  function renderSharedFaq() {
+    const faqList = document.querySelector('#faq .about-faq-list');
+    if (!faqList) return;
+    faqList.dataset.cmsKey = 'shared_faq_list';
+    faqList.replaceChildren();
+    SHARED_FAQ_ITEMS.forEach((item) => {
+      const details = html('details', { class: 'about-faq-item', open: '' });
+      const summary = html('summary');
+      summary.append(html('span', {}, item.num), document.createTextNode(item.q));
+      details.append(summary, html('p', {}, item.a));
+      faqList.append(details);
+    });
+  }
   function registerEditableTargets() {
     const title = document.querySelector('.page-title');
     const description = document.querySelector('.page-description');
@@ -57,6 +103,10 @@
       document.querySelector('#servicesTitle')?.setAttribute('data-cms-key', 'home_services_heading');
       document.querySelector('#newsTickerTrack')?.setAttribute('data-cms-key', 'home_ticker_text');
       document.querySelector('.official-notice')?.setAttribute('data-cms-key', 'home_official_notice');
+    }
+    if (page === 'events.html') {
+      document.querySelector('[data-pending="events-gathering-notice"]')?.setAttribute('data-cms-key', 'events_gathering_notice');
+      document.querySelector('[data-pending="children-worship-details"]')?.setAttribute('data-cms-key', 'events_children_worship');
     }
   }
   function applyPageContent(rows) {
@@ -73,6 +123,7 @@
   async function boot() {
     if (page === 'admin.html' && window.KF_ADMIN_DASHBOARD) return;
     injectNav();
+    renderSharedFaq();
     registerEditableTargets();
     if (!config?.url || !config?.anonKey) return fallback('未設定內容服務連線，保留原有內容。');
     try {
@@ -83,11 +134,10 @@
       await syncUser(data.session?.user || null);
       state.client.auth.onAuthStateChange((_event, session) => syncUser(session?.user || null));
       injectNav();
-      const pageContent = await state.client.from('page_content').select('content_key,content_html').eq('page', page).eq('visibility', 'public');
+      const pageContent = await state.client.from('page_content').select('content_key,content_html').in('page', [page, 'shared']).eq('visibility', 'public');
       if (!pageContent.error) applyPageContent(pageContent.data);
       if (page === 'index.html' || page === '') await renderHome();
       if (page === 'news.html') await renderNotices(ensureTarget('dynamicNotices', '最新動態通告'));
-      if (page === 'events.html') await renderEvents(ensureTarget('dynamicEvents', '特別聚會與焦點活動'));
       if (page === 'prayer.html') await renderPrayers(ensureTarget('dynamicPrayers', '大堂代禱事項'));
       if (page === 'members.html') await initMembers();
       if (page === 'admin.html' && !window.KF_ADMIN_DASHBOARD) await initAdmin();
