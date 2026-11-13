@@ -86,9 +86,9 @@
       const pageContent = await state.client.from('page_content').select('content_key,content_html').eq('page', page).eq('visibility', 'public');
       if (!pageContent.error) applyPageContent(pageContent.data);
       if (page === 'index.html' || page === '') await renderHome();
-      if (page === 'news.html') await renderNotices(ensureTarget('dynamicNotices', '最新動態通告', 'LIVE NOTICES'));
-      if (page === 'events.html') await renderEvents(ensureTarget('dynamicEvents', '特別聚會與焦點活動', 'FEATURED EVENTS'));
-      if (page === 'prayer.html') await renderPrayers(ensureTarget('dynamicPrayers', '最新代禱事項', 'PRAYER WALL'));
+      if (page === 'news.html') await renderNotices(ensureTarget('dynamicNotices', '最新動態通告'));
+      if (page === 'events.html') await renderEvents(ensureTarget('dynamicEvents', '特別聚會與焦點活動'));
+      if (page === 'prayer.html') await renderPrayers(ensureTarget('dynamicPrayers', '大堂代禱事項'));
       if (page === 'members.html') await initMembers();
       if (page === 'admin.html' && !window.KF_ADMIN_DASHBOARD) await initAdmin();
     } catch (error) {
@@ -208,8 +208,15 @@
       target.append(card);
     });
   }
+  function makePrayerCard(item) {
+    const card = html('article', { class: 'cms-item prayer-cms-item' });
+    card.append(html('div', { class: 'cms-item-meta' }, `${esc(item.category || '堂會代禱')} · ${fmt(item.published_at)}`));
+    card.append(html('h3', {}, item.title), makeRichNode(item.content_html, item.content));
+    return card;
+  }
   async function renderPrayers(target) {
     if (!target || !state.client) return;
+    const inviteTarget = document.getElementById('dynamicPrayerInvitations');
     const { data, error } = await state.client.from('prayer_requests').select('*').order('published_at', { ascending: false }).limit(20);
     if (error) {
       if (target.dataset.preserve === 'true') return;
@@ -219,18 +226,21 @@
       if (target.dataset.preserve === 'true') return;
       return setStatus(target, '目前沒有新的代禱事項。', 'muted');
     }
-    target.replaceChildren();
-    target.closest('section')?.classList.remove('is-hidden');
-    data.forEach((item) => {
-      const card = html('article', { class: 'cms-item prayer-cms-item' });
-      card.append(html('div', { class: 'cms-item-meta' }, `${esc(item.category || '堂會代禱')} · ${fmt(item.published_at)}`));
-      card.append(html('h3', {}, item.title), makeRichNode(item.content_html, item.content));
-      target.append(card);
-    });
+    const generalItems = data.filter((item) => item.category !== '禱告邀約');
+    const inviteItems = data.filter((item) => item.category === '禱告邀約');
+    if (generalItems.length) {
+      target.replaceChildren();
+      target.closest('section')?.classList.remove('is-hidden');
+      generalItems.forEach((item) => target.append(makePrayerCard(item)));
+    }
+    if (inviteTarget && inviteItems.length) {
+      inviteTarget.replaceChildren();
+      inviteItems.forEach((item) => inviteTarget.append(makePrayerCard(item)));
+    }
   }
   async function renderHome() {
-    await renderNotices(ensureTarget('dynamicHomeNotices', '最新動態通告', 'LATEST NOTICES'));
-    await renderEvents(ensureTarget('dynamicHomeEvents', '近期特別聚會', 'UPCOMING EVENTS'));
+    await renderNotices(ensureTarget('dynamicHomeNotices', '最新動態通告'));
+    await renderEvents(ensureTarget('dynamicHomeEvents', '近期特別聚會'));
   }
   async function initMembers() {
     const login = document.querySelector('#memberLogin');
