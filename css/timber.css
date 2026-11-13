@@ -12,7 +12,7 @@
   --tb-oak-pale: #EFE5D6;
   --tb-wheat: #E3CFA6;
   --tb-paper: #F7F2EA;
-  --tb-shade: linear-gradient(180deg, rgba(46, 33, 24, 0.30) 0%, rgba(46, 33, 24, 0.10) 35%, rgba(46, 33, 24, 0.78) 100%);
+  --tb-shade: linear-gradient(180deg, rgba(46, 33, 24, 0.22) 0%, rgba(46, 33, 24, 0.08) 35%, rgba(46, 33, 24, 0.68) 100%);
   --tb-section: clamp(72px, 10vw, 136px);
 }
 
@@ -113,8 +113,8 @@ body { background: var(--tb-paper); }
 .tb-hero-media, .tb-hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .tb-hero-media { z-index: -2; }
 .tb-hero-media img { object-fit: cover; object-position: center 35%; transform: scale(1.04); animation: tb-settle 2.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-.tb-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(46, 33, 24, 0.72) 0%, rgba(46, 33, 24, 0.35) 45%, rgba(46, 33, 24, 0) 75%), var(--tb-shade); }
-.tb-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: #8C5F38; mix-blend-mode: soft-light; opacity: 0.35; }
+.tb-hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(46, 33, 24, 0.58) 0%, rgba(46, 33, 24, 0.24) 48%, rgba(46, 33, 24, 0) 78%), var(--tb-shade); }
+.tb-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: #8C5F38; mix-blend-mode: soft-light; opacity: 0.15; }
 .tb-hero-inner { width: 100%; max-width: 1320px; margin: 0 auto; padding: 160px clamp(20px, 5vw, 64px) clamp(56px, 9vh, 104px); }
 .tb-hero h1 {
   color: #fff; font-weight: 600;
@@ -130,25 +130,13 @@ body { background: var(--tb-paper); }
 .tb-hero-scroll::after { content: ""; display: block; width: 1px; height: 64px; margin: 14px auto 0; background: rgba(255, 255, 255, 0.5); }
 @keyframes tb-settle { to { transform: scale(1); } }
 
-/* ---------- 首頁：主日聚會 ---------- */
+/* ---------- 首頁：區塊與堂址導航 ---------- */
 .tb-section { padding: var(--tb-section) 0; }
 .tb-section.alt { background: var(--tb-oak-pale); }
 .tb-wide { width: 100%; max-width: 1320px; margin: 0 auto; padding-inline: clamp(20px, 5vw, 64px); }
 .tb-heading { font-size: clamp(30px, 4.4vw, 60px); line-height: 1.2; font-weight: 600; color: var(--tb-walnut); letter-spacing: 0.02em; text-wrap: balance; }
 .tb-lead { font-size: clamp(16px, 1.25vw, 18px); line-height: 1.95; color: var(--kf-text-secondary); max-width: 36em; }
 
-.tb-services-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 32px 64px; align-items: end; margin-bottom: 56px; }
-.tb-service-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
-.tb-service {
-  position: relative; padding: 36px 32px 32px; background: #FFFCF7;
-  border: 1px solid var(--kf-border); border-top: 3px solid var(--tb-oak);
-  transition: var(--kf-transition);
-}
-.tb-service:hover { border-top-color: var(--tb-timber); transform: translateY(-4px); box-shadow: var(--kf-shadow-md); }
-.tb-service-day { font-size: 13px; letter-spacing: 0.16em; color: var(--kf-secondary-dark); font-weight: 600; }
-.tb-service-time { font-family: var(--kf-font-serif); font-size: clamp(44px, 4.6vw, 64px); line-height: 1; color: var(--tb-walnut); margin: 18px 0 14px; letter-spacing: 0.02em; }
-.tb-service h3 { font-size: 20px; margin-bottom: 8px; }
-.tb-service p { font-size: 15px; line-height: 1.8; color: var(--kf-text-secondary); }
 .tb-visit {
   margin-top: 20px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px;
   padding: 28px 32px; background: var(--tb-walnut); color: #F7F2EA;
@@ -157,7 +145,7 @@ body { background: var(--tb-paper); }
 .tb-visit span { font-size: 15px; color: #E3D5C2; }
 .tb-visit-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
-/* ---------- 首頁：圖文分割（第一次來、牧者） ---------- */
+/* ---------- 首頁：圖文分割（第一次來、諾知原中心） ---------- */
 .tb-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: clamp(40px, 6vw, 96px); align-items: center; }
 .tb-split.reverse .tb-split-media { order: 2; }
 .tb-split-media { position: relative; }
@@ -237,11 +225,10 @@ body { background: var(--tb-paper); }
 
 /* ---------- 響應式 ---------- */
 @media (max-width: 1024px) {
-  .tb-services-head, .tb-split, .tb-news-cols { grid-template-columns: minmax(0, 1fr); }
+  .tb-split, .tb-news-cols { grid-template-columns: minmax(0, 1fr); }
   .tb-split.reverse .tb-split-media { order: 0; }
   .tb-split-media img { aspect-ratio: 4 / 3; }
-  .tb-service-grid, .tb-card-grid { grid-template-columns: minmax(0, 1fr); }
-  .tb-service-grid { gap: 12px; }
+  .tb-card-grid { grid-template-columns: minmax(0, 1fr); }
   .tb-mosaic { grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: clamp(120px, 26vw, 220px); }
   .tb-m1 { grid-column: span 6; grid-row: span 2; }
   .tb-m2, .tb-m3, .tb-m4, .tb-m5 { grid-column: span 3; grid-row: span 1; }
@@ -250,7 +237,6 @@ body { background: var(--tb-paper); }
   .tb-hero-inner { padding-top: 120px; }
   .tb-hero-actions .btn { width: 100%; }
   .tb-hero-scroll { display: none; }
-  .tb-service { padding: 28px 24px; }
   .tb-visit { padding: 24px; }
   .tb-visit-actions, .tb-visit-actions .btn { width: 100%; }
   .tb-split-media::after { display: none; }
@@ -259,44 +245,6 @@ body { background: var(--tb-paper); }
 }
 @media (prefers-reduced-motion: reduce) {
   .tb-hero-media img { transform: none; animation: none; }
-}
-
-/* 最新動態：無 JS／減少動態時保持靜態可讀 */
-.tb-ticker { background: var(--tb-walnut, #4a3526); color: #fff; padding: 18px 0; }
-.tb-ticker-inner { display: flex; align-items: center; gap: 24px; }
-.tb-ticker h2 { font-size: 1rem; white-space: nowrap; color: inherit; margin: 0; }
-.tb-ticker-window { min-width: 0; flex: 1; overflow: hidden; }
-.tb-ticker-track { display: flex; gap: 48px; width: max-content; max-width: 100%; flex-wrap: wrap; }
-.tb-ticker-track a { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
-.tb-ticker.is-animated .tb-ticker-track { max-width: none; flex-wrap: nowrap; animation: ticker-travel 32s linear infinite; }
-.tb-ticker.is-animated .tb-ticker-track a { white-space: nowrap; }
-.tb-ticker:hover .tb-ticker-track, .tb-ticker:focus-within .tb-ticker-track,
-.tb-ticker.is-paused .tb-ticker-track { animation-play-state: paused; }
-.tb-ticker:focus-within .tb-ticker-track { transform: none; animation: none; max-width: 100%; flex-wrap: wrap; }
-.tb-ticker:focus-within .tb-ticker-track a { white-space: normal; }
-.tb-ticker button { flex-shrink: 0; border: 1px solid #c8b394; border-radius: 4px; background: transparent; color: #fff; padding: 8px 12px; cursor: pointer; font: inherit; font-size: .8rem; }
-.tb-ticker button[hidden] { display: none; }
-.tb-ticker a:focus-visible, .tb-ticker button:focus-visible { outline: 2px solid #f4d9ad; outline-offset: 3px; }
-@keyframes ticker-travel { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (max-width: 600px) {
-  .tb-ticker-inner { gap: 12px; flex-wrap: wrap; }
-  .tb-ticker-window { flex-basis: calc(100% - 100px); }
-  .tb-ticker button { margin-left: auto; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tb-ticker.is-animated .tb-ticker-track { animation: none; max-width: 100%; flex-wrap: wrap; }
-  .tb-ticker.is-animated .tb-ticker-track a { white-space: normal; }
-}
-
-.tb-ticker-track { gap: 0; }
-.tb-ticker-group { display: flex; gap: 48px; padding-right: 48px; flex-shrink: 0; align-items: center; }
-.tb-ticker-copy { display: none; }
-.tb-ticker.is-animated .tb-ticker-copy { display: flex; }
-.tb-ticker:focus-within .tb-ticker-copy { display: none; }
-.tb-ticker:focus-within .tb-ticker-group { flex-wrap: wrap; flex-shrink: 1; gap: 16px; padding-right: 0; }
-@media (prefers-reduced-motion: reduce) {
-  .tb-ticker.is-animated .tb-ticker-copy { display: none; }
-  .tb-ticker-group { flex-wrap: wrap; flex-shrink: 1; gap: 16px; padding-right: 0; }
 }
 
 /* 浮動聯絡入口：鍵盤、觸控與滑鼠均可使用 */
@@ -315,22 +263,3 @@ body.home .site-footer { padding-bottom: 110px; }
 .logo-subtext { text-transform: none; letter-spacing: .015em; white-space: normal; }
 @media (min-width: 1401px) { .logo-link { flex-shrink: 0; } .logo-subtext { font-size: 11px; } }
 @media (max-width: 600px) { .logo-subtext { max-width: 210px; font-size: 10px; line-height: 1.35; } }
-
-/* Service schedule: a blurred worship-hall image sits behind a calm readable surface. */
-.tb-services-photo { position:relative; isolation:isolate; overflow:hidden; background:#4a3526; }
-.tb-services-photo::before { content:""; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,rgba(46,33,24,.86),rgba(46,33,24,.68)),url("../images/photos/worship-hall-1280.webp") center/cover; filter:blur(2px); transform:scale(1.03); }
-.tb-services-photo::after { content:""; position:absolute; inset:0; z-index:-1; background:rgba(46,33,24,.25); }
-.tb-services-photo .eyebrow,.tb-services-photo .tb-heading,.tb-services-photo .tb-lead,.tb-services-photo .tb-service-day,.tb-services-photo .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p,.tb-services-photo .tb-visit,.tb-services-photo .tb-visit strong,.tb-services-photo .tb-visit span { color:#fff; }
-.tb-services-photo .tb-service { background:rgba(255,250,241,.93); color:var(--tb-walnut); border-color:rgba(255,255,255,.42); }
-.tb-services-photo .tb-service .tb-service-day,.tb-services-photo .tb-service .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p { color:var(--tb-walnut); }
-.tb-services-photo .tb-visit { background:rgba(46,33,24,.62); border-color:rgba(255,255,255,.3); }
-/* Each service card carries its own quiet decorative photograph. */
-.tb-services-photo { background:var(--tb-paper); }
-.tb-services-photo::before,.tb-services-photo::after { display:none; }
-.tb-services-photo .eyebrow,.tb-services-photo .tb-heading,.tb-services-photo .tb-lead { color:var(--tb-walnut); }
-.tb-services-photo .tb-service { background-size:cover; background-position:center; background-repeat:no-repeat; border-color:var(--kf-border); }
-.tb-services-photo .tb-service:nth-child(1) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/altar-1280.webp"); }
-.tb-services-photo .tb-service:nth-child(2) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/worship-hall-1280.webp"); }
-.tb-services-photo .tb-service:nth-child(3) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/worship-hands-1280.webp"); }
-.tb-services-photo .tb-service:nth-child(4) { background-image:linear-gradient(rgba(255,252,247,.88),rgba(255,252,247,.88)),url("../images/photos/prayer-hands-1280.webp"); }
-.tb-services-photo .tb-service .tb-service-day,.tb-services-photo .tb-service .tb-service-time,.tb-services-photo .tb-service h3,.tb-services-photo .tb-service p { color:var(--tb-walnut); }

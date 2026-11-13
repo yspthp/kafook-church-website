@@ -4,16 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>管理後台 | 五旬節聖潔會迦福堂</title>
-  <meta name="description" content="五旬節聖潔會迦福堂管理後台，供獲授權同工管理頁面文案、堂會消息、聚會及代禱事項。">
+  <meta name="description" content="五旬節聖潔會迦福堂同工管理後台，供獲授權教牧及幹事管理頁面文案、堂會消息、特別聚會與代禱事項。">
   <meta name="theme-color" content="#4A3526">
   <link rel="icon" href="images/favicon.png" type="image/png">
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Site Stylesheets (Warm Timber Design System) -->
+  <!-- Warm Timber Site Stylesheets -->
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -21,97 +20,68 @@
   <link rel="stylesheet" href="css/cms.css">
   <link rel="stylesheet" href="css/about-editorial.css?v=20260930">
 
-  <!-- Tailwind CSS (via CDN) with Warm Timber Palette & preflight disabled to preserve site header/footer -->
+  <!-- Tailwind CSS & Quill Editor (CDN only, no build step) -->
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script>
     tailwind.config = {
-      corePlugins: {
-        preflight: false
-      },
       theme: {
         extend: {
           colors: {
             kf: {
-              espresso: '#2E2118',
-              walnut: '#4A3526',
-              walnutLight: '#6B4A30',
-              walnutDark: '#33251A',
-              timber: '#8C5F38',
-              timberDeep: '#7A5334',
-              oak: '#CDAF88',
-              oakPale: '#EFE5D6',
-              wheat: '#E3CFA6',
-              gold: '#B8975A',
+              forest: '#4A3526',
+              forestLight: '#6B4A30',
+              forestDark: '#2E2118',
+              olive: '#8C5F38',
               paper: '#F7F2EA',
-              card: '#FFFCF7',
-              cardHover: '#FBF6EE',
+              sand: '#EFE5D6',
+              sandMuted: '#E4D8C6',
+              gold: '#B8975A',
+              goldDeep: '#7A5334',
+              goldLight: '#E3CFA6',
               ink: '#33261C',
               inkSoft: '#6B5847',
               inkMuted: '#725F4D',
-              border: '#E4D8C6',
-              borderSubtle: '#EEE5D8'
+              border: '#E4D8C6'
             }
           },
           fontFamily: {
             serif: ['"Noto Serif TC"', 'Georgia', 'serif'],
-            sans: ['"Noto Sans TC"', '"Inter"', 'sans-serif']
+            sans: ['"Noto Sans TC"', 'sans-serif']
           }
         }
       }
     };
   </script>
-
-  <!-- FontAwesome 6 (via CDN) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-  <!-- Quill.js Rich Text Editor (via CDN) -->
   <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
 
-  <!-- DOMPurify (via CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
-
   <style>
-    /* Scoped reset for Tailwind utilities inside CMS workspace when preflight is off */
-    .cms-workspace *, .cms-workspace *::before, .cms-workspace *::after {
-      box-sizing: border-box;
-      border-width: 0;
-      border-style: solid;
-      border-color: #E4D8C6;
+    body {
+      background-color: #F7F2EA;
+      color: #33261C;
+      font-family: 'Noto Sans TC', sans-serif;
     }
-    .cms-workspace button, .cms-workspace input, .cms-workspace select, .cms-workspace textarea {
-      font-family: inherit;
-    }
-    .cms-workspace button {
-      cursor: pointer;
-      background-color: transparent;
-    }
-    /* Quill.js Warm Timber Theme Overrides */
     .ql-toolbar.ql-snow {
-      border: 1px solid #E4D8C6 !important;
+      border-color: #E4D8C6 !important;
       background-color: #EFE5D6;
       border-top-left-radius: 0.5rem;
       border-top-right-radius: 0.5rem;
       padding: 0.6rem 0.75rem !important;
-      font-family: var(--kf-font-sans) !important;
+      font-family: 'Noto Sans TC', sans-serif !important;
     }
     .ql-container.ql-snow {
-      border: 1px solid #E4D8C6 !important;
-      border-top: 0 !important;
+      border-color: #E4D8C6 !important;
       background-color: #FFFCF7;
       border-bottom-left-radius: 0.5rem;
       border-bottom-right-radius: 0.5rem;
-      font-family: var(--kf-font-sans) !important;
+      font-family: 'Noto Sans TC', sans-serif !important;
       font-size: 1rem !important;
       min-height: 220px;
     }
     .ql-editor {
       min-height: 220px;
-      line-height: 1.85;
+      line-height: 1.8;
       color: #33261C;
-    }
-    .ql-editor.ql-blank::before {
-      color: #725F4D !important;
-      font-style: normal !important;
     }
     .ql-editor img {
       max-width: 100%;
@@ -120,36 +90,27 @@
       margin: 0.75rem 0;
       border: 1px solid #E4D8C6;
     }
-    .ql-editor blockquote {
-      border-left: 4px solid #8C5F38 !important;
-      background-color: #EFE5D6;
-      padding: 0.5rem 1rem !important;
-      color: #2E2118;
-    }
     .ql-snow .ql-stroke {
-      stroke: #4A3526 !important;
+      stroke: #6B5847 !important;
     }
     .ql-snow .ql-fill {
-      fill: #4A3526 !important;
-    }
-    .ql-snow .ql-picker {
-      color: #4A3526 !important;
+      fill: #6B5847 !important;
     }
     .ql-snow.ql-toolbar button:hover .ql-stroke,
     .ql-snow.ql-toolbar button.ql-active .ql-stroke {
-      stroke: #8C5F38 !important;
+      stroke: #4A3526 !important;
     }
     .ql-snow.ql-toolbar button:hover,
     .ql-snow.ql-toolbar button.ql-active {
-      background-color: #FFFCF7 !important;
-      border-radius: 0.375rem;
+      background-color: #E4D8C6 !important;
+      border-radius: 0.25rem;
     }
   </style>
 </head>
-<body class="photo-top">
+<body class="photo-top min-h-screen flex flex-col bg-kf-paper text-kf-ink antialiased">
   <a class="skip-link" href="#mainContent">跳到主要內容</a>
 
-  <!-- OFFICIAL SITE HEADER (100% consistent with kafook-church-website) -->
+  <!-- 頂部導航列 -->
   <header class="site-header" id="siteHeader">
     <nav class="nav-container" aria-label="主要導覽">
       <a href="index.html" class="logo-link" aria-label="迦福堂首頁">
@@ -171,664 +132,772 @@
         <li class="nav-item"><a class="nav-link" href="giving.html">奉獻支持</a></li>
         <li class="nav-item"><a class="nav-link" href="contact.html">聯絡我們</a></li>
         <li class="nav-item" data-auth-link><a class="nav-link" href="members.html">會友專區</a></li>
-        <li class="nav-item" data-admin-link><a class="nav-link active" aria-current="page" href="admin.html">管理後台</a></li>
       </ul>
       <div class="nav-actions">
         <a href="contact.html" class="nav-btn">初次到訪 <span aria-hidden="true">↗</span></a>
-        <button class="mobile-menu-toggle" id="menuToggle" aria-label="開啟導覽選單" aria-expanded="false" aria-controls="navMenu">
-          <span aria-hidden="true">☰</span>
-        </button>
+        <button class="mobile-menu-toggle" id="menuToggle" aria-label="開啟導覽選單" aria-expanded="false" aria-controls="navMenu"><span aria-hidden="true">☰</span></button>
       </div>
     </nav>
   </header>
 
-  <main id="mainContent" class="site-main">
-    <!-- OFFICIAL PHOTO HERO BANNER -->
-    <section class="page-hero has-photo">
-      <img src="images/photos/sign-1280.webp"
-           srcset="images/photos/sign-640.webp 640w, images/photos/sign-1280.webp 1280w, images/photos/sign-2000.webp 2000w"
-           sizes="100vw" alt="" style="object-position:center 45%;" fetchpriority="high">
-      <div class="page-hero-content">
-        <span class="page-eyebrow">Church Content Management</span>
-        <h1 class="page-title">管理後台</h1>
-        <p class="page-description">供獲授權同工管理頁面文案、堂會消息、聚會及代禱事項。</p>
+  <section class="page-hero has-photo">
+    <img src="images/photos/sign-1280.webp" srcset="images/photos/sign-640.webp 640w, images/photos/sign-1280.webp 1280w, images/photos/sign-2000.webp 2000w" sizes="100vw" alt="" style="object-position:center 45%;" fetchpriority="high">
+    <div class="page-hero-content">
+      <h1 class="page-title">管理後台</h1>
+      <p class="page-description">供獲授權教牧同工及幹事管理頁面文案、堂會消息、聚會及代禱事項。</p>
+    </div>
+  </section>
+
+  <!-- 系統訊息提示 -->
+  <div id="cmsToast" class="fixed top-24 right-5 z-50 hidden max-w-md transition-all duration-300">
+    <div id="cmsToastInner" class="flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-lg border bg-white border-kf-border">
+      <i id="cmsToastIcon" class="fa-solid fa-circle-info text-kf-forest mt-0.5"></i>
+      <div class="flex-1 text-sm">
+        <p id="cmsToastTitle" class="font-semibold text-kf-ink">系統提示</p>
+        <p id="cmsToastMessage" class="text-kf-inkSoft mt-0.5"></p>
       </div>
-    </section>
+      <button id="cmsToastClose" type="button" aria-label="關閉提示" class="text-kf-inkMuted hover:text-kf-ink">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
 
-    <!-- CMS WORKSPACE WRAPPER -->
-    <div class="cms-workspace py-10 px-4 sm:px-8 max-w-[1320px] mx-auto">
-
-      <!-- Global Toast Notification -->
-      <div id="cmsToast" class="fixed top-24 right-5 z-50 hidden max-w-md transition-all duration-300">
-        <div class="flex items-start gap-3 px-4 py-3.5 rounded-xl shadow-lg border border-kf-border bg-kf-card">
-          <i id="cmsToastIcon" class="fa-solid fa-circle-info text-kf-timber mt-0.5"></i>
-          <div class="flex-1 text-sm">
-            <p id="cmsToastTitle" class="font-semibold text-kf-walnut m-0">系統提示</p>
-            <p id="cmsToastMessage" class="text-kf-inkSoft mt-0.5 mb-0"></p>
+  <!-- 同工登入驗證區 -->
+  <div id="adminGate" class="py-16 px-6 flex items-center justify-center bg-gradient-to-b from-kf-paper to-kf-sand">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-md border border-kf-border overflow-hidden">
+      <div class="bg-kf-forest px-6 py-6 text-white border-b-2 border-kf-gold">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-white/10 border border-kf-gold/40 flex items-center justify-center text-kf-goldLight font-serif font-bold text-lg">
+            迦
           </div>
-          <button id="cmsToastClose" type="button" class="text-kf-inkMuted hover:text-kf-walnut p-1">
-            <i class="fa-solid fa-xmark"></i>
+          <div>
+            <p class="text-xs tracking-widest text-kf-goldLight">五旬節聖潔會迦福堂</p>
+            <h2 class="font-serif text-xl font-semibold tracking-wide text-white">同工管理後台</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-5">
+        <div id="gateAlert" class="p-3.5 rounded-lg bg-kf-sand border border-kf-border text-xs text-kf-inkSoft leading-relaxed">
+          <i class="fa-solid fa-shield-halved text-kf-goldDeep mr-1.5"></i>
+          此管理系統僅供獲授權之教牧同工及幹事使用。所有資料寫入與檔案上傳均受資料庫安全策略保護。
+        </div>
+
+        <form id="adminLoginForm" class="space-y-4">
+          <div>
+            <label for="loginEmail" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+              同工電郵
+            </label>
+            <div class="relative">
+              <i class="fa-regular fa-envelope absolute left-3.5 top-3 text-kf-inkMuted text-sm"></i>
+              <input id="loginEmail" name="email" type="email" required autocomplete="username"
+                placeholder="請輸入同工電郵"
+                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+            </div>
+          </div>
+
+          <div>
+            <label for="loginPassword" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+              登入密碼
+            </label>
+            <div class="relative">
+              <i class="fa-solid fa-lock absolute left-3.5 top-3 text-kf-inkMuted text-sm"></i>
+              <input id="loginPassword" name="password" type="password" required autocomplete="current-password"
+                placeholder="請輸入密碼"
+                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+            </div>
+          </div>
+
+          <button id="loginSubmitBtn" type="submit"
+            class="w-full py-2.5 px-4 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white font-medium text-sm transition flex items-center justify-center gap-2 shadow-sm">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span>登入管理系統</span>
+          </button>
+        </form>
+
+        <div class="pt-4 border-t border-kf-border flex items-center justify-between text-xs text-kf-inkMuted">
+          <div class="flex items-center gap-3">
+            <a href="index.html" class="hover:text-kf-forest inline-flex items-center gap-1">
+              <i class="fa-solid fa-arrow-left"></i>
+              <span>返回首頁</span>
+            </a>
+            <span>·</span>
+            <a href="members.html" class="hover:text-kf-forest">會友專區</a>
+          </div>
+          <button id="enterPreviewBtn" type="button" class="text-kf-goldDeep hover:text-kf-forest font-medium inline-flex items-center gap-1.5">
+            <i class="fa-regular fa-eye"></i>
+            <span>預覽介面</span>
           </button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <!-- Hidden Global Image Input used by Custom Quill Image Handler -->
-      <input id="quillImagePicker" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+  <!-- 後台管理主介面 -->
+  <div id="adminApp" class="hidden flex-1 flex flex-col lg:flex-row">
 
-      <!-- AUTHENTICATION GATE (#adminGate) -->
-      <div id="adminGate" class="max-w-lg mx-auto bg-kf-card rounded-2xl shadow-sm border border-kf-border overflow-hidden my-4">
-        <div class="bg-kf-walnut px-6 py-5 text-white border-b-2 border-kf-oak">
-          <span class="text-[11px] uppercase tracking-[0.2em] text-kf-wheat block">STAFF AUTHENTICATION</span>
-          <h2 class="font-serif text-xl font-semibold text-white mt-0.5 mb-0">同工登入</h2>
-          <p class="text-xs text-white/80 mt-1 mb-0">請使用獲授權的同工帳號（staff / admin）登入管理後台。</p>
+    <!-- 手機版功能列 -->
+    <div class="lg:hidden flex items-center justify-between bg-kf-forest text-white px-4 py-3 border-b border-kf-gold/30">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded bg-white/10 border border-kf-gold/40 flex items-center justify-center text-kf-goldLight font-serif font-bold">
+          迦
+        </div>
+        <div>
+          <span class="font-serif font-semibold text-sm block">迦福堂管理後台</span>
+          <span class="text-[11px] text-kf-goldLight block">教牧及幹事專用</span>
+        </div>
+      </div>
+      <button id="mobileSidebarToggle" type="button" aria-label="切換側邊欄" class="p-2 rounded-lg bg-white/10 text-white hover:bg-white/20">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+
+    <!-- 側邊導覽列 -->
+    <aside id="cmsSidebar" class="w-full lg:w-64 bg-kf-forest text-white flex-shrink-0 flex flex-col justify-between border-r border-kf-forestDark hidden lg:flex">
+      <div>
+        <div class="p-6 border-b border-white/10">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-white/10 border border-kf-gold/50 flex items-center justify-center text-kf-goldLight font-serif font-bold text-lg shadow-inner">
+              迦
+            </div>
+            <div>
+              <h2 class="font-serif font-semibold text-base tracking-wide text-white">五旬節聖潔會迦福堂</h2>
+              <p class="text-xs text-kf-goldLight tracking-wider mt-0.5">教牧及幹事管理系統</p>
+            </div>
+          </div>
         </div>
 
-        <div class="p-6 space-y-5">
-          <form id="adminLoginForm" class="space-y-4">
-            <div>
-              <label for="loginEmail" class="block text-sm font-medium text-kf-ink mb-1.5">電郵</label>
-              <input id="loginEmail" name="email" type="email" required autocomplete="username"
-                placeholder="admin_test@kfphc.org"
-                class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-            </div>
+        <nav class="p-4 space-y-1.5" aria-label="後台管理模組導覽">
+          <p class="px-3 py-1.5 text-[11px] font-semibold tracking-widest text-kf-goldLight/80">
+            管理模組
+          </p>
 
-            <div>
-              <label for="loginPassword" class="block text-sm font-medium text-kf-ink mb-1.5">密碼</label>
-              <input id="loginPassword" name="password" type="password" required autocomplete="current-password"
-                placeholder="••••••••"
-                class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-            </div>
+          <button type="button" data-tab="dashboard"
+            class="cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition bg-white/15 text-white border-l-4 border-kf-gold">
+            <i class="fa-solid fa-chart-pie w-5 text-center text-kf-goldLight"></i>
+            <span>總覽與頁面文案</span>
+          </button>
 
-            <button id="loginSubmitBtn" type="submit"
-              class="w-full py-3 px-5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white font-medium text-sm transition flex items-center justify-center gap-2 shadow-sm">
-              <i class="fa-solid fa-right-to-bracket"></i>
-              <span>登入管理後台</span>
-            </button>
+          <button type="button" data-tab="news"
+            class="cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition text-white/80 hover:bg-white/10 hover:text-white">
+            <i class="fa-regular fa-newspaper w-5 text-center text-kf-goldLight"></i>
+            <span>教會消息</span>
+          </button>
 
-            <p id="adminLoginStatus" class="text-xs text-center text-kf-inkMuted m-0" role="status"></p>
-          </form>
+          <button type="button" data-tab="events"
+            class="cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition text-white/80 hover:bg-white/10 hover:text-white">
+            <i class="fa-regular fa-calendar-check w-5 text-center text-kf-goldLight"></i>
+            <span>活動聚會</span>
+          </button>
 
-          <div class="pt-4 border-t border-kf-border flex items-center justify-between text-xs text-kf-inkMuted">
-            <a href="members.html" class="text-kf-walnut hover:underline">前往會友專區 →</a>
-            <button id="enterPreviewBtn" type="button"
-              class="text-kf-timber hover:text-kf-walnut font-semibold inline-flex items-center gap-1.5 underline underline-offset-4">
-              <i class="fa-regular fa-eye"></i>
-              <span>預覽後台版面</span>
-            </button>
+          <button type="button" data-tab="prayers"
+            class="cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition text-white/80 hover:bg-white/10 hover:text-white">
+            <i class="fa-solid fa-hands-praying w-5 text-center text-kf-goldLight"></i>
+            <span>代禱事項與跟進</span>
+          </button>
+
+          <button type="button" data-tab="media"
+            class="cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition text-white/80 hover:bg-white/10 hover:text-white">
+            <i class="fa-regular fa-images w-5 text-center text-kf-goldLight"></i>
+            <span>圖片媒體庫</span>
+          </button>
+
+          <div class="pt-4 mt-4 border-t border-white/10">
+            <p class="px-3 py-1.5 text-[11px] font-semibold tracking-widest text-kf-goldLight/80">
+              前台頁面連結
+            </p>
+            <a href="index.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-house w-5 text-center text-kf-goldLight"></i>
+              <span>返回網站首頁</span>
+            </a>
+            <a href="about.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-people-group w-5 text-center text-kf-goldLight"></i>
+              <span>查看關於我們頁</span>
+            </a>
+            <a href="events.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-calendar-days w-5 text-center text-kf-goldLight"></i>
+              <span>查看聚會生活頁</span>
+            </a>
+            <a href="news.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-bullhorn w-5 text-center text-kf-goldLight"></i>
+              <span>查看教會消息頁</span>
+            </a>
+            <a href="prayer.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-hands-praying w-5 text-center text-kf-goldLight"></i>
+              <span>查看同心代禱頁</span>
+            </a>
+            <a href="members.html" class="w-full flex items-center gap-3 px-3.5 py-2 rounded-xl text-xs text-white/75 hover:bg-white/10 hover:text-white transition">
+              <i class="fa-solid fa-users w-5 text-center text-kf-goldLight"></i>
+              <span>查看會友專區</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- 同工帳戶資訊與登出 -->
+      <div class="p-4 border-t border-white/10 bg-kf-forestDark/60 space-y-3">
+        <div class="flex items-center gap-3 px-2">
+          <div class="w-9 h-9 rounded-full bg-kf-gold/20 border border-kf-gold/50 flex items-center justify-center text-kf-goldLight text-sm font-semibold">
+            <i class="fa-regular fa-user"></i>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p id="staffDisplayName" class="text-xs font-semibold text-white truncate">迦福堂同工</p>
+            <p id="staffRoleBadge" class="text-[11px] text-kf-goldLight truncate">角色：同工</p>
+          </div>
+        </div>
+
+        <div class="flex gap-2">
+          <button id="refreshDataBtn" type="button"
+            class="flex-1 py-2 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-xs text-white font-medium transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-rotate"></i>
+            <span>同步資料</span>
+          </button>
+          <button id="adminLogoutBtn" type="button"
+            class="flex-1 py-2 px-3 rounded-lg bg-red-900/50 hover:bg-red-800/70 border border-red-400/20 text-xs text-red-100 font-medium transition flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            <span>登出</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 右側工作區 -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+      <div class="bg-white/90 backdrop-blur border-b border-kf-border px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span id="workspaceEyebrow" class="text-[11px] font-semibold tracking-widest text-kf-goldDeep block">
+            總覽與頁面內容
+          </span>
+          <h2 id="workspaceTitle" class="font-serif text-xl sm:text-2xl font-bold text-kf-forest">
+            總覽與頁面文案
+          </h2>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <input id="quillImagePicker" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+
+          <div id="adminStatusBanner" data-admin-status role="status"
+            class="px-3.5 py-1.5 rounded-full text-xs font-medium bg-kf-sand border border-kf-border text-kf-inkSoft flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+            <span>系統連線正常</span>
           </div>
         </div>
       </div>
 
-      <!-- MAIN CMS DASHBOARD (#adminApp) -->
-      <div id="adminApp" class="is-hidden">
+      <main id="mainContent" class="flex-1 p-6 max-w-6xl w-full mx-auto space-y-6">
 
-        <!-- Status Bar & Staff Profile Strip -->
-        <div class="bg-kf-card rounded-2xl p-4 sm:px-6 mb-6 border border-kf-border shadow-sm flex flex-wrap items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-kf-oakPale border border-kf-oak flex items-center justify-center text-kf-walnut font-serif font-bold">
-              <i class="fa-solid fa-user-shield text-sm"></i>
-            </div>
-            <div>
-              <div class="flex items-center gap-2">
-                <span id="staffDisplayName" class="font-serif font-semibold text-base text-kf-walnut">迦福堂同工</span>
-                <span id="staffRoleBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-kf-oakPale text-kf-timberDeep">staff</span>
+        <!-- 模組一：總覽與頁面文案 -->
+        <section id="tab-dashboard" class="cms-tab-panel space-y-6">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white rounded-xl p-5 border border-kf-border shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-kf-inkMuted tracking-wider">最新通告</p>
+                <p id="statNoticesCount" class="font-serif text-2xl font-bold text-kf-forest mt-1">0</p>
+                <p class="text-xs text-kf-goldDeep mt-1">公開及會友通告</p>
               </div>
-              <p data-admin-status id="adminStatusBanner" class="text-xs text-kf-inkMuted m-0 mt-0.5" role="status">
-                管理消息、活動及代禱內容；首頁固定版面與歷史頁結構仍由網站版本管理。
-              </p>
+              <div class="w-11 h-11 rounded-xl bg-kf-sand flex items-center justify-center text-kf-forest text-lg">
+                <i class="fa-regular fa-newspaper"></i>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 border border-kf-border shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-kf-inkMuted tracking-wider">特別聚會</p>
+                <p id="statEventsCount" class="font-serif text-2xl font-bold text-kf-forest mt-1">0</p>
+                <p class="text-xs text-kf-goldDeep mt-1">已登錄聚會項目</p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-kf-sand flex items-center justify-center text-kf-forest text-lg">
+                <i class="fa-regular fa-calendar-check"></i>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 border border-kf-border shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-kf-inkMuted tracking-wider">代禱事項</p>
+                <p id="statPrayersCount" class="font-serif text-2xl font-bold text-kf-forest mt-1">0</p>
+                <p class="text-xs text-kf-goldDeep mt-1">大堂代禱及禱告邀約</p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-kf-sand flex items-center justify-center text-kf-forest text-lg">
+                <i class="fa-solid fa-hands-praying"></i>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-xl p-5 border border-kf-border shadow-sm flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-kf-inkMuted tracking-wider">媒體圖庫</p>
+                <p id="statMediaCount" class="font-serif text-2xl font-bold text-kf-forest mt-1">0</p>
+                <p class="text-xs text-kf-goldDeep mt-1">已上傳公開圖片</p>
+              </div>
+              <div class="w-11 h-11 rounded-xl bg-kf-sand flex items-center justify-center text-kf-forest text-lg">
+                <i class="fa-regular fa-images"></i>
+              </div>
             </div>
           </div>
 
-          <div class="flex items-center gap-2.5">
-            <button id="mobileSidebarToggle" type="button"
-              class="lg:hidden px-3.5 py-2 rounded-full border border-kf-border bg-kf-paper text-kf-walnut text-xs font-medium">
-              <i class="fa-solid fa-bars mr-1"></i>切換分類選單
-            </button>
-            <button id="refreshDataBtn" type="button"
-              class="px-4 py-2 rounded-full border border-kf-border bg-kf-paper hover:bg-kf-oakPale text-xs text-kf-walnut font-medium transition inline-flex items-center gap-1.5">
-              <i class="fa-solid fa-rotate text-kf-timber"></i>
-              <span>同步資料</span>
-            </button>
-            <button id="adminLogoutBtn" type="button"
-              class="px-4 py-2 rounded-full bg-kf-espresso hover:bg-kf-walnut text-xs text-white font-medium transition inline-flex items-center gap-1.5">
-              <i class="fa-solid fa-arrow-right-from-bracket"></i>
-              <span>登出</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Sidebar + Main Workspace Flex Layout -->
-        <div class="flex flex-col lg:flex-row gap-8 items-start">
-
-          <!-- LEFT SIDEBAR (Warm Timber Palette) -->
-          <aside id="cmsSidebar" class="w-full lg:w-72 flex-shrink-0 bg-kf-card rounded-2xl border border-kf-border shadow-sm overflow-hidden hidden lg:block">
-            <div class="bg-kf-walnut px-5 py-4 text-white border-b border-kf-oak/40">
-              <span class="text-[11px] uppercase tracking-[0.2em] text-kf-wheat block">CMS MODULES</span>
-              <h2 class="font-serif text-base font-semibold text-white mt-0.5 mb-0">內容管理分類</h2>
+          <!-- 快速發佈捷徑 -->
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest">快速發佈捷徑</h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">選擇要新增或管理的教會內容模組，支援富文本排版與圖片即時上傳。</p>
+              </div>
             </div>
 
-            <nav class="p-3 space-y-1" aria-label="CMS 分類導覽">
-              <button type="button" data-tab="dashboard"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition bg-kf-oakPale text-kf-walnut border-l-4 border-kf-timber text-left">
-                <i class="fa-solid fa-table-columns w-5 text-center text-kf-timber"></i>
-                <div>
-                  <span class="block">總覽面板</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">全站動態與快速入口</span>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button type="button" data-jump-tab="news"
+                class="p-4 rounded-xl border border-kf-border bg-kf-paper hover:bg-kf-sand hover:border-kf-gold transition text-left group">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-9 h-9 rounded-lg bg-kf-forest text-white flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-bullhorn"></i>
+                  </span>
+                  <i class="fa-solid fa-arrow-right text-kf-inkMuted group-hover:text-kf-forest transition"></i>
                 </div>
+                <h4 class="font-serif font-semibold text-kf-forest">發佈最新消息／通告</h4>
+                <p class="text-xs text-kf-inkSoft mt-1">支援段落格式、內嵌圖片及會友專屬附件檔案。</p>
               </button>
 
-              <button type="button" data-tab="page-content"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left">
-                <i class="fa-solid fa-file-pen w-5 text-center text-kf-timber"></i>
-                <div>
-                  <span class="block">編輯頁面內容</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">首頁及各頁標題／簡介文案</span>
+              <button type="button" data-jump-tab="events"
+                class="p-4 rounded-xl border border-kf-border bg-kf-paper hover:bg-kf-sand hover:border-kf-gold transition text-left group">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-9 h-9 rounded-lg bg-kf-forest text-white flex items-center justify-center text-sm">
+                    <i class="fa-regular fa-calendar-plus"></i>
+                  </span>
+                  <i class="fa-solid fa-arrow-right text-kf-inkMuted group-hover:text-kf-forest transition"></i>
                 </div>
+                <h4 class="font-serif font-semibold text-kf-forest">新增特別聚會與活動</h4>
+                <p class="text-xs text-kf-inkSoft mt-1">設定聚會日期、地點、焦點標記及圖文活動詳情。</p>
               </button>
 
-              <button type="button" data-tab="news"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left">
-                <i class="fa-regular fa-newspaper w-5 text-center text-kf-timber"></i>
-                <div>
-                  <span class="block">發佈通告 · 教會消息</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">大堂報告、通告及會友 PDF</span>
+              <button type="button" data-jump-tab="prayers"
+                class="p-4 rounded-xl border border-kf-border bg-kf-paper hover:bg-kf-sand hover:border-kf-gold transition text-left group">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="w-9 h-9 rounded-lg bg-kf-forest text-white flex items-center justify-center text-sm">
+                    <i class="fa-solid fa-hands-praying"></i>
+                  </span>
+                  <i class="fa-solid fa-arrow-right text-kf-inkMuted group-hover:text-kf-forest transition"></i>
                 </div>
+                <h4 class="font-serif font-semibold text-kf-forest">管理代禱事項與跟進請求</h4>
+                <p class="text-xs text-kf-inkSoft mt-1">發佈大堂代禱、禱告邀約，以及檢視會友提交的代禱與跟進聯絡方式。</p>
               </button>
+            </div>
+          </div>
 
-              <button type="button" data-tab="events"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left">
-                <i class="fa-regular fa-calendar-check w-5 text-center text-kf-timber"></i>
+          <!-- 編輯頁面內容 -->
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-kf-border">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest flex items-center gap-2">
+                  <i class="fa-solid fa-pen-to-square text-kf-goldDeep"></i>
+                  <span>編輯頁面內容</span>
+                </h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">選擇所屬頁面及內容區塊後即可載入現有文字並儲存更新；未有後台覆蓋內容時，網站會顯示預設文案。</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-medium bg-kf-sand text-kf-goldDeep border border-kf-border">
+                跨頁與單頁區塊管理
+              </span>
+            </div>
+
+            <form id="pageContentForm" class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span class="block">新增特別聚會</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">聚會生活、合堂及祈禱會</span>
+                  <label for="pageSelect" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    所屬頁面
+                  </label>
+                  <select id="pageSelect" name="page"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                    <option value="index.html">首頁</option>
+                    <option value="about.html">關於我們（含教牧與幹事自我介紹）</option>
+                    <option value="events.html">聚會生活（含聚會提示與兒童崇拜）</option>
+                    <option value="shared">跨頁共用內容（新朋友常見問題）</option>
+                    <option value="news.html">教會消息</option>
+                    <option value="prayer.html">同心代禱</option>
+                    <option value="giving.html">奉獻支持</option>
+                    <option value="contact.html">聯絡我們</option>
+                    <option value="members.html">會友專區</option>
+                  </select>
                 </div>
-              </button>
 
-              <button type="button" data-tab="prayers"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left">
-                <i class="fa-solid fa-hands-praying w-5 text-center text-kf-timber"></i>
                 <div>
-                  <span class="block">新增代禱事項</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">同心守望及會友代禱提交</span>
-                </div>
-              </button>
-
-              <button type="button" data-tab="media"
-                class="cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left">
-                <i class="fa-regular fa-images w-5 text-center text-kf-timber"></i>
-                <div>
-                  <span class="block">圖片媒體庫 (cms-media)</span>
-                  <span class="text-[11px] font-normal text-kf-inkMuted">相片與聚會海報公開網址</span>
-                </div>
-              </button>
-            </nav>
-          </aside>
-
-          <!-- RIGHT WORKSPACE PANELS -->
-          <div class="flex-1 min-w-0 w-full space-y-6">
-
-            <!-- ================= PANEL 1: DASHBOARD ================= -->
-            <section id="tab-dashboard" class="cms-tab-panel space-y-6">
-              <!-- Stats Grid -->
-              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                <div class="p-4 rounded-xl bg-kf-card border border-kf-border shadow-sm">
-                  <p class="text-xs text-kf-inkMuted m-0">頁面文案覆蓋</p>
-                  <p id="statPageContentCount" class="font-serif text-2xl font-bold text-kf-walnut mt-1 mb-0">0</p>
-                  <p class="text-[11px] text-kf-timber mt-0.5 mb-0">編輯頁面內容</p>
-                </div>
-                <div class="p-4 rounded-xl bg-kf-card border border-kf-border shadow-sm">
-                  <p class="text-xs text-kf-inkMuted m-0">教會消息／通告</p>
-                  <p id="statNoticesCount" class="font-serif text-2xl font-bold text-kf-walnut mt-1 mb-0">0</p>
-                  <p class="text-[11px] text-kf-timber mt-0.5 mb-0">發佈通告</p>
-                </div>
-                <div class="p-4 rounded-xl bg-kf-card border border-kf-border shadow-sm">
-                  <p class="text-xs text-kf-inkMuted m-0">近期特別聚會</p>
-                  <p id="statEventsCount" class="font-serif text-2xl font-bold text-kf-walnut mt-1 mb-0">0</p>
-                  <p class="text-[11px] text-kf-timber mt-0.5 mb-0">聚會生活</p>
-                </div>
-                <div class="p-4 rounded-xl bg-kf-card border border-kf-border shadow-sm">
-                  <p class="text-xs text-kf-inkMuted m-0">同心守望代禱</p>
-                  <p id="statPrayersCount" class="font-serif text-2xl font-bold text-kf-walnut mt-1 mb-0">0</p>
-                  <p class="text-[11px] text-kf-timber mt-0.5 mb-0">代禱事項</p>
-                </div>
-                <div class="p-4 rounded-xl bg-kf-card border border-kf-border shadow-sm col-span-2 sm:col-span-1">
-                  <p class="text-xs text-kf-inkMuted m-0">會友代禱提交</p>
-                  <p id="statSubmissionsCount" class="font-serif text-2xl font-bold text-kf-walnut mt-1 mb-0">0</p>
-                  <p class="text-[11px] text-kf-timber mt-0.5 mb-0">線上代禱表單</p>
+                  <label for="contentKeySelect" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    內容區塊
+                  </label>
+                  <select id="contentKeySelect" name="content_key"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                    <optgroup label="首頁專屬區塊">
+                      <option value="home_promised_land">諾知原中心介紹文案</option>
+                      <option value="home_hero_description">首頁主視覺引言段落</option>
+                    </optgroup>
+                    <optgroup label="聚會生活頁專屬區塊">
+                      <option value="events_gathering_notice">聚會提示（頂部提示框）</option>
+                      <option value="events_children_worship">兒童崇拜聚會詳情</option>
+                    </optgroup>
+                    <optgroup label="關於我們：教牧與幹事團隊自我介紹">
+                      <option value="staff_bio_1">林淑櫻（主任牧師）自我介紹</option>
+                      <option value="staff_bio_2">林肇楓（牧師）自我介紹</option>
+                      <option value="staff_bio_3">蒙潔文（幹事）自我介紹</option>
+                      <option value="staff_bio_4">黃淽君（幹事）自我介紹</option>
+                      <option value="staff_bio_5">吳天恩（神學生）自我介紹</option>
+                    </optgroup>
+                    <optgroup label="跨頁共用區塊（請配搭「跨頁共用內容」頁面選項）">
+                      <option value="shared_faq_list">新朋友常見問題（關於我們＋聚會生活同步）</option>
+                    </optgroup>
+                    <optgroup label="各頁通用標題與簡介">
+                      <option value="page_title">頁面主標題</option>
+                      <option value="page_description">頁面副標題／簡介</option>
+                    </optgroup>
+                  </select>
                 </div>
               </div>
 
-              <!-- 4 Core Cards matching the original admin.html structure -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="bg-kf-card rounded-2xl p-6 border border-kf-border border-t-4 border-t-kf-oak shadow-sm flex flex-col justify-between">
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-kf-timber block mb-1">01 · PAGE CONTENT</span>
-                    <h3 class="font-serif text-xl font-semibold text-kf-walnut m-0">編輯頁面內容</h3>
-                    <p class="text-sm text-kf-inkSoft mt-2 mb-0 leading-relaxed">
-                      選擇頁面（首頁、關於我們、聚會生活、教會消息、同心代禱、奉獻支持、聯絡我們、會友專區）及欄位後儲存；未有 CMS 內容時，網站會繼續顯示現有固定文案。
-                    </p>
-                  </div>
-                  <button type="button" data-jump-tab="page-content"
-                    class="mt-5 self-start px-5 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-xs font-medium transition">
-                    進入編輯頁面內容 →
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold tracking-wider text-kf-inkSoft">
+                    區塊內容 *
+                  </label>
+                  <button id="loadExistingContentBtn" type="button" class="text-xs text-kf-goldDeep hover:text-kf-forest font-medium">
+                    讀取目前已儲存內容
                   </button>
                 </div>
-
-                <div class="bg-kf-card rounded-2xl p-6 border border-kf-border border-t-4 border-t-kf-oak shadow-sm flex flex-col justify-between">
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-kf-timber block mb-1">02 · NOTICES & PDF</span>
-                    <h3 class="font-serif text-xl font-semibold text-kf-walnut m-0">發佈通告</h3>
-                    <p class="text-sm text-kf-inkSoft mt-2 mb-0 leading-relaxed">
-                      發佈大堂報告、堂會通告、事奉招募及僅限會友閱覽的 PDF 附件，支援 Quill 富文本排版與圖片上傳。
-                    </p>
-                  </div>
-                  <button type="button" data-jump-tab="news"
-                    class="mt-5 self-start px-5 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-xs font-medium transition">
-                    進入發佈通告 →
-                  </button>
-                </div>
-
-                <div class="bg-kf-card rounded-2xl p-6 border border-kf-border border-t-4 border-t-kf-oak shadow-sm flex flex-col justify-between">
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-kf-timber block mb-1">03 · SPECIAL EVENTS</span>
-                    <h3 class="font-serif text-xl font-semibold text-kf-walnut m-0">新增特別聚會</h3>
-                    <p class="text-sm text-kf-inkSoft mt-2 mb-0 leading-relaxed">
-                      發佈合堂崇拜、集體祈禱會、禱告禁食日及聯合聚會安排，自動顯示於「聚會生活」及首頁。
-                    </p>
-                  </div>
-                  <button type="button" data-jump-tab="events"
-                    class="mt-5 self-start px-5 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-xs font-medium transition">
-                    進入新增特別聚會 →
-                  </button>
-                </div>
-
-                <div class="bg-kf-card rounded-2xl p-6 border border-kf-border border-t-4 border-t-kf-oak shadow-sm flex flex-col justify-between">
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-widest text-kf-timber block mb-1">04 · PRAYER WALL</span>
-                    <h3 class="font-serif text-xl font-semibold text-kf-walnut m-0">新增代禱事項</h3>
-                    <p class="text-sm text-kf-inkSoft mt-2 mb-0 leading-relaxed">
-                      發佈建堂需要、諾知原中心及各團契代禱事項，並跟進弟兄姊妹於線上提交的代禱需要。
-                    </p>
-                  </div>
-                  <button type="button" data-jump-tab="prayers"
-                    class="mt-5 self-start px-5 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-xs font-medium transition">
-                    進入管理代禱事項 →
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            <!-- ================= PANEL 2: EDIT PAGE CONTENT (page_content) ================= -->
-            <section id="tab-page-content" class="cms-tab-panel hidden space-y-6">
-              <div class="bg-kf-card rounded-2xl p-6 sm:p-8 border border-kf-border shadow-sm">
-                <div class="border-b border-kf-border pb-4 mb-6">
-                  <span class="text-xs font-semibold uppercase tracking-[0.2em] text-kf-timber block">PAGE CONTENT</span>
-                  <h2 class="font-serif text-2xl font-semibold text-kf-walnut mt-1 mb-0">編輯頁面內容</h2>
-                  <p class="text-sm text-kf-inkMuted mt-1 mb-0">
-                    選擇頁面及欄位後儲存；未有 CMS 內容時，網站會繼續顯示現有固定文案。
-                  </p>
-                </div>
-
-                <form id="pageContentForm" class="space-y-5">
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                      <label for="pageSelect" class="block text-sm font-medium text-kf-ink mb-1.5">頁面</label>
-                      <select id="pageSelect" name="page"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                        <option value="index.html">首頁</option>
-                        <option value="about.html">關於我們</option>
-                        <option value="events.html">聚會生活</option>
-                        <option value="news.html">教會消息</option>
-                        <option value="prayer.html">同心代禱</option>
-                        <option value="giving.html">奉獻支持</option>
-                        <option value="contact.html">聯絡我們</option>
-                        <option value="members.html">會友專區</option>
-                        <option value="lent.html">饑饉月2026</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label for="contentKeySelect" class="block text-sm font-medium text-kf-ink mb-1.5">欄位</label>
-                      <select id="contentKeySelect" name="content_key"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                        <option value="page_title">頁面標題</option>
-                        <option value="page_description">頁面簡介</option>
-                        <option value="home_hero_description">首頁主視覺文字</option>
-                        <option value="home_services_heading">首頁「一同敬拜」標題</option>
-                        <option value="home_ticker_text">首頁「最新動態」跑馬燈文字</option>
-                        <option value="home_official_notice">首頁「聚會提示」特別聚會安排</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                      <label class="block text-sm font-medium text-kf-ink">內容</label>
-                      <button type="button" data-insert-table="pageContent"
-                        class="px-3 py-1 rounded border border-kf-border bg-kf-oakPale/60 hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-                        <i class="fa-solid fa-table mr-1"></i>插入表格
-                      </button>
-                    </div>
-                    <div id="pageContentEditor"></div>
-                    <input type="hidden" name="content_html" id="pageContentHtml">
-                    <input type="hidden" name="visibility" value="public">
-                  </div>
-
-                  <div class="flex items-center justify-between pt-2">
-                    <button type="button" data-clear-editor="pageContent"
-                      class="px-4 py-2.5 rounded-full border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-oakPale transition">
-                      清空內容
-                    </button>
-                    <button type="submit"
-                      class="px-6 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium transition shadow-sm">
-                      儲存頁面內容
-                    </button>
-                  </div>
-                </form>
+                <div id="pageContentEditor"></div>
+                <input type="hidden" name="content_html" id="pageContentHtml">
+                <input type="hidden" name="visibility" value="public">
               </div>
 
-              <!-- Saved Page Content List -->
-              <div class="bg-kf-card rounded-2xl p-6 border border-kf-border shadow-sm">
-                <h3 class="font-serif text-lg font-semibold text-kf-walnut mt-0 mb-4">已儲存的頁面內容</h3>
-                <div id="adminPageContentList" class="space-y-3 text-sm text-kf-inkSoft">
-                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
-                </div>
+              <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" data-clear-editor="pageContent"
+                  class="px-4 py-2.5 rounded-lg border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-sand transition">
+                  清空內容
+                </button>
+                <button type="submit"
+                  class="px-6 py-2.5 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                  <i class="fa-solid fa-floppy-disk"></i>
+                  <span>儲存頁面內容</span>
+                </button>
               </div>
-            </section>
+            </form>
+          </div>
+        </section>
 
-            <!-- ================= PANEL 3: PUBLISH NOTICE (notices) ================= -->
-            <section id="tab-news" class="cms-tab-panel hidden space-y-6">
-              <div class="bg-kf-card rounded-2xl p-6 sm:p-8 border border-kf-border shadow-sm">
-                <div class="border-b border-kf-border pb-4 mb-6">
-                  <span class="text-xs font-semibold uppercase tracking-[0.2em] text-kf-timber block">ANNOUNCEMENTS & NOTICES</span>
-                  <h2 class="font-serif text-2xl font-semibold text-kf-walnut mt-1 mb-0">發佈通告</h2>
-                  <p class="text-sm text-kf-inkMuted mt-1 mb-0">
-                    發佈大堂報告、堂會通告或會友專屬 PDF 通告，工具列圖片按鈕會自動將相片上傳至 <code class="font-mono">cms-media</code>。
-                  </p>
-                </div>
-
-                <form id="noticeForm" class="space-y-5">
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="md:col-span-2">
-                      <label for="noticeTitle" class="block text-sm font-medium text-kf-ink mb-1.5">標題 *</label>
-                      <input id="noticeTitle" name="title" type="text" required
-                        placeholder="例如：2026年10月4日 11:15 合堂崇拜"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                    </div>
-
-                    <div>
-                      <label for="noticeCategory" class="block text-sm font-medium text-kf-ink mb-1.5">分類 *</label>
-                      <input id="noticeCategory" name="category" list="noticeCategoryOptions" value="堂會通告" required
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                      <datalist id="noticeCategoryOptions">
-                        <option value="堂會通告"></option>
-                        <option value="大堂報告"></option>
-                        <option value="特別聚會安排"></option>
-                        <option value="事奉招募"></option>
-                        <option value="團契及家消息"></option>
-                        <option value="崇拜程序表"></option>
-                      </datalist>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                      <label class="block text-sm font-medium text-kf-ink">內容 *</label>
-                      <div class="flex items-center gap-2">
-                        <button type="button" data-insert-table="notice"
-                          class="px-3 py-1 rounded border border-kf-border bg-kf-oakPale/60 hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-                          <i class="fa-solid fa-table mr-1"></i>插入表格
-                        </button>
-                      </div>
-                    </div>
-                    <div id="noticeEditor"></div>
-                    <input type="hidden" name="content" id="noticeContentPlain">
-                    <input type="hidden" name="content_html" id="noticeContentHtml">
-                  </div>
-
-                  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div>
-                      <label for="noticeVisibility" class="block text-sm font-medium text-kf-ink mb-1.5">公開程度</label>
-                      <select id="noticeVisibility" name="visibility"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                        <option value="public">公開</option>
-                        <option value="members">僅限會友</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label for="noticeAttachment" class="block text-sm font-medium text-kf-ink mb-1.5">附件 PDF</label>
-                      <input id="noticeAttachment" name="attachment" type="file" accept="application/pdf"
-                        class="w-full text-xs text-kf-inkSoft file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-medium file:bg-kf-walnut file:text-white hover:file:bg-kf-walnutLight cursor-pointer border border-kf-border rounded-lg bg-white p-1">
-                    </div>
-                  </div>
-
-                  <div class="flex items-center justify-between pt-2">
-                    <button type="button" data-clear-editor="notice"
-                      class="px-4 py-2.5 rounded-full border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-oakPale transition">
-                      清空內容
-                    </button>
-                    <button type="submit"
-                      class="px-6 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium transition shadow-sm">
-                      發佈通告
-                    </button>
-                  </div>
-                </form>
+        <!-- 模組二：教會消息 -->
+        <section id="tab-news" class="cms-tab-panel hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-kf-border">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest flex items-center gap-2">
+                  <i class="fa-regular fa-newspaper text-kf-goldDeep"></i>
+                  <span>發佈教會消息／堂會通告</span>
+                </h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">點擊編輯器工具列的圖片圖示，即可上傳圖片並自動插入通告內容。</p>
               </div>
+              <span class="px-3 py-1 rounded-full text-xs font-medium bg-kf-sand text-kf-goldDeep border border-kf-border">
+                堂會通告管理
+              </span>
+            </div>
 
-              <div class="bg-kf-card rounded-2xl p-6 border border-kf-border shadow-sm">
-                <h3 class="font-serif text-lg font-semibold text-kf-walnut mt-0 mb-4">已發佈通告列表</h3>
-                <div id="adminNoticesList" class="space-y-3 text-sm text-kf-inkSoft">
-                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
-                </div>
-              </div>
-            </section>
-
-            <!-- ================= PANEL 4: ADD SPECIAL EVENT (events) ================= -->
-            <section id="tab-events" class="cms-tab-panel hidden space-y-6">
-              <div class="bg-kf-card rounded-2xl p-6 sm:p-8 border border-kf-border shadow-sm">
-                <div class="border-b border-kf-border pb-4 mb-6">
-                  <span class="text-xs font-semibold uppercase tracking-[0.2em] text-kf-timber block">GATHERINGS & SCHEDULE</span>
-                  <h2 class="font-serif text-2xl font-semibold text-kf-walnut mt-1 mb-0">新增特別聚會</h2>
-                  <p class="text-sm text-kf-inkMuted mt-1 mb-0">
-                    發佈合堂崇拜、集體祈禱會、禱告禁食日或特別聚會，自動同步至「聚會生活 (`events.html`)」及首頁。
-                  </p>
+            <form id="noticeForm" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                  <label for="noticeTitle" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    通告標題 *
+                  </label>
+                  <input id="noticeTitle" name="title" type="text" required
+                    placeholder="例如：新堂正式啟用及獻堂感恩日聚會須知"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
                 </div>
 
-                <form id="eventForm" class="space-y-5">
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="md:col-span-2">
-                      <label for="eventTitle" class="block text-sm font-medium text-kf-ink mb-1.5">活動名稱 *</label>
-                      <input id="eventTitle" name="title" type="text" required
-                        placeholder="例如：2026年10月11日 14:30–16:00 集體祈禱會"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                    </div>
-
-                    <div>
-                      <label for="eventCategory" class="block text-sm font-medium text-kf-ink mb-1.5">分類 *</label>
-                      <input id="eventCategory" name="category" list="eventCategoryOptions" value="特別聚會" required
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                      <datalist id="eventCategoryOptions">
-                        <option value="特別聚會"></option>
-                        <option value="合堂崇拜"></option>
-                        <option value="集體祈禱會"></option>
-                        <option value="禱告禁食日"></option>
-                        <option value="聯合崇拜"></option>
-                        <option value="團契活動"></option>
-                      </datalist>
-                    </div>
-                  </div>
-
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-end">
-                    <div>
-                      <label for="eventStartsAt" class="block text-sm font-medium text-kf-ink mb-1.5">日期時間 *</label>
-                      <input id="eventStartsAt" name="starts_at" type="datetime-local" required
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                    </div>
-
-                    <div>
-                      <label for="eventLocation" class="block text-sm font-medium text-kf-ink mb-1.5">地點</label>
-                      <input id="eventLocation" name="location" type="text"
-                        value="九龍觀塘成業街 10 號電訊一代廣場 23 樓 A 室"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                    </div>
-
-                    <div>
-                      <label class="inline-flex items-center gap-2.5 cursor-pointer px-4 py-2.5 rounded-lg border border-kf-border bg-white hover:bg-kf-oakPale/40 w-full">
-                        <input id="eventFeatured" name="featured" type="checkbox" value="true"
-                          class="w-4 h-4 rounded text-kf-walnut focus:ring-kf-timber border-kf-border">
-                        <span class="text-sm font-medium text-kf-ink">焦點活動</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                      <label class="block text-sm font-medium text-kf-ink">詳情</label>
-                      <button type="button" data-insert-table="event"
-                        class="px-3 py-1 rounded border border-kf-border bg-kf-oakPale/60 hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-                        <i class="fa-solid fa-table mr-1"></i>插入表格
-                      </button>
-                    </div>
-                    <div id="eventEditor"></div>
-                    <input type="hidden" name="description" id="eventDescriptionPlain">
-                    <input type="hidden" name="content_html" id="eventContentHtml">
-                  </div>
-
-                  <div class="flex items-center justify-between pt-2">
-                    <button type="button" data-clear-editor="event"
-                      class="px-4 py-2.5 rounded-full border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-oakPale transition">
-                      清空內容
-                    </button>
-                    <button type="submit"
-                      class="px-6 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium transition shadow-sm">
-                      發佈活動
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              <div class="bg-kf-card rounded-2xl p-6 border border-kf-border shadow-sm">
-                <h3 class="font-serif text-lg font-semibold text-kf-walnut mt-0 mb-4">已發佈特別聚會列表</h3>
-                <div id="adminEventsList" class="space-y-3 text-sm text-kf-inkSoft">
-                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
-                </div>
-              </div>
-            </section>
-
-            <!-- ================= PANEL 5: PRAYERS (prayer_requests & prayer_submissions) ================= -->
-            <section id="tab-prayers" class="cms-tab-panel hidden space-y-6">
-              <div class="bg-kf-card rounded-2xl p-6 sm:p-8 border border-kf-border shadow-sm">
-                <div class="border-b border-kf-border pb-4 mb-6">
-                  <span class="text-xs font-semibold uppercase tracking-[0.2em] text-kf-timber block">PRAYER & INTERCESSION</span>
-                  <h2 class="font-serif text-2xl font-semibold text-kf-walnut mt-1 mb-0">新增代禱事項</h2>
-                  <p class="text-sm text-kf-inkMuted mt-1 mb-0">
-                    發佈後將顯示於「同心代禱 (`prayer.html`)」頁面的同心守望區域。
-                  </p>
-                </div>
-
-                <form id="prayerFormCms" class="space-y-5">
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="md:col-span-2">
-                      <label for="prayerTitle" class="block text-sm font-medium text-kf-ink mb-1.5">主題 *</label>
-                      <input id="prayerTitle" name="title" type="text" required
-                        placeholder="例如：建堂需要 ／ 諾知原中心 ／ 少年團校園福音月"
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                    </div>
-
-                    <div>
-                      <label for="prayerCategory" class="block text-sm font-medium text-kf-ink mb-1.5">分類 *</label>
-                      <input id="prayerCategory" name="category" list="prayerCategoryOptions" value="堂會代禱" required
-                        class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-white text-kf-ink focus:outline-none focus:ring-2 focus:ring-kf-timber">
-                      <datalist id="prayerCategoryOptions">
-                        <option value="堂會代禱"></option>
-                        <option value="建堂需要"></option>
-                        <option value="諾知原中心"></option>
-                        <option value="少年團校園福音月"></option>
-                        <option value="安得烈團福音工作"></option>
-                        <option value="肢體與家庭關顧"></option>
-                      </datalist>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-                      <label class="block text-sm font-medium text-kf-ink">內容 *</label>
-                      <button type="button" data-insert-table="prayer"
-                        class="px-3 py-1 rounded border border-kf-border bg-kf-oakPale/60 hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-                        <i class="fa-solid fa-table mr-1"></i>插入表格
-                      </button>
-                    </div>
-                    <div id="prayerEditor"></div>
-                    <input type="hidden" name="content" id="prayerContentPlain">
-                    <input type="hidden" name="content_html" id="prayerContentHtml">
-                  </div>
-
-                  <div class="flex items-center justify-between pt-2">
-                    <button type="button" data-clear-editor="prayer"
-                      class="px-4 py-2.5 rounded-full border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-oakPale transition">
-                      清空內容
-                    </button>
-                    <button type="submit"
-                      class="px-6 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium transition shadow-sm">
-                      發佈代禱
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              <!-- Member Submitted Prayers -->
-              <div class="bg-kf-card rounded-2xl p-6 border border-kf-border shadow-sm">
-                <h3 class="font-serif text-lg font-semibold text-kf-walnut mt-0 mb-1">會友提交代禱事項 (`prayer_submissions`)</h3>
-                <p class="text-xs text-kf-inkMuted mt-0 mb-4">弟兄姊妹於「同心代禱」頁面提交的代禱需要，只供教會同工跟進。</p>
-                <div id="prayerSubmissions" class="space-y-3 text-sm text-kf-inkSoft">
-                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+                <div>
+                  <label for="noticeCategory" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    通告分類 *
+                  </label>
+                  <select id="noticeCategory" name="category" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                    <option value="堂會通告">堂會通告</option>
+                    <option value="大堂報告">大堂報告</option>
+                    <option value="培訓與課程">培訓與課程</option>
+                    <option value="團契消息">團契消息</option>
+                    <option value="區會聯合">區會聯合</option>
+                    <option value="會員大會">會員大會</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- Published Prayers -->
-              <div class="bg-kf-card rounded-2xl p-6 border border-kf-border shadow-sm">
-                <h3 class="font-serif text-lg font-semibold text-kf-walnut mt-0 mb-4">已發佈公開代禱事項 (`prayer_requests`)</h3>
-                <div id="adminPrayersList" class="space-y-3 text-sm text-kf-inkSoft">
-                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label for="noticeVisibility" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    公開程度
+                  </label>
+                  <select id="noticeVisibility" name="visibility"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                    <option value="public">公開（於首頁及教會消息頁面顯示）</option>
+                    <option value="members">僅限會友（只於會友專區登入後顯示）</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="noticeAttachment" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    會友附件檔案（選填，僅限已登入會友下載）
+                  </label>
+                  <input id="noticeAttachment" name="attachment" type="file" accept="application/pdf"
+                    class="w-full text-xs text-kf-inkSoft file:mr-3 file:py-2 file:px-3.5 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-kf-forest file:text-white hover:file:bg-kf-forestLight cursor-pointer border border-kf-border rounded-lg bg-kf-paper p-1">
                 </div>
               </div>
-            </section>
 
-            <!-- ================= PANEL 6: MEDIA LIBRARY (cms-media) ================= -->
-            <section id="tab-media" class="cms-tab-panel hidden space-y-6">
-              <div class="bg-kf-card rounded-2xl p-6 sm:p-8 border border-kf-border shadow-sm">
-                <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-6 border-b border-kf-border">
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-[0.2em] text-kf-timber block">MEDIA STORAGE</span>
-                    <h2 class="font-serif text-2xl font-semibold text-kf-walnut mt-1 mb-0">圖片媒體庫 (`cms-media`)</h2>
-                    <p class="text-sm text-kf-inkMuted mt-1 mb-0">
-                      上傳教會活動相片或聚會海報至 Supabase Storage 公開儲存桶，取得公開網址或於編輯器內直接插入。
-                    </p>
-                  </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold tracking-wider text-kf-inkSoft">
+                    通告內容（支援格式排版及圖片上傳） *
+                  </label>
+                  <span class="text-[11px] text-kf-inkMuted">
+                    <i class="fa-regular fa-image text-kf-goldDeep mr-1"></i>可於工具列點擊圖片按鈕插入相片
+                  </span>
+                </div>
+                <div id="noticeEditor"></div>
+                <input type="hidden" name="content" id="noticeContentPlain">
+                <input type="hidden" name="content_html" id="noticeContentHtml">
+              </div>
 
-                  <label class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-kf-walnut hover:bg-kf-walnutLight text-white text-xs font-medium cursor-pointer transition shadow-sm">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span>上傳新圖片</span>
-                    <input id="directMediaUploadInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+              <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" data-clear-editor="notice"
+                  class="px-4 py-2.5 rounded-lg border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-sand transition">
+                  清空內容
+                </button>
+                <button type="submit"
+                  class="px-6 py-2.5 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                  <i class="fa-solid fa-paper-plane"></i>
+                  <span>發佈通告</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <h4 class="font-serif text-base font-semibold text-kf-forest mb-4">已發佈通告列表</h4>
+            <div id="adminNoticesList" class="space-y-3 text-sm text-kf-inkSoft">
+              <p class="text-xs text-kf-inkMuted">載入中…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 模組三：活動聚會 -->
+        <section id="tab-events" class="cms-tab-panel hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-kf-border">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest flex items-center gap-2">
+                  <i class="fa-regular fa-calendar-check text-kf-goldDeep"></i>
+                  <span>新增特別聚會與活動</span>
+                </h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">供同工登錄教會特別聚會及焦點活動紀錄。</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-medium bg-kf-sand text-kf-goldDeep border border-kf-border">
+                特別聚會管理
+              </span>
+            </div>
+
+            <form id="eventForm" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                  <label for="eventTitle" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    聚會／活動名稱 *
+                  </label>
+                  <input id="eventTitle" name="title" type="text" required
+                    placeholder="例如：2026 新堂獻堂感恩聯合崇拜"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                </div>
+
+                <div>
+                  <label for="eventCategory" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    活動類別 *
+                  </label>
+                  <input id="eventCategory" name="category" type="text" value="特別聚會" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                <div>
+                  <label for="eventStartsAt" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    日期及時間 *
+                  </label>
+                  <input id="eventStartsAt" name="starts_at" type="datetime-local" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                </div>
+
+                <div>
+                  <label for="eventLocation" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    聚會地點
+                  </label>
+                  <input id="eventLocation" name="location" type="text" value="觀塘成業街10號電訊一代廣場23樓A室"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                </div>
+
+                <div class="pb-1">
+                  <label class="inline-flex items-center gap-2.5 cursor-pointer px-3.5 py-2.5 rounded-lg border border-kf-border bg-kf-paper hover:bg-kf-sand w-full">
+                    <input id="eventFeatured" name="featured" type="checkbox" value="true"
+                      class="w-4 h-4 rounded text-kf-forest focus:ring-kf-forest border-kf-border">
+                    <span class="text-sm font-medium text-kf-ink">設為焦點活動</span>
                   </label>
                 </div>
+              </div>
 
-                <div id="mediaGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  <div class="p-8 text-center text-xs text-kf-inkMuted col-span-full bg-kf-paper rounded-xl border border-dashed border-kf-border">
-                    正在讀取 <code class="font-mono">cms-media</code> 儲存桶…
-                  </div>
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold tracking-wider text-kf-inkSoft">
+                    聚會詳情與海報圖片 *
+                  </label>
+                  <span class="text-[11px] text-kf-inkMuted">
+                    可插入聚會海報或講員介紹圖片
+                  </span>
+                </div>
+                <div id="eventEditor"></div>
+                <input type="hidden" name="description" id="eventDescriptionPlain">
+                <input type="hidden" name="content_html" id="eventContentHtml">
+              </div>
+
+              <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" data-clear-editor="event"
+                  class="px-4 py-2.5 rounded-lg border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-sand transition">
+                  清空內容
+                </button>
+                <button type="submit"
+                  class="px-6 py-2.5 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                  <i class="fa-regular fa-calendar-check"></i>
+                  <span>發佈特別聚會</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <h4 class="font-serif text-base font-semibold text-kf-forest mb-4">已發佈聚會列表</h4>
+            <div id="adminEventsList" class="space-y-3 text-sm text-kf-inkSoft">
+              <p class="text-xs text-kf-inkMuted">載入中…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 模組四：代禱事項與跟進 -->
+        <section id="tab-prayers" class="cms-tab-panel hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-kf-border">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest flex items-center gap-2">
+                  <i class="fa-solid fa-hands-praying text-kf-goldDeep"></i>
+                  <span>新增公開代禱事項／禱告邀約</span>
+                </h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">選擇「禱告邀約」分類將顯示於「同心代禱」頁面右欄；選擇其他分類則顯示於左欄「大堂代禱事項」。</p>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-medium bg-kf-sand text-kf-goldDeep border border-kf-border">
+                公開代禱與邀約管理
+              </span>
+            </div>
+
+            <form id="prayerFormCms" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="md:col-span-2">
+                  <label for="prayerTitle" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    代禱主題 *
+                  </label>
+                  <input id="prayerTitle" name="title" type="text" required
+                    placeholder="例如：為新堂場地善用及觀塘社區福音工作代禱"
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                </div>
+
+                <div>
+                  <label for="prayerCategory" class="block text-xs font-semibold tracking-wider text-kf-inkSoft mb-1.5">
+                    代禱分類 *
+                  </label>
+                  <select id="prayerCategory" name="category" required
+                    class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-forest">
+                    <option value="大堂代禱事項">大堂代禱事項（顯示於左欄）</option>
+                    <option value="堂會代禱">堂會代禱（顯示於左欄）</option>
+                    <option value="建堂守望">建堂守望（顯示於左欄）</option>
+                    <option value="社區福音">社區福音（顯示於左欄）</option>
+                    <option value="肢體關顧">肢體關顧（顯示於左欄）</option>
+                    <option value="禱告邀約">禱告邀約（顯示於右欄）</option>
+                  </select>
                 </div>
               </div>
-            </section>
 
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="block text-xs font-semibold tracking-wider text-kf-inkSoft">
+                    代禱內容（支援條列與重點標示） *
+                  </label>
+                </div>
+                <div id="prayerEditor"></div>
+                <input type="hidden" name="content" id="prayerContentPlain">
+                <input type="hidden" name="content_html" id="prayerContentHtml">
+              </div>
+
+              <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" data-clear-editor="prayer"
+                  class="px-4 py-2.5 rounded-lg border border-kf-border text-xs font-medium text-kf-inkSoft hover:bg-kf-sand transition">
+                  清空內容
+                </button>
+                <button type="submit"
+                  class="px-6 py-2.5 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white text-sm font-medium transition flex items-center gap-2 shadow-sm">
+                  <i class="fa-solid fa-hands-praying"></i>
+                  <span>發佈代禱事項</span>
+                </button>
+              </div>
+            </form>
           </div>
-        </div>
-      </div>
-    </div>
-  </main>
 
-  <!-- OFFICIAL SITE FOOTER (100% consistent with kafook-church-website) -->
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <h4 class="font-serif text-base font-semibold text-kf-forest mb-4">已發佈公開代禱及禱告邀約</h4>
+            <div id="adminPrayersList" class="space-y-3 text-sm text-kf-inkSoft">
+              <p class="text-xs text-kf-inkMuted">載入中…</p>
+            </div>
+          </div>
+
+          <!-- 會友提交代禱及同工跟進紀錄 -->
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <h4 class="font-serif text-base font-semibold text-kf-forest">會友提交代禱與同工跟進紀錄</h4>
+                <p class="text-xs text-kf-inkMuted mt-0.5">只供獲授權教牧及幹事查閱；標示「需要同工聯絡跟進」之項目會顯示提交者的聯絡電話或電郵。</p>
+              </div>
+            </div>
+            <div id="prayerSubmissions" class="space-y-3 text-sm text-kf-inkSoft">
+              <p class="text-xs text-kf-inkMuted">載入中…</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 模組五：圖片媒體庫 -->
+        <section id="tab-media" class="cms-tab-panel hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
+            <div class="flex flex-wrap items-center justify-between gap-4 pb-4 mb-5 border-b border-kf-border">
+              <div>
+                <h3 class="font-serif text-lg font-semibold text-kf-forest flex items-center gap-2">
+                  <i class="fa-regular fa-images text-kf-goldDeep"></i>
+                  <span>圖片媒體庫</span>
+                </h3>
+                <p class="text-xs text-kf-inkMuted mt-0.5">在此直接上傳活動海報或相片，或於富文本編輯器內點擊圖片按鈕即時上傳並插入。</p>
+              </div>
+
+              <label class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-kf-forest hover:bg-kf-forestLight text-white text-xs font-medium cursor-pointer transition shadow-sm">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span>上傳新圖片</span>
+                <input id="directMediaUploadInput" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+              </label>
+            </div>
+
+            <div id="mediaGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div class="p-8 text-center text-xs text-kf-inkMuted col-span-full bg-kf-paper rounded-xl border border-dashed border-kf-border">
+                尚無圖片或正在讀取媒體儲存桶…
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- 頁尾（已移除週三祈禱會 19:30） -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-top">
@@ -855,7 +924,7 @@
         </div>
         <div>
           <h3 class="footer-col-title">每週聚會</h3>
-          <p>週日早堂崇拜　09:30<br>週日午堂崇拜　11:15<br>週六青少年崇拜　17:30<br>週三祈禱會　19:30</p>
+          <p>週日早堂崇拜　09:30<br>週日午堂崇拜　11:15<br>週六青少年崇拜　17:30</p>
         </div>
         <div>
           <h3 class="footer-col-title">來到我們當中</h3>
@@ -879,14 +948,14 @@
     </div>
   </footer>
 
-  <!-- Site Scripts & CDN Libraries -->
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js"></script>
   <script src="js/redesign.js"></script>
   <script src="js/main.js"></script>
   <script src="js/supabase-config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
 
-  <!-- CMS Dashboard Controller -->
   <script>
     (function () {
       'use strict';
@@ -900,6 +969,50 @@
       const MEDIA_BUCKET = 'cms-media';
       const DOCS_BUCKET = 'member-documents';
 
+      const PAGE_KEY_OPTIONS = {
+        'index.html': [
+          { value: 'home_promised_land', label: '首頁：諾知原中心介紹文案' },
+          { value: 'home_hero_description', label: '首頁：主視覺引言段落' },
+          { value: 'page_title', label: '首頁：頁面主標題' },
+          { value: 'page_description', label: '首頁：頁面副標題／簡介' }
+        ],
+        'about.html': [
+          { value: 'staff_bio_1', label: '關於我們：林淑櫻（主任牧師）自我介紹' },
+          { value: 'staff_bio_2', label: '關於我們：林肇楓（牧師）自我介紹' },
+          { value: 'staff_bio_3', label: '關於我們：蒙潔文（幹事）自我介紹' },
+          { value: 'staff_bio_4', label: '關於我們：黃淽君（幹事）自我介紹' },
+          { value: 'staff_bio_5', label: '關於我們：吳天恩（神學生）自我介紹' },
+          { value: 'page_title', label: '關於我們：頁面主標題' },
+          { value: 'page_description', label: '關於我們：頁面副標題／簡介' }
+        ],
+        'events.html': [
+          { value: 'events_gathering_notice', label: '聚會生活：聚會提示（頂部提示框）' },
+          { value: 'events_children_worship', label: '聚會生活：兒童崇拜聚會詳情' },
+          { value: 'page_title', label: '聚會生活：頁面主標題' },
+          { value: 'page_description', label: '聚會生活：頁面副標題／簡介' }
+        ],
+        'shared': [
+          { value: 'shared_faq_list', label: '跨頁共用：新朋友常見問題（關於我們＋聚會生活同步）' }
+        ],
+        'default': [
+          { value: 'page_title', label: '頁面主標題' },
+          { value: 'page_description', label: '頁面副標題／簡介' }
+        ]
+      };
+
+      const STATUS_LABELS = {
+        new: '未處理',
+        prayed: '已代禱',
+        archived: '已封存'
+      };
+
+      const ROLE_LABELS = {
+        admin: '管理員',
+        staff: '同工',
+        member: '會友',
+        guest: '訪客'
+      };
+
       const state = {
         client: null,
         user: null,
@@ -907,22 +1020,14 @@
         displayName: '',
         previewMode: false,
         activeEditorKey: 'notice',
-        editors: {},
-        pageContentCache: []
+        editors: {}
       };
 
-      function sanitizeHtml(dirty) {
-        if (!dirty) return '';
-        if (window.DOMPurify) {
-          return window.DOMPurify.sanitize(String(dirty), {
-            USE_PROFILES: { html: true },
-            ADD_ATTR: ['target', 'rel', 'loading']
-          });
-        }
-        const d = document.createElement('div');
-        d.textContent = String(dirty);
-        return d.innerHTML;
-      }
+      const escHtml = (str) => {
+        const div = document.createElement('div');
+        div.textContent = String(str ?? '');
+        return div.innerHTML;
+      };
 
       function showToast(title, message, type = 'info') {
         const toast = document.getElementById('cmsToast');
@@ -937,14 +1042,17 @@
         if (icon) {
           icon.className =
             type === 'error'
-              ? 'fa-solid fa-circle-exclamation text-red-700 mt-0.5'
+              ? 'fa-solid fa-circle-exclamation text-red-600 mt-0.5'
               : type === 'success'
-              ? 'fa-solid fa-circle-check text-kf-timber mt-0.5'
-              : 'fa-solid fa-circle-info text-kf-walnut mt-0.5';
+              ? 'fa-solid fa-circle-check text-emerald-600 mt-0.5'
+              : 'fa-solid fa-circle-info text-kf-forest mt-0.5';
         }
 
         if (statusBanner) {
-          statusBanner.textContent = `${title}：${message}`;
+          statusBanner.innerHTML =
+            type === 'error'
+              ? `<span class="w-2 h-2 rounded-full bg-red-600"></span><span class="text-red-700">${escHtml(message)}</span>`
+              : `<span class="w-2 h-2 rounded-full bg-emerald-600"></span><span>${escHtml(message)}</span>`;
         }
 
         toast?.classList.remove('hidden');
@@ -956,23 +1064,68 @@
         document.getElementById('cmsToast')?.classList.add('hidden');
       });
 
-      // Custom Quill Image Upload Handler -> Supabase Storage (cms-media)
+      function syncContentKeyOptions() {
+        const pageSelect = document.getElementById('pageSelect');
+        const keySelect = document.getElementById('contentKeySelect');
+        if (!pageSelect || !keySelect) return;
+
+        const selectedPage = pageSelect.value;
+        const options = PAGE_KEY_OPTIONS[selectedPage] || PAGE_KEY_OPTIONS.default;
+        const previousValue = keySelect.value;
+
+        keySelect.replaceChildren();
+        options.forEach((opt) => {
+          const el = document.createElement('option');
+          el.value = opt.value;
+          el.textContent = opt.label;
+          keySelect.appendChild(el);
+        });
+
+        if (options.some((o) => o.value === previousValue)) {
+          keySelect.value = previousValue;
+        }
+        loadExistingPageContent();
+      }
+
+      async function loadExistingPageContent() {
+        const pageSelect = document.getElementById('pageSelect');
+        const keySelect = document.getElementById('contentKeySelect');
+        const quill = state.editors.pageContent;
+        if (!state.client || !pageSelect || !keySelect || !quill) return;
+
+        const { data, error } = await state.client
+          .from('page_content')
+          .select('content_html')
+          .eq('page', pageSelect.value)
+          .eq('content_key', keySelect.value)
+          .maybeSingle();
+
+        if (!error && data?.content_html) {
+          quill.root.innerHTML = window.DOMPurify
+            ? window.DOMPurify.sanitize(data.content_html, { USE_PROFILES: { html: true }, ADD_ATTR: ['open', 'target', 'rel'] })
+            : data.content_html;
+        } else {
+          quill.setText('');
+        }
+      }
+
       async function uploadImageToSupabase(file) {
         if (!file) return null;
         if (!file.type.startsWith('image/')) {
-          throw new Error('請選擇有效的圖片檔案 (PNG, JPG, WEBP, GIF)。');
+          throw new Error('請選擇有效的圖片檔案。');
         }
         if (file.size > 5 * 1024 * 1024) {
           throw new Error('圖片大小不可超過 5MB。');
         }
+
         if (!state.client || !state.user) {
-          throw new Error('請先以獲授權同工帳號登入，方可上傳圖片至 Supabase Storage。');
+          throw new Error('請先以教牧或幹事帳號登入，方可上傳圖片。');
         }
 
         const safeName = file.name.replace(/[^\w.\-]+/g, '-').toLowerCase();
         const filePath = `editor/${Date.now()}-${safeName}`;
 
-        showToast('正在上傳圖片…', `正在上傳 ${file.name} 至 ${MEDIA_BUCKET}…`, 'info');
+        showToast('正在上傳圖片…', `正在上傳 ${file.name}…`, 'info');
 
         const { error: uploadError } = await state.client.storage
           .from(MEDIA_BUCKET)
@@ -982,11 +1135,13 @@
             contentType: file.type
           });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          throw uploadError;
+        }
 
         const { data } = state.client.storage.from(MEDIA_BUCKET).getPublicUrl(filePath);
         if (!data?.publicUrl) {
-          throw new Error('無法取得圖片公開網址 (Public URL)。');
+          throw new Error('無法取得圖片公開網址。');
         }
 
         return { publicUrl: data.publicUrl, path: filePath, name: file.name };
@@ -997,23 +1152,24 @@
 
         const picker = document.getElementById('quillImagePicker');
         const toolbarOptions = [
-          ['bold', 'italic', 'underline'],
           [{ header: [2, 3, false] }],
-          [{ list: 'unordered' }, { list: 'ordered' }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ color: [] }, { background: [] }],
+          [{ list: 'ordered' }, { list: 'bullet' }],
           ['blockquote', 'link', 'image'],
           ['clean']
         ];
 
         const configs = [
-          { key: 'pageContent', selector: '#pageContentEditor', placeholder: '選擇頁面及欄位後輸入內容；支援粗體、斜體、項目、標題、表格及圖片…' },
-          { key: 'notice', selector: '#noticeEditor', placeholder: '請輸入通告或大堂報告內容，可點擊圖片按鈕上傳相片或海報…' },
-          { key: 'event', selector: '#eventEditor', placeholder: '請輸入特別聚會詳情（例如合堂崇拜安排、集體祈禱會主題及報名詳情）…' },
-          { key: 'prayer', selector: '#prayerEditor', placeholder: '請輸入同心守望代禱內容…' }
+          { key: 'pageContent', selector: '#pageContentEditor', placeholder: '請輸入要更新的頁面區塊內容…' },
+          { key: 'notice', selector: '#noticeEditor', placeholder: '請輸入通告詳細內容，可點擊圖片圖示上傳並插入相片或海報…' },
+          { key: 'event', selector: '#eventEditor', placeholder: '請輸入聚會詳情、講員介紹或活動流程，支援圖片上傳…' },
+          { key: 'prayer', selector: '#prayerEditor', placeholder: '請輸入代禱事項或禱告邀約內容（可使用編號或項目符號條列）…' }
         ];
 
         configs.forEach(({ key, selector, placeholder }) => {
-          const el = document.querySelector(selector);
-          if (!el) return;
+          const container = document.querySelector(selector);
+          if (!container) return;
 
           const quill = new window.Quill(selector, {
             theme: 'snow',
@@ -1040,6 +1196,7 @@
         picker?.addEventListener('change', async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
+
           const activeQuill = state.editors[state.activeEditorKey];
           if (!activeQuill) return;
 
@@ -1048,24 +1205,11 @@
             const range = activeQuill.getSelection(true) || { index: activeQuill.getLength() };
             activeQuill.insertEmbed(range.index, 'image', uploaded.publicUrl, 'user');
             activeQuill.setSelection(range.index + 1);
-            showToast('圖片已插入', '圖片已上傳至 cms-media 並插入編輯器。', 'success');
+            showToast('圖片已插入', '圖片已成功上傳並插入編輯器。', 'success');
             await loadMediaLibrary();
           } catch (err) {
-            showToast('圖片上傳失敗', err.message || '請確認已於 Supabase 建立 cms-media 儲存桶。', 'error');
+            showToast('圖片上傳失敗', err.message || '請確認儲存桶權限已設定。', 'error');
           }
-        });
-
-        document.querySelectorAll('[data-insert-table]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const key = btn.getAttribute('data-insert-table');
-            const quill = state.editors[key];
-            if (!quill) return;
-            const range = quill.getSelection(true) || { index: quill.getLength() };
-            quill.clipboard.dangerouslyPasteHTML(
-              range.index,
-              '<table><thead><tr><th>欄目一</th><th>欄目二</th></tr></thead><tbody><tr><td>內容</td><td>內容</td></tr></tbody></table><p><br></p>'
-            );
-          });
         });
 
         document.querySelectorAll('[data-clear-editor]').forEach((btn) => {
@@ -1077,6 +1221,14 @@
       }
 
       function switchTab(tabName) {
+        const titles = {
+          dashboard: { eyebrow: '總覽與頁面內容', title: '總覽與頁面文案' },
+          news: { eyebrow: '教會消息與通告', title: '教會消息管理' },
+          events: { eyebrow: '聚會與活動管理', title: '特別聚會管理' },
+          prayers: { eyebrow: '代禱事項與跟進管理', title: '代禱事項與跟進管理' },
+          media: { eyebrow: '媒體檔案管理', title: '圖片媒體庫' }
+        };
+
         document.querySelectorAll('.cms-tab-panel').forEach((panel) => {
           panel.classList.toggle('hidden', panel.id !== `tab-${tabName}`);
         });
@@ -1084,9 +1236,15 @@
         document.querySelectorAll('.cms-nav-btn').forEach((btn) => {
           const isActive = btn.getAttribute('data-tab') === tabName;
           btn.className = isActive
-            ? 'cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition bg-kf-oakPale text-kf-walnut border-l-4 border-kf-timber text-left'
-            : 'cms-nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-kf-inkSoft hover:bg-kf-oakPale/60 hover:text-kf-walnut text-left';
+            ? 'cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition bg-white/15 text-white border-l-4 border-kf-gold'
+            : 'cms-nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition text-white/80 hover:bg-white/10 hover:text-white';
         });
+
+        const meta = titles[tabName] || titles.dashboard;
+        const eyebrowEl = document.getElementById('workspaceEyebrow');
+        const titleEl = document.getElementById('workspaceTitle');
+        if (eyebrowEl) eyebrowEl.textContent = meta.eyebrow;
+        if (titleEl) titleEl.textContent = meta.title;
       }
 
       async function syncUser(user) {
@@ -1117,17 +1275,14 @@
         const isAuthorized = (state.user && ['staff', 'admin'].includes(state.role)) || state.previewMode;
 
         if (isAuthorized) {
-          gate?.classList.add('is-hidden');
           gate?.classList.add('hidden');
-          app?.classList.remove('is-hidden');
           app?.classList.remove('hidden');
           if (nameEl) nameEl.textContent = state.displayName || (state.previewMode ? '預覽模式（未登入）' : '迦福堂同工');
-          if (roleEl) roleEl.textContent = state.previewMode ? 'UI 預覽' : state.role;
+          if (roleEl) roleEl.textContent = state.previewMode ? '模式：介面預覽' : `角色：${ROLE_LABELS[state.role] || '同工'}`;
           refreshAllLists();
+          loadExistingPageContent();
         } else {
-          gate?.classList.remove('is-hidden');
           gate?.classList.remove('hidden');
-          app?.classList.add('is-hidden');
           app?.classList.add('hidden');
         }
       }
@@ -1135,73 +1290,12 @@
       async function refreshAllLists() {
         if (!state.client) return;
         await Promise.allSettled([
-          loadPageContentList(),
           loadNoticesList(),
           loadEventsList(),
           loadPrayersList(),
           loadPrayerSubmissions(),
           loadMediaLibrary()
         ]);
-      }
-
-      async function loadPageContentList() {
-        const container = document.getElementById('adminPageContentList');
-        const countEl = document.getElementById('statPageContentCount');
-        if (!state.client || !container) return;
-
-        const { data, error } = await state.client
-          .from('page_content')
-          .select('*')
-          .order('updated_at', { ascending: false });
-
-        if (error) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">無法讀取頁面內容紀錄：${error.message}</p>`;
-          return;
-        }
-
-        state.pageContentCache = data || [];
-        if (countEl) countEl.textContent = String(state.pageContentCache.length);
-
-        if (!state.pageContentCache.length) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">目前尚無自訂頁面內容覆蓋，全站正顯示預設固定文案。</p>`;
-          return;
-        }
-
-        container.innerHTML = '';
-        state.pageContentCache.forEach((item) => {
-          const row = document.createElement('div');
-          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border flex flex-wrap items-start justify-between gap-4';
-          row.innerHTML = `
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs font-semibold text-kf-timber">
-                <span>${item.page}</span>
-                <span>·</span>
-                <span>${item.content_key}</span>
-              </div>
-              <div class="text-sm text-kf-ink mt-1">${sanitizeHtml(item.content_html)}</div>
-            </div>
-            <button type="button" data-load-page="${item.page}" data-load-key="${item.content_key}"
-              class="px-3 py-1.5 rounded-full border border-kf-border bg-white hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-              載入編輯
-            </button>
-          `;
-          container.appendChild(row);
-        });
-
-        container.querySelectorAll('[data-load-page]').forEach((btn) => {
-          btn.addEventListener('click', () => {
-            const p = btn.getAttribute('data-load-page');
-            const k = btn.getAttribute('data-load-key');
-            const pageSelect = document.getElementById('pageSelect');
-            const keySelect = document.getElementById('contentKeySelect');
-            if (pageSelect) pageSelect.value = p;
-            if (keySelect) keySelect.value = k;
-            const found = state.pageContentCache.find((r) => r.page === p && r.content_key === k);
-            if (found && state.editors.pageContent) {
-              state.editors.pageContent.root.innerHTML = sanitizeHtml(found.content_html);
-            }
-          });
-        });
       }
 
       async function loadNoticesList() {
@@ -1211,47 +1305,40 @@
 
         const { data, error } = await state.client
           .from('notices')
-          .select('*')
+          .select('id,title,category,visibility,published_at')
           .order('published_at', { ascending: false })
-          .limit(15);
+          .limit(10);
 
         if (error) {
-          container.innerHTML = `<p class="text-xs text-red-700 m-0">無法讀取通告：${error.message}</p>`;
+          container.innerHTML = `<p class="text-xs text-red-600">無法讀取通告：${escHtml(error.message)}</p>`;
           return;
         }
 
         if (countEl) countEl.textContent = String(data?.length || 0);
         if (!data?.length) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">目前尚無動態通告。</p>`;
+          container.innerHTML = `<p class="text-xs text-kf-inkMuted">目前尚無已發佈通告。</p>`;
           return;
         }
 
         container.innerHTML = '';
         data.forEach((item) => {
           const row = document.createElement('div');
-          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border flex items-start justify-between gap-4';
+          row.className = 'flex items-center justify-between gap-4 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
           const dateStr = item.published_at ? new Date(item.published_at).toLocaleDateString('zh-HK') : '';
           row.innerHTML = `
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs text-kf-timber font-semibold">
-                <span>${item.category || '堂會通告'}</span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 text-xs text-kf-goldDeep font-medium">
+                <span>${escHtml(item.category || '堂會通告')}</span>
                 <span>·</span>
                 <span>${item.visibility === 'members' ? '僅限會友' : '公開'}</span>
                 <span>·</span>
-                <span>${dateStr}</span>
+                <span>${escHtml(dateStr)}</span>
               </div>
-              <h4 class="font-serif font-semibold text-base text-kf-walnut mt-1 mb-0">${item.title}</h4>
-              <div class="text-xs text-kf-inkSoft mt-1">${sanitizeHtml(item.content_html || item.content)}</div>
+              <p class="font-medium text-kf-ink truncate mt-0.5">${escHtml(item.title)}</p>
             </div>
-            <button type="button" data-delete-table="notices" data-delete-id="${item.id}"
-              class="px-3 py-1.5 rounded-full border border-red-200 bg-white hover:bg-red-50 text-xs text-red-700 font-medium flex-shrink-0">
-              刪除
-            </button>
           `;
           container.appendChild(row);
         });
-
-        bindDeleteButtons(container);
       }
 
       async function loadEventsList() {
@@ -1261,46 +1348,40 @@
 
         const { data, error } = await state.client
           .from('events')
-          .select('*')
+          .select('id,title,category,starts_at,location,featured')
           .order('starts_at', { ascending: true })
-          .limit(15);
+          .limit(10);
 
         if (error) {
-          container.innerHTML = `<p class="text-xs text-red-700 m-0">無法讀取特別聚會：${error.message}</p>`;
+          container.innerHTML = `<p class="text-xs text-red-600">無法讀取活動：${escHtml(error.message)}</p>`;
           return;
         }
 
         if (countEl) countEl.textContent = String(data?.length || 0);
         if (!data?.length) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">目前尚無額外特別聚會。</p>`;
+          container.innerHTML = `<p class="text-xs text-kf-inkMuted">目前尚無特別聚會記錄。</p>`;
           return;
         }
 
         container.innerHTML = '';
         data.forEach((item) => {
           const row = document.createElement('div');
-          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border flex items-start justify-between gap-4';
+          row.className = 'flex items-center justify-between gap-4 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
           const dateStr = item.starts_at ? new Date(item.starts_at).toLocaleString('zh-HK', { dateStyle: 'medium', timeStyle: 'short' }) : '';
           row.innerHTML = `
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs text-kf-timber font-semibold">
-                <span>${item.category || '特別聚會'}</span>
+            <div class="min-w-0">
+              <div class="flex items-center gap-2 text-xs text-kf-goldDeep font-medium">
+                <span>${escHtml(item.category || '特別聚會')}</span>
                 <span>·</span>
-                <span>${dateStr}</span>
-                ${item.featured ? '<span class="px-2 py-0.5 rounded bg-kf-wheat text-kf-espresso text-[10px]">焦點活動</span>' : ''}
+                <span>${escHtml(dateStr)}</span>
+                ${item.featured ? '<span class="px-2 py-0.5 rounded bg-kf-gold/20 text-kf-goldDeep text-[10px]">焦點</span>' : ''}
               </div>
-              <h4 class="font-serif font-semibold text-base text-kf-walnut mt-1 mb-0">${item.title}</h4>
-              <p class="text-xs text-kf-inkMuted mt-0.5 mb-0">${item.location || ''}</p>
+              <p class="font-medium text-kf-ink truncate mt-0.5">${escHtml(item.title)}</p>
+              <p class="text-xs text-kf-inkMuted truncate">${escHtml(item.location || '')}</p>
             </div>
-            <button type="button" data-delete-table="events" data-delete-id="${item.id}"
-              class="px-3 py-1.5 rounded-full border border-red-200 bg-white hover:bg-red-50 text-xs text-red-700 font-medium flex-shrink-0">
-              刪除
-            </button>
           `;
           container.appendChild(row);
         });
-
-        bindDeleteButtons(container);
       }
 
       async function loadPrayersList() {
@@ -1310,50 +1391,65 @@
 
         const { data, error } = await state.client
           .from('prayer_requests')
-          .select('*')
+          .select('id,title,category,published_at')
           .order('published_at', { ascending: false })
           .limit(20);
 
         if (error) {
-          container.innerHTML = `<p class="text-xs text-red-700 m-0">無法讀取代禱事項：${error.message}</p>`;
+          container.innerHTML = `<p class="text-xs text-red-600">無法讀取代禱事項：${escHtml(error.message)}</p>`;
           return;
         }
 
         if (countEl) countEl.textContent = String(data?.length || 0);
         if (!data?.length) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">目前尚無動態代禱事項。</p>`;
+          container.innerHTML = `<p class="text-xs text-kf-inkMuted">目前尚無代禱事項。</p>`;
           return;
         }
 
         container.innerHTML = '';
         data.forEach((item) => {
           const row = document.createElement('div');
-          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border flex items-start justify-between gap-4';
+          row.className = 'flex items-center justify-between gap-4 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
           const dateStr = item.published_at ? new Date(item.published_at).toLocaleDateString('zh-HK') : '';
+          const colLabel = item.category === '禱告邀約' ? '右欄：禱告邀約' : '左欄：大堂代禱事項';
           row.innerHTML = `
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs text-kf-timber font-semibold">
-                <span>${item.category || '堂會代禱'}</span>
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-kf-goldDeep font-medium">
+                <span>${escHtml(item.category || '大堂代禱事項')}</span>
                 <span>·</span>
-                <span>${dateStr}</span>
+                <span class="px-2 py-0.5 rounded bg-kf-sand text-kf-forest text-[11px]">${colLabel}</span>
+                <span>·</span>
+                <span>${escHtml(dateStr)}</span>
               </div>
-              <h4 class="font-serif font-semibold text-base text-kf-walnut mt-1 mb-0">${item.title}</h4>
-              <div class="text-xs text-kf-inkSoft mt-1">${sanitizeHtml(item.content_html || item.content)}</div>
+              <p class="font-medium text-kf-ink truncate mt-0.5">${escHtml(item.title)}</p>
             </div>
-            <button type="button" data-delete-table="prayer_requests" data-delete-id="${item.id}"
-              class="px-3 py-1.5 rounded-full border border-red-200 bg-white hover:bg-red-50 text-xs text-red-700 font-medium flex-shrink-0">
-              刪除
-            </button>
           `;
           container.appendChild(row);
         });
+      }
 
-        bindDeleteButtons(container);
+      async function updateSubmissionStatus(id, nextStatus) {
+        if (!state.client || !state.user) {
+          return showToast('需要登入', '請先登入教牧或幹事帳號。', 'error');
+        }
+        const { error } = await state.client
+          .from('prayer_submissions')
+          .update({
+            status: nextStatus,
+            handled_by: state.user.id,
+            handled_at: new Date().toISOString()
+          })
+          .eq('id', id);
+
+        if (error) {
+          return showToast('更新狀態失敗', error.message, 'error');
+        }
+        showToast('狀態已更新', `代禱紀錄已標記為「${STATUS_LABELS[nextStatus] || nextStatus}」。`, 'success');
+        await loadPrayerSubmissions();
       }
 
       async function loadPrayerSubmissions() {
         const container = document.getElementById('prayerSubmissions');
-        const countEl = document.getElementById('statSubmissionsCount');
         if (!state.client || !container) return;
 
         const { data, error } = await state.client
@@ -1363,79 +1459,69 @@
           .limit(30);
 
         if (error) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">需要同工權限方可檢視會友提交的代禱事項。</p>`;
+          container.innerHTML = `<p class="text-xs text-kf-inkMuted">目前無代禱提交紀錄或需要同工登入權限。</p>`;
           return;
         }
 
-        if (countEl) countEl.textContent = String(data?.length || 0);
         if (!data?.length) {
-          container.innerHTML = `<p class="text-xs text-kf-inkMuted m-0">目前沒有新的會友代禱提交。</p>`;
+          container.innerHTML = `<p class="text-xs text-kf-inkMuted">目前沒有新的代禱提交。</p>`;
           return;
         }
 
         container.innerHTML = '';
         data.forEach((item) => {
           const row = document.createElement('div');
-          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border flex flex-wrap items-start justify-between gap-4';
-          const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('zh-HK') : '';
-          const statusLabel = item.status === 'prayed' ? '已代禱' : item.status === 'archived' ? '已封存' : '新提交';
+          row.className = 'p-4 rounded-xl bg-kf-paper border border-kf-border space-y-2';
+          const dateStr = item.created_at ? new Date(item.created_at).toLocaleString('zh-HK', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+          const statusLabel = STATUS_LABELS[item.status] || '未處理';
+          const wantsFollowup = Boolean(item.needs_followup);
+          const followupBadge = wantsFollowup
+            ? `<span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-semibold">需要同工聯絡跟進</span>`
+            : `<span class="px-2.5 py-0.5 rounded-full bg-kf-sand text-kf-inkMuted text-xs">無需同工聯絡</span>`;
+
+          const contactLine = (wantsFollowup || item.contact_info)
+            ? `<p class="text-xs font-medium text-kf-forest bg-white px-3 py-1.5 rounded-lg border border-kf-border">聯絡電話或電郵：${escHtml(item.contact_info || '未填寫')}</p>`
+            : '';
+
           row.innerHTML = `
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 text-xs text-kf-timber font-semibold">
-                <span>${dateStr}</span>
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-2 text-xs text-kf-goldDeep font-medium">
+                <span>${escHtml(dateStr)}</span>
                 <span>·</span>
-                <span class="px-2 py-0.5 rounded bg-kf-oakPale text-kf-walnut">${statusLabel}</span>
-                ${item.fellowship ? `<span>· ${item.fellowship}</span>` : ''}
+                <span>狀態：${escHtml(statusLabel)}</span>
+                ${item.fellowship ? `<span>· 團契／家：${escHtml(item.fellowship)}</span>` : ''}
+                ${followupBadge}
               </div>
-              <h4 class="font-serif font-semibold text-base text-kf-walnut mt-1 mb-0">${item.name || '弟兄／姊妹'}</h4>
-              <p class="text-sm text-kf-inkSoft mt-1 mb-0 whitespace-pre-line">${item.content || ''}</p>
+              <div class="flex items-center gap-1.5">
+                <button type="button" data-sub-id="${escHtml(item.id)}" data-sub-status="prayed"
+                  class="px-2.5 py-1 rounded bg-white hover:bg-kf-sand border border-kf-border text-xs text-kf-forest font-medium transition">
+                  標記已代禱
+                </button>
+                <button type="button" data-sub-id="${escHtml(item.id)}" data-sub-status="archived"
+                  class="px-2.5 py-1 rounded bg-white hover:bg-kf-sand border border-kf-border text-xs text-kf-inkMuted font-medium transition">
+                  封存
+                </button>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button type="button" data-submission-status="prayed" data-submission-id="${item.id}"
-                class="px-3 py-1.5 rounded-full border border-kf-border bg-white hover:bg-kf-oakPale text-xs text-kf-walnut font-medium">
-                標記已代禱
-              </button>
-              <button type="button" data-submission-status="archived" data-submission-id="${item.id}"
-                class="px-3 py-1.5 rounded-full border border-kf-border bg-white hover:bg-kf-oakPale text-xs text-kf-inkMuted font-medium">
-                封存
-              </button>
-            </div>
+            <p class="font-semibold text-kf-ink">${escHtml(item.name || '弟兄／姊妹')}</p>
+            <p class="text-sm text-kf-inkSoft whitespace-pre-line">${escHtml(item.content || '')}</p>
+            ${contactLine}
           `;
           container.appendChild(row);
         });
 
-        container.querySelectorAll('[data-submission-status]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            if (!state.user) return showToast('權限提示', '請先登入同工帳號。', 'error');
-            const id = btn.getAttribute('data-submission-id');
-            const nextStatus = btn.getAttribute('data-submission-status');
-            const { error: updateErr } = await state.client
-              .from('prayer_submissions')
-              .update({ status: nextStatus, handled_by: state.user.id, handled_at: new Date().toISOString() })
-              .eq('id', id);
-            if (updateErr) return showToast('更新失敗', updateErr.message, 'error');
-            showToast('已更新狀態', '代禱提交狀態已更新。', 'success');
-            await loadPrayerSubmissions();
-          });
-        });
-      }
-
-      function bindDeleteButtons(container) {
-        container.querySelectorAll('[data-delete-table]').forEach((btn) => {
-          btn.addEventListener('click', async () => {
-            if (!state.user) return showToast('權限提示', '請先登入同工帳號。', 'error');
-            const table = btn.getAttribute('data-delete-table');
-            const id = btn.getAttribute('data-delete-id');
-            const { error } = await state.client.from(table).delete().eq('id', id);
-            if (error) return showToast('刪除失敗', error.message, 'error');
-            showToast('已刪除', '項目已從資料庫移除。', 'success');
-            await refreshAllLists();
+        container.querySelectorAll('[data-sub-status]').forEach((btn) => {
+          btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-sub-id');
+            const nextStatus = btn.getAttribute('data-sub-status');
+            if (id && nextStatus) updateSubmissionStatus(id, nextStatus);
           });
         });
       }
 
       async function loadMediaLibrary() {
         const grid = document.getElementById('mediaGalleryGrid');
+        const countEl = document.getElementById('statMediaCount');
         if (!state.client || !grid) return;
 
         const { data, error } = await state.client.storage.from(MEDIA_BUCKET).list('editor', {
@@ -1446,17 +1532,19 @@
         if (error) {
           grid.innerHTML = `
             <div class="p-6 text-center text-xs text-kf-inkMuted col-span-full bg-kf-paper rounded-xl border border-dashed border-kf-border">
-              尚未建立 <code class="font-mono">cms-media</code> 儲存桶或無讀取權限（請於 Supabase SQL Editor 執行更新腳本）。
+              尚未建立媒體儲存桶或無讀取權限（請於資料庫執行更新腳本）。
             </div>
           `;
           return;
         }
 
         const files = (data || []).filter((f) => f.name && f.name !== '.emptyFolderPlaceholder');
+        if (countEl) countEl.textContent = String(files.length);
+
         if (!files.length) {
           grid.innerHTML = `
             <div class="p-8 text-center text-xs text-kf-inkMuted col-span-full bg-kf-paper rounded-xl border border-dashed border-kf-border">
-              目前 <code class="font-mono">cms-media/editor</code> 尚無圖片，可點擊右上角按鈕或於編輯器內上傳。
+              目前媒體庫尚無圖片，可點擊右上角按鈕或於編輯器內上傳。
             </div>
           `;
           return;
@@ -1471,13 +1559,13 @@
           const card = document.createElement('div');
           card.className = 'rounded-xl border border-kf-border bg-kf-paper overflow-hidden flex flex-col justify-between';
           card.innerHTML = `
-            <div class="aspect-video bg-kf-oakPale flex items-center justify-center overflow-hidden">
-              <img src="${publicUrl}" alt="${file.name}" class="w-full h-full object-cover max-w-full h-auto">
+            <div class="aspect-video bg-kf-sand flex items-center justify-center overflow-hidden">
+              <img src="${escHtml(publicUrl)}" alt="${escHtml(file.name)}" class="w-full h-full object-cover max-w-full h-auto">
             </div>
             <div class="p-3 space-y-2">
-              <p class="text-xs font-medium text-kf-ink truncate m-0" title="${file.name}">${file.name}</p>
-              <button type="button" data-copy-url="${publicUrl}"
-                class="w-full py-1.5 px-3 rounded-full bg-white hover:bg-kf-oakPale border border-kf-border text-xs text-kf-walnut font-medium transition flex items-center justify-center gap-1.5">
+              <p class="text-xs font-medium text-kf-ink truncate" title="${escHtml(file.name)}">${escHtml(file.name)}</p>
+              <button type="button" data-copy-url="${escHtml(publicUrl)}"
+                class="w-full py-1.5 px-2.5 rounded-lg bg-white hover:bg-kf-sand border border-kf-border text-xs text-kf-forest font-medium transition flex items-center justify-center gap-1.5">
                 <i class="fa-regular fa-copy"></i>
                 <span>複製圖片網址</span>
               </button>
@@ -1497,7 +1585,10 @@
       }
 
       function bindForms() {
-        // 1. Page Content Form (public.page_content)
+        document.getElementById('pageSelect')?.addEventListener('change', syncContentKeyOptions);
+        document.getElementById('contentKeySelect')?.addEventListener('change', loadExistingPageContent);
+        document.getElementById('loadExistingContentBtn')?.addEventListener('click', loadExistingPageContent);
+
         document.getElementById('pageContentForm')?.addEventListener('submit', async (e) => {
           e.preventDefault();
           const form = e.currentTarget;
@@ -1505,10 +1596,11 @@
           const htmlContent = quill ? quill.root.innerHTML.trim() : '';
 
           if (!htmlContent || htmlContent === '<p><br></p>') {
-            return showToast('內容不可為空', '請輸入頁面內容。', 'error');
+            return showToast('內容不可為空', '請在編輯器中輸入頁面內容。', 'error');
           }
+
           if (!state.user) {
-            return showToast('預覽模式提示', '請先登入同工帳號以儲存頁面內容。', 'error');
+            return showToast('預覽模式提示', '目前為介面預覽模式，請先登入幹事帳號以寫入資料庫。', 'error');
           }
 
           try {
@@ -1517,19 +1609,18 @@
               content_key: form.content_key.value,
               content_html: htmlContent,
               visibility: 'public',
-              created_by: state.user.id
+              created_by: state.user.id,
+              updated_at: new Date().toISOString()
             };
             const { error } = await state.client.from('page_content').upsert(payload, { onConflict: 'page,content_key' });
             if (error) throw error;
 
-            showToast('頁面內容已儲存', '重新整理公開頁面後會套用。', 'success');
-            await loadPageContentList();
+            showToast('頁面內容已儲存', '重新整理公開頁面後會自動套用更新。', 'success');
           } catch (err) {
             showToast('儲存失敗', err.message || '請檢查資料庫權限。', 'error');
           }
         });
 
-        // 2. Notice Form (public.notices)
         document.getElementById('noticeForm')?.addEventListener('submit', async (e) => {
           e.preventDefault();
           const form = e.currentTarget;
@@ -1538,10 +1629,11 @@
           const htmlContent = quill ? quill.root.innerHTML.trim() : '';
 
           if (!plainText && !htmlContent.includes('<img')) {
-            return showToast('內容不可為空', '請輸入通告內容。', 'error');
+            return showToast('內容不可為空', '請在編輯器中輸入通告內容。', 'error');
           }
+
           if (!state.user) {
-            return showToast('預覽模式提示', '請先登入同工帳號以發佈通告。', 'error');
+            return showToast('預覽模式提示', '目前為介面預覽模式，請先登入幹事帳號以寫入資料庫。', 'error');
           }
 
           try {
@@ -1573,14 +1665,13 @@
 
             form.reset();
             quill?.setText('');
-            showToast('已成功發佈', '通告已發佈至教會消息。', 'success');
+            showToast('通告已發佈', '最新消息已成功儲存。', 'success');
             await loadNoticesList();
           } catch (err) {
-            showToast('發佈失敗', err.message || '請檢查欄位或權限。', 'error');
+            showToast('發佈失敗', err.message || '請檢查欄位或資料庫權限。', 'error');
           }
         });
 
-        // 3. Event Form (public.events)
         document.getElementById('eventForm')?.addEventListener('submit', async (e) => {
           e.preventDefault();
           const form = e.currentTarget;
@@ -1589,7 +1680,7 @@
           const htmlContent = quill ? quill.root.innerHTML.trim() : '';
 
           if (!state.user) {
-            return showToast('預覽模式提示', '請先登入同工帳號以發佈活動。', 'error');
+            return showToast('預覽模式提示', '目前為介面預覽模式，請先登入幹事帳號以寫入資料庫。', 'error');
           }
 
           try {
@@ -1614,14 +1705,13 @@
 
             form.reset();
             quill?.setText('');
-            showToast('已成功發佈', '特別聚會已新增。', 'success');
+            showToast('聚會已發佈', '特別聚會資料已成功儲存。', 'success');
             await loadEventsList();
           } catch (err) {
-            showToast('發佈失敗', err.message || '請檢查欄位或權限。', 'error');
+            showToast('發佈失敗', err.message || '請檢查聚會欄位或權限。', 'error');
           }
         });
 
-        // 4. Prayer Form (public.prayer_requests)
         document.getElementById('prayerFormCms')?.addEventListener('submit', async (e) => {
           e.preventDefault();
           const form = e.currentTarget;
@@ -1630,10 +1720,11 @@
           const htmlContent = quill ? quill.root.innerHTML.trim() : '';
 
           if (!plainText) {
-            return showToast('內容不可為空', '請輸入代禱內容。', 'error');
+            return showToast('內容不可為空', '請輸入代禱事項內容。', 'error');
           }
+
           if (!state.user) {
-            return showToast('預覽模式提示', '請先登入同工帳號以發佈代禱。', 'error');
+            return showToast('預覽模式提示', '目前為介面預覽模式，請先登入幹事帳號以寫入資料庫。', 'error');
           }
 
           try {
@@ -1656,23 +1747,22 @@
 
             form.reset();
             quill?.setText('');
-            showToast('已成功發佈', '代禱事項已發佈。', 'success');
+            showToast('代禱事項已發佈', '已成功新增至公開代禱列表。', 'success');
             await loadPrayersList();
           } catch (err) {
-            showToast('發佈失敗', err.message || '請檢查欄位或權限。', 'error');
+            showToast('發佈失敗', err.message || '請檢查代禱事項欄位或權限。', 'error');
           }
         });
 
-        // 5. Direct Media Upload
         document.getElementById('directMediaUploadInput')?.addEventListener('change', async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
           try {
             const uploaded = await uploadImageToSupabase(file);
-            showToast('圖片上傳成功', `已上傳至 ${uploaded.path}`, 'success');
+            showToast('圖片上傳成功', `已上傳檔案：${uploaded.name}`, 'success');
             await loadMediaLibrary();
           } catch (err) {
-            showToast('上傳失敗', err.message || '請檢查 cms-media 權限。', 'error');
+            showToast('上傳失敗', err.message || '請檢查儲存桶權限。', 'error');
           }
         });
       }
@@ -1698,37 +1788,31 @@
         document.getElementById('enterPreviewBtn')?.addEventListener('click', () => {
           state.previewMode = true;
           updateAuthUI();
-          showToast('已開啟預覽模式', '您可檢視溫暖原木風格後台及各分類編輯器。', 'info');
+          showToast('已進入介面預覽模式', '您可自由切換側邊欄及測試富文本編輯器。', 'info');
         });
 
         document.getElementById('refreshDataBtn')?.addEventListener('click', async () => {
           await refreshAllLists();
-          showToast('資料已更新', '已同步最新資料庫內容。', 'success');
+          showToast('資料已同步', '已重新載入最新內容。', 'success');
         });
 
         document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
           e.preventDefault();
           if (!state.client) return;
           const form = e.currentTarget;
-          const statusEl = document.getElementById('adminLoginStatus');
-          if (statusEl) statusEl.textContent = '登入中…';
+          const email = form.email.value.trim();
+          const password = form.password.value;
 
-          const { data, error } = await state.client.auth.signInWithPassword({
-            email: form.email.value.trim(),
-            password: form.password.value
-          });
+          const { data, error } = await state.client.auth.signInWithPassword({ email, password });
           if (error) {
-            if (statusEl) statusEl.textContent = '登入失敗，請檢查電郵及密碼。';
             return showToast('登入失敗', error.message || '請檢查電郵及密碼。', 'error');
           }
           state.previewMode = false;
           await syncUser(data.user);
           if (!['staff', 'admin'].includes(state.role)) {
-            if (statusEl) statusEl.textContent = '此帳號非獲授權同工 (staff / admin)。';
-            showToast('權限不足', '此帳號非 staff 或 admin 角色。', 'error');
+            showToast('權限不足', '此帳號非教牧同工或幹事角色，無法存取管理後台。', 'error');
           } else {
-            if (statusEl) statusEl.textContent = '';
-            showToast('登入成功', `歡迎回來，${state.displayName}`, 'success');
+            showToast('歡迎回來', `已登入為 ${state.displayName}`, 'success');
           }
         });
 
@@ -1748,6 +1832,7 @@
         initQuillEditors();
         bindUIEvents();
         bindForms();
+        syncContentKeyOptions();
 
         const cfg = window.KF_SUPABASE_CONFIG || DEFAULT_SUPABASE_CONFIG;
         if (window.supabase && cfg?.url && cfg?.anonKey) {
