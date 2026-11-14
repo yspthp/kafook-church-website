@@ -72,6 +72,28 @@ create table if not exists public.prayer_submissions (
   handled_at timestamptz
 );
 
+-- 8A. Structured Church History Milestones Table (public.history_milestones)
+create table if not exists public.history_milestones (
+  id uuid primary key default gen_random_uuid(),
+  year_label text not null,
+  sort_year integer not null,
+  sort_order integer not null default 0,
+  title text not null,
+  detail_html text,
+  photo_path text,
+  photo_alt text,
+  is_published boolean not null default true,
+  created_by uuid references auth.users(id),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists history_milestones_year_title_idx
+  on public.history_milestones (year_label, title);
+
+create index if not exists history_milestones_sort_idx
+  on public.history_milestones (is_published, sort_year asc, sort_order asc);
+
 -- 2. Idempotent Column Migrations for Existing Deployments
 alter table public.notices add column if not exists content_html text;
 alter table public.events add column if not exists content_html text;
@@ -79,6 +101,18 @@ alter table public.prayer_requests add column if not exists content_html text;
 alter table public.prayer_requests alter column category set default '大堂代禱事項';
 alter table public.prayer_submissions add column if not exists needs_followup boolean not null default false;
 alter table public.prayer_submissions add column if not exists contact_info text;
+
+alter table public.history_milestones add column if not exists year_label text;
+alter table public.history_milestones add column if not exists sort_year integer;
+alter table public.history_milestones add column if not exists sort_order integer not null default 0;
+alter table public.history_milestones add column if not exists title text;
+alter table public.history_milestones add column if not exists detail_html text;
+alter table public.history_milestones add column if not exists photo_path text;
+alter table public.history_milestones add column if not exists photo_alt text;
+alter table public.history_milestones add column if not exists is_published boolean not null default true;
+alter table public.history_milestones add column if not exists created_by uuid references auth.users(id);
+alter table public.history_milestones add column if not exists created_at timestamptz not null default now();
+alter table public.history_milestones add column if not exists updated_at timestamptz not null default now();
 
 -- Ensure any legacy constraint on prayer_requests.category allows both '大堂代禱事項' and '禱告邀約'
 alter table public.prayer_requests drop constraint if exists prayer_requests_category_check;
@@ -103,6 +137,7 @@ alter table public.events enable row level security;
 alter table public.prayer_requests enable row level security;
 alter table public.page_content enable row level security;
 alter table public.prayer_submissions enable row level security;
+alter table public.history_milestones enable row level security;
 
 -- 5. RLS Policies
 drop policy if exists "profiles_self_read" on public.profiles;
@@ -160,6 +195,15 @@ create policy "staff_prayer_submissions_read" on public.prayer_submissions
 drop policy if exists "staff_prayer_submissions_update" on public.prayer_submissions;
 create policy "staff_prayer_submissions_update" on public.prayer_submissions
   for update using (public.is_staff()) with check (public.is_staff());
+
+-- history_milestones RLS: Public SELECT only where is_published = true; Staff ALL via public.is_staff()
+drop policy if exists "public_history_milestones_read" on public.history_milestones;
+create policy "public_history_milestones_read" on public.history_milestones
+  for select using (is_published = true);
+
+drop policy if exists "staff_history_milestones_write" on public.history_milestones;
+create policy "staff_history_milestones_write" on public.history_milestones
+  for all using (public.is_staff()) with check (public.is_staff());
 
 -- 6. Storage Buckets & RLS: member-documents (private) & cms-media (public)
 insert into storage.buckets (id, name, public)
@@ -261,7 +305,124 @@ values
   )
 on conflict (page, content_key) do nothing;
 
--- 8. Optional Admin Profile Promotion (when admin_test@kfphc.org exists in Auth)
+-- 8. Seed Initial 14 Church History Milestones (Idempotent: Do Nothing if Already Seeded)
+insert into public.history_milestones (year_label, sort_year, sort_order, title, detail_html, is_published)
+values
+  (
+    '1968',
+    1968,
+    10,
+    '慈雲山開基',
+    '<p>1966年借用慈雲山一間醫務所作聚會地點，1968年正式成立「五旬節聖潔會慈雲山堂」，初期聚會人數只有十多人。</p>',
+    true
+  ),
+  (
+    '1969',
+    1969,
+    20,
+    '永光小學時期',
+    '<p>遷入五旬節聖潔會第二永光學校，以學校作為福音工作的重要平台。七十至八十年代以小學生佈道為主要發展方向；至八十年代末，聚會人數增長至接近二百人，教會經濟亦漸趨穩定。</p>',
+    true
+  ),
+  (
+    '1995–1996',
+    1995,
+    30,
+    '首次置業・更名迦福堂',
+    '<p>因應慈雲山區重建，教會成立「建堂委員會」，由等待政府安置轉向自行置業。1995年購入九龍城嘉福閣閣樓單位；1996年正式進駐九龍城，並因地域遷移改名為「五旬節聖潔會迦福堂」。</p>',
+    true
+  ),
+  (
+    '1999',
+    1999,
+    40,
+    '青年架構重組',
+    '<p>原有高中團契彼得團及初中團契約翰團，重組為大專團契「彼得之家」，以及少年團「Teen家」及「豐盛之家」，確立以學生工作作為福音發展主幹。</p>',
+    true
+  ),
+  (
+    '2002',
+    2002,
+    50,
+    '落戶觀塘',
+    '<p>因聚會空間不敷應用，遷往觀塘道410號觀點中心12樓，展開觀塘區的長遠服侍。</p>',
+    true
+  ),
+  (
+    '2006',
+    2006,
+    60,
+    '分家與小組牧養',
+    '<p>成立雅比斯之家並推行小組牧養；拓展大專團契安得烈團，由彼得之家分為雲彩之家、懷道之家、恩火之家及傳光之家；少年團分為錫安之家、甘霖之家、曙光之家、薪火之家及基石之家。</p>',
+    true
+  ),
+  (
+    '2007–2008',
+    2007,
+    70,
+    '入校工作與首支隊工',
+    '<p>2007年與東華三院呂潤財紀念中學合辦香港基督少年軍，開展將軍澳入校工作。2008年成立本堂第一支隊工「恩冕籃球隊」。</p>',
+    true
+  ),
+  (
+    '2011',
+    2011,
+    80,
+    '棋匯坊成立',
+    '<p>成立隊工「棋匯坊」，以板棋作為傳福音媒介，藉活動與新朋友建立關係。</p>',
+    true
+  ),
+  (
+    '2012',
+    2012,
+    90,
+    '諾知原開辦',
+    '<p>於將軍澳慧安商場開辦「諾知原教育中心」（Promised Land），以補習班及興趣班接觸區內學生。同年於迦密主恩中學開展學生信仰小組，並首次舉辦柬埔寨短宣團。</p>',
+    true
+  ),
+  (
+    '2013–2016',
+    2013,
+    100,
+    '傳恩之家與入校資助',
+    '<p>2013年成立傳恩之家，作為中學文憑試考生及大專生的牧養群體；同年獲教育局區本計劃資助，與高雷中學合作舉辦課程。至2016年已與觀塘及將軍澳區五所中學建立合作，包括高雷中學、新生命教育協會呂郭碧鳳中學、聖安當女書院、東華三院呂潤財紀念中學及迦密主恩中學，透過學術課程、功課輔導及義工訓練等接觸逾百名中學生。</p>',
+    true
+  ),
+  (
+    '2016',
+    2016,
+    110,
+    '提摩太團成立',
+    '<p>成立活泉之家，與傳恩之家合組成「提摩太團」，聚焦大專生活中的信仰挑戰與大專校園福音工作。</p>',
+    true
+  ),
+  (
+    '2017',
+    2017,
+    120,
+    '小組化牧養與建堂起步',
+    '<p>安得烈團重組為六個小組：申命、因愛、葡萄園、傳愛、恩悅、承命，其中申命及因愛為夫婦小組，其餘為職青小組；少年團重組為揚光之家及使命之家。同年11月購入觀塘成業街10號電訊一代廣場23樓C2室，並啟動「天國小錢」建堂捐獻計劃。</p>',
+    true
+  ),
+  (
+    '2018',
+    2018,
+    130,
+    '五十週年堂慶',
+    '<p>推動「全堂合一佈道運動」及相關堂慶活動，總結多年來的組織發展與福音外展。</p>',
+    true
+  ),
+  (
+    '2024–2026',
+    2024,
+    140,
+    '新堂啟用',
+    '<p>2024年啟動「天國小錢2025」建堂捐獻計劃；2025年購置新堂物業；2026年1月25日舉行新堂啟用與獻堂感恩崇拜。</p>',
+    true
+  )
+on conflict (year_label, title) do nothing;
+
+-- 9. Optional Admin Profile Promotion (when admin_test@kfphc.org exists in Auth)
 insert into public.profiles (id, display_name, role)
 select id, '迦福堂測試幹事', 'admin'
 from auth.users
