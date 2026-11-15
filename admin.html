@@ -325,6 +325,26 @@
               <i class="fa-solid fa-hands-praying" aria-hidden="true"></i>
               <span>同心代禱與跟進</span>
             </button>
+            <button type="button" data-tab="ministries"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-solid fa-people-group" aria-hidden="true"></i>
+              <span>牧養架構</span>
+            </button>
+            <button type="button" data-tab="staff"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-regular fa-id-badge" aria-hidden="true"></i>
+              <span>教牧團隊</span>
+            </button>
+            <button type="button" data-tab="qa"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-regular fa-circle-question" aria-hidden="true"></i>
+              <span>常見問題</span>
+            </button>
+            <button type="button" data-tab="giving"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>
+              <span>奉獻方式</span>
+            </button>
             <button type="button" data-tab="media"
               class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
               <i class="fa-regular fa-images" aria-hidden="true"></i>
@@ -473,15 +493,12 @@
                     </label>
                     <select id="pageSelect" name="page"
                       class="w-full px-3.5 py-2.5 text-sm rounded-lg border border-kf-border bg-kf-paper focus:bg-white focus:outline-none focus:ring-2 focus:ring-kf-walnut">
-                      <option value="index.html">首頁</option>
-                      <option value="about.html">關於我們（含教牧同工自我介紹）</option>
-                      <option value="events.html">聚會生活（含聚會提示及兒童崇拜）</option>
-                      <option value="shared">跨頁共用區塊（新朋友常見問題）</option>
-                      <option value="news.html">教會消息</option>
-                      <option value="prayer.html">同心代禱</option>
-                      <option value="giving.html">奉獻支持</option>
-                      <option value="contact.html">聯絡我們</option>
-                      <option value="members.html">會友專區</option>
+                      <option value="index">首頁</option>
+                      <option value="about">關於我們</option>
+                      <option value="events">聚會生活</option>
+                      <option value="giving">奉獻支持</option>
+                      <option value="contact">聯絡我們</option>
+                      <option value="prayer">同心代禱</option>
                     </select>
                   </div>
 
@@ -781,6 +798,55 @@
 
           <!-- ================= 分頁四：崇拜與特別聚會 ================= -->
           <section id="tab-events" class="cms-tab-panel hidden space-y-6">
+              <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm space-y-5">
+                <div class="pb-4 border-b border-kf-border flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h3 class="font-serif text-lg font-semibold text-kf-walnut m-0 flex items-center gap-2">
+                      <i class="fa-solid fa-church text-kf-amber" aria-hidden="true"></i>
+                      <span>崇拜聚會時間管理</span>
+                    </h3>
+                    <p class="text-xs text-kf-inkMuted m-0 mt-1">管理早堂、午堂、青少年崇拜及兒童崇拜，將同步顯示於聚會生活與聯絡我們頁面。</p>
+                  </div>
+                  <button type="button" id="cancelWorshipEditBtn" class="hidden px-3 py-1.5 rounded-lg border border-kf-border text-xs text-kf-inkSoft hover:bg-kf-sand cursor-pointer">取消編輯</button>
+                </div>
+                <form id="worshipForm" class="space-y-4">
+                  <input type="hidden" name="id" id="worshipIdInput">
+                  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                      <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">名稱 *</label>
+                      <input name="name" id="worshipNameInput" type="text" required placeholder="例如：早堂崇拜" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">星期 *</label>
+                      <input name="day_label" id="worshipDayInput" type="text" required placeholder="例如：週日" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">開始時間 *</label>
+                      <input name="start_time" id="worshipStartInput" type="text" required placeholder="09:30" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">結束時間（選填）</label>
+                      <input name="end_time" id="worshipEndInput" type="text" placeholder="18:30" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                    <div class="md:col-span-2">
+                      <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">對象與說明</label>
+                      <input name="audience_html" id="worshipAudienceInput" type="text" placeholder="例如：歡迎長者及退職人士參與" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                    </div>
+                    <label class="inline-flex items-center gap-2 pt-5 cursor-pointer text-sm text-kf-ink">
+                      <input name="is_concurrent" id="worshipConcurrentInput" type="checkbox" class="w-4 h-4">
+                      <span>與主崇拜同時進行（如兒童崇拜）</span>
+                    </label>
+                  </div>
+                  <div class="flex justify-end">
+                    <button type="submit" id="worshipSubmitBtn" class="px-5 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存崇拜時間</button>
+                  </div>
+                </form>
+                <div id="adminWorshipList" class="space-y-2.5 text-sm text-kf-inkSoft">
+                  <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+                </div>
+              </div>
             <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm">
               <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-kf-border">
                 <div>
@@ -988,6 +1054,178 @@
             </div>
           </section>
 
+          <!-- ================= 分頁：牧養架構 (ministry_units) ================= -->
+          <section id="tab-ministries" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm space-y-5">
+              <div class="pb-4 border-b border-kf-border flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="font-serif text-lg font-semibold text-kf-walnut m-0">牧養架構管理</h3>
+                  <p class="text-xs text-kf-inkMuted m-0 mt-1">管理由長至幼 6 個牧養單位與隊工，將同步顯示於「關於我們」頁面。</p>
+                </div>
+                <button type="button" id="cancelMinistryEditBtn" class="hidden px-3 py-1.5 rounded-lg border border-kf-border text-xs text-kf-inkSoft hover:bg-kf-sand cursor-pointer">取消編輯</button>
+              </div>
+              <form id="ministryForm" class="space-y-4">
+                <input type="hidden" name="id" id="ministryIdInput">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">單位名稱 *</label>
+                    <input name="name" id="ministryNameInput" type="text" required placeholder="例如：提摩太團" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">對象標籤 *</label>
+                    <input name="audience_label" id="ministryAudienceInput" type="text" required placeholder="例如：大專與初職青年" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">副標語</label>
+                    <input name="tagline" id="ministryTaglineInput" type="text" placeholder="例如：在轉變中同行" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">屬下小組／團契（JSON 陣列，選填）</label>
+                  <input name="sub_units" id="ministrySubsInput" type="text" placeholder='[{"name":"活泉之家","label":"初職"},{"name":"燃愛之家","label":"大專"}]' class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">單位簡介</label>
+                  <textarea name="description_html" id="ministryDescInput" rows="3" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper"></textarea>
+                </div>
+                <div class="flex justify-end">
+                  <button type="submit" id="ministrySubmitBtn" class="px-5 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存牧養單位</button>
+                </div>
+              </form>
+              <div id="adminMinistriesList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= 分頁：教牧團隊 (staff_members) ================= -->
+          <section id="tab-staff" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm space-y-5">
+              <div class="pb-4 border-b border-kf-border flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="font-serif text-lg font-semibold text-kf-walnut m-0">教牧與幹事團隊管理</h3>
+                  <p class="text-xs text-kf-inkMuted m-0 mt-1">管理同工姓名、職稱、相片與自我介紹文案，將同步顯示於「關於我們」頁面。</p>
+                </div>
+                <button type="button" id="cancelStaffEditBtn" class="hidden px-3 py-1.5 rounded-lg border border-kf-border text-xs text-kf-inkSoft hover:bg-kf-sand cursor-pointer">取消編輯</button>
+              </div>
+              <form id="staffForm" class="space-y-4">
+                <input type="hidden" name="id" id="staffIdInput">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">姓名 *</label>
+                    <input name="name" id="staffNameInput" type="text" required placeholder="例如：林淑櫻" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">職稱 *</label>
+                    <input name="title" id="staffTitleInput" type="text" required placeholder="例如：主任牧師" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">相片路徑</label>
+                    <input name="photo_path" id="staffPhotoInput" type="text" placeholder="images/team/林淑櫻.webp" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">自我介紹（可輸入 HTML 或純文字）</label>
+                  <textarea name="bio_html" id="staffBioInput" rows="3" placeholder="留空時前台將顯示「自我介紹內容待補充。」" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper"></textarea>
+                </div>
+                <div class="flex justify-end">
+                  <button type="submit" id="staffSubmitBtn" class="px-5 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存同工資料</button>
+                </div>
+              </form>
+              <div id="adminStaffList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= 分頁：常見問題 (qa_items) ================= -->
+          <section id="tab-qa" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm space-y-5">
+              <div class="pb-4 border-b border-kf-border flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="font-serif text-lg font-semibold text-kf-walnut m-0">新朋友常見問題管理</h3>
+                  <p class="text-xs text-kf-inkMuted m-0 mt-1">管理「關於我們」與「聚會生活」共用之常見問題；答案留空時前台將顯示「（內容待補）」。</p>
+                </div>
+                <button type="button" id="cancelQaEditBtn" class="hidden px-3 py-1.5 rounded-lg border border-kf-border text-xs text-kf-inkSoft hover:bg-kf-sand cursor-pointer">取消編輯</button>
+              </div>
+              <form id="qaForm" class="space-y-4">
+                <input type="hidden" name="id" id="qaIdInput">
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">問題 *</label>
+                  <input name="question" id="qaQuestionInput" type="text" required placeholder="例如：崇拜會做什麼？" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">解答（可輸入 HTML 或純文字）</label>
+                  <textarea name="answer_html" id="qaAnswerInput" rows="4" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper"></textarea>
+                </div>
+                <div class="flex justify-end">
+                  <button type="submit" id="qaSubmitBtn" class="px-5 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存常見問題</button>
+                </div>
+              </form>
+              <div id="adminQaList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= 分頁：奉獻方式 (giving_methods) ================= -->
+          <section id="tab-giving" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl p-6 border border-kf-border shadow-sm space-y-5">
+              <div class="pb-4 border-b border-kf-border flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 class="font-serif text-lg font-semibold text-kf-walnut m-0">奉獻方式管理</h3>
+                  <p class="text-xs text-kf-inkMuted m-0 mt-1">管理轉數快、銀行轉帳及支票奉獻資訊與登記表連結。</p>
+                </div>
+                <button type="button" id="cancelGivingEditBtn" class="hidden px-3 py-1.5 rounded-lg border border-kf-border text-xs text-kf-inkSoft hover:bg-kf-sand cursor-pointer">取消編輯</button>
+              </div>
+              <form id="givingForm" class="space-y-4">
+                <input type="hidden" name="id" id="givingIdInput">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">類型 *</label>
+                    <select name="method_type" id="givingTypeInput" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                      <option value="fps">轉數快</option>
+                      <option value="bank">銀行轉帳</option>
+                      <option value="cheque">支票</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">顯示名稱 *</label>
+                    <input name="name" id="givingNameInput" type="text" required class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">識別碼／戶口號碼</label>
+                    <input name="identifier" id="givingIdentifierInput" type="text" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">銀行／系統名稱</label>
+                    <input name="bank_name" id="givingBankInput" type="text" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">戶名</label>
+                    <input name="account_name" id="givingAccountInput" type="text" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">登記表單連結</label>
+                  <input name="form_url" id="givingFormUrlInput" type="url" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-kf-inkSoft mb-1.5">奉獻說明</label>
+                  <textarea name="instructions_html" id="givingInstructionsInput" rows="3" class="w-full px-3 py-2 text-sm rounded-lg border border-kf-border bg-kf-paper"></textarea>
+                </div>
+                <div class="flex justify-end">
+                  <button type="submit" id="givingSubmitBtn" class="px-5 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存奉獻方式</button>
+                </div>
+              </form>
+              <div id="adminGivingList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
         </div>
       </div>
     </section>
@@ -1067,50 +1305,44 @@
       const DOCS_BUCKET = 'member-documents';
 
       const PAGE_KEYS_MAP = {
-        'index.html': [
-          { value: 'home_promised_land', label: '首頁：諾知原中心 (Promised Land) 介紹' },
-          { value: 'page_title', label: '首頁：主標題' },
-          { value: 'page_description', label: '首頁：副標題／簡介' },
-          { value: 'home_hero_description', label: '首頁：主視覺引言文字' },
-          { value: 'home_official_notice', label: '首頁：頂部特別公告' }
+        'index': [
+          { value: 'hero_headline', label: '首頁：主視覺大標題' },
+          { value: 'hero_lead', label: '首頁：主視覺導言' },
+          { value: 'first_visit_steps', label: '首頁：歡迎新朋友三步驟' },
+          { value: 'card_worship', label: '首頁：投入群體（崇拜與事奉）' },
+          { value: 'card_fellowship', label: '首頁：投入群體（團契與小組）' },
+          { value: 'card_prayer', label: '首頁：投入群體（代禱與關顧）' },
+          { value: 'promised_land_intro', label: '首頁：諾知原中心 (Promised Land) 簡介' }
         ],
-        'about.html': [
-          { value: 'staff_bio_1', label: '教牧與幹事團隊：林淑櫻主任牧師自我介紹' },
-          { value: 'staff_bio_2', label: '教牧與幹事團隊：林肇楓牧師自我介紹' },
-          { value: 'staff_bio_3', label: '教牧與幹事團隊：蒙潔文幹事自我介紹' },
-          { value: 'staff_bio_4', label: '教牧與幹事團隊：黃淽君幹事自我介紹' },
-          { value: 'staff_bio_5', label: '教牧與幹事團隊：吳天恩神學生自我介紹' },
-          { value: 'page_title', label: '關於我們：頁面標題' },
-          { value: 'page_description', label: '關於我們：頁面簡介' }
+        'about': [
+          { value: 'about_intro', label: '認識我們：頁首導言' },
+          { value: 'vision', label: '認識我們：01 異象' },
+          { value: 'mission', label: '認識我們：02 使命' },
+          { value: 'values', label: '認識我們：03 核心價值' }
         ],
-        'events.html': [
-          { value: 'events_gathering_notice', label: '崇拜聚會：聚會提示' },
-          { value: 'events_children_worship', label: '崇拜聚會：兒童崇拜詳情' },
-          { value: 'page_title', label: '聚會生活：頁面標題' },
-          { value: 'page_description', label: '聚會生活：頁面簡介' }
+        'events': [
+          { value: 'gathering_tips', label: '聚會生活：聚會提示（留空則隱藏）' },
+          { value: 'gathering_location', label: '聚會生活：聚會地點' }
         ],
-        'shared': [
-          { value: 'shared_faq_list', label: '新朋友常見問題（關於我們及崇拜聚會共用）' }
+        'giving': [
+          { value: 'giving_scripture', label: '奉獻支持：頁首經文' },
+          { value: 'giving_steps', label: '奉獻支持：網上奉獻五步驟' },
+          { value: 'cutoff_callout', label: '奉獻支持：每週截數時間提示' },
+          { value: 'tax_note', label: '奉獻支持：稅務寬減證明書說明' },
+          { value: 'physical_envelope_note', label: '奉獻支持：實體奉獻封備註' }
         ],
-        'news.html': [
-          { value: 'page_title', label: '教會消息：頁面標題' },
-          { value: 'page_description', label: '教會消息：頁面簡介' }
+        'contact': [
+          { value: 'address_zh', label: '聯絡我們：中文地址' },
+          { value: 'address_en', label: '聯絡我們：英文地址' },
+          { value: 'mtr_note', label: '聯絡我們：港鐵前往提示' },
+          { value: 'phone', label: '聯絡我們：電話號碼' },
+          { value: 'email', label: '聯絡我們：電郵地址' },
+          { value: 'map_url', label: '聯絡我們：地圖嵌入網址' },
+          { value: 'form_url', label: '聯絡我們：聯絡表單外部連結' }
         ],
-        'prayer.html': [
-          { value: 'page_title', label: '同心代禱：頁面標題' },
-          { value: 'page_description', label: '同心代禱：頁面簡介' }
-        ],
-        'giving.html': [
-          { value: 'page_title', label: '奉獻支持：頁面標題' },
-          { value: 'page_description', label: '奉獻支持：頁面簡介' }
-        ],
-        'contact.html': [
-          { value: 'page_title', label: '聯絡我們：頁面標題' },
-          { value: 'page_description', label: '聯絡我們：頁面簡介' }
-        ],
-        'members.html': [
-          { value: 'page_title', label: '會友專區：頁面標題' },
-          { value: 'page_description', label: '會友專區：頁面簡介' }
+        'prayer': [
+          { value: 'prayer_scripture', label: '同心代禱：頁首經文' },
+          { value: 'privacy_notice', label: '同心代禱：代禱表單私隱聲明' }
         ]
       };
 
@@ -1354,6 +1586,10 @@
           news: { eyebrow: '最新動態與通告', title: '教會消息管理' },
           events: { eyebrow: '聚會生活與行事曆', title: '崇拜與特別聚會管理' },
           prayers: { eyebrow: '代禱牆與肢體關顧', title: '同心代禱與跟進管理' },
+          ministries: { eyebrow: '關於我們・牧養單位', title: '牧養架構管理' },
+          staff: { eyebrow: '關於我們・教牧團隊', title: '教牧與幹事團隊管理' },
+          qa: { eyebrow: '新朋友常見問題', title: '常見問題管理' },
+          giving: { eyebrow: '奉獻支持', title: '奉獻方式管理' },
           media: { eyebrow: '公開圖片儲存庫', title: '圖片媒體庫管理' }
         };
 
@@ -1383,12 +1619,12 @@
         if (user && state.client) {
           const { data } = await state.client
             .from('profiles')
-            .select('role,display_name')
+            .select('role,full_name')
             .eq('id', user.id)
             .maybeSingle();
 
           state.role = data?.role || user.user_metadata?.role || 'member';
-          state.displayName = data?.display_name || user.email;
+          state.displayName = data?.full_name || user.email;
         }
 
         updateAuthUI();
@@ -1400,7 +1636,7 @@
         const nameEl = document.getElementById('staffDisplayName');
         const roleEl = document.getElementById('staffRoleBadge');
 
-        const isAuthorized = (state.user && ['staff', 'admin'].includes(state.role)) || state.previewMode;
+        const isAuthorized = (state.user && ['staff', 'editor', 'admin'].includes(state.role)) || state.previewMode;
 
         if (isAuthorized) {
           gate?.classList.add('hidden');
@@ -1428,6 +1664,11 @@
           loadPrayersList(),
           loadPrayerSubmissions(),
           loadMediaLibrary(),
+          loadWorshipListAdmin(),
+          loadMinistriesListAdmin(),
+          loadStaffListAdmin(),
+          loadQaListAdmin(),
+          loadGivingListAdmin(),
           loadSelectedPageContent()
         ]);
       }
@@ -2126,11 +2367,11 @@
               page: form.page.value,
               content_key: form.content_key.value,
               content_html: htmlContent,
-              visibility: 'public',
-              created_by: state.user.id,
+              is_published: true,
+              updated_by: state.user.id,
               updated_at: new Date().toISOString()
             };
-            const { error } = await state.client.from('page_content').upsert(payload, { onConflict: 'page,content_key' });
+            const { error } = await state.client.from('page_content').upsert(payload, { onConflict: 'content_key' });
             if (error) throw error;
 
             showToast('頁面內容已儲存', '重新整理前台頁面後會自動套用最新內容。', 'success');
@@ -2173,7 +2414,13 @@
               payload.attachment_path = pdfPath;
             }
 
-            const { error } = await state.client.from('notices').insert(payload);
+            payload.body = payload.content;
+            payload.updated_by = state.user.id;
+            const editId = form.dataset.editId;
+            const { error } = editId
+              ? await state.client.from('notices').update(payload).eq('id', editId)
+              : await state.client.from('notices').insert(payload);
+            delete form.dataset.editId;
             if (error) throw error;
 
             form.reset();
@@ -2209,7 +2456,13 @@
               created_by: state.user.id
             };
 
-            const { error } = await state.client.from('events').insert(payload);
+            payload.venue = payload.location;
+            payload.updated_by = state.user.id;
+            const editId = form.dataset.editId;
+            const { error } = editId
+              ? await state.client.from('events').update(payload).eq('id', editId)
+              : await state.client.from('events').insert(payload);
+            delete form.dataset.editId;
             if (error) throw error;
 
             form.reset();
@@ -2246,7 +2499,12 @@
               created_by: state.user.id
             };
 
-            const { error } = await state.client.from('prayer_requests').insert(payload);
+            payload.updated_by = state.user.id;
+            const editId = form.dataset.editId;
+            const { error } = editId
+              ? await state.client.from('prayer_requests').update(payload).eq('id', editId)
+              : await state.client.from('prayer_requests').insert(payload);
+            delete form.dataset.editId;
             if (error) throw error;
 
             form.reset();
@@ -2307,7 +2565,7 @@
           }
           state.previewMode = false;
           await syncUser(data.user);
-          if (!['staff', 'admin'].includes(state.role)) {
+          if (!['staff', 'editor', 'admin'].includes(state.role)) {
             showToast('權限不足', '此帳號未具同工或管理員權限，無法存取管理後台。', 'error');
           } else {
             showToast('歡迎回來', `已登入為 ${state.displayName}`, 'success');
@@ -2325,6 +2583,383 @@
           showToast('已登出', '您已安全登出管理後台。', 'info');
         });
       }
+
+
+      /* ---------- M4 完整 CRUD 模組（清單／編輯／發佈切換／排序／刪除） ---------- */
+      async function togglePublishRow(table, id, currentVal, reloadFn) {
+        if (!state.user) return showToast('權限提示', '請先登入同工帳號。', 'error');
+        const { error } = await state.client.from(table).update({ is_published: !currentVal, updated_by: state.user.id }).eq('id', id);
+        if (error) return showToast('更新失敗', error.message, 'error');
+        showToast('已更新狀態', !currentVal ? '已設為公開發佈。' : '已設為隱藏草稿。', 'success');
+        await reloadFn();
+      }
+
+      async function deleteTableRow(table, id, label, reloadFn) {
+        if (!state.user) return showToast('權限提示', '請先登入同工帳號。', 'error');
+        if (!window.confirm(`確定要刪除「${label}」嗎？此操作無法復原。`)) return;
+        const { error } = await state.client.from(table).delete().eq('id', id);
+        if (error) return showToast('刪除失敗', error.message, 'error');
+        showToast('已刪除', `已移除「${label}」。`, 'success');
+        await reloadFn();
+      }
+
+      async function swapSortOrder(table, items, idx, dir, reloadFn) {
+        const targetIdx = idx + dir;
+        if (targetIdx < 0 || targetIdx >= items.length || !state.user) return;
+        const a = items[idx];
+        const b = items[targetIdx];
+        const orderA = Number(a.sort_order ?? (idx + 1) * 10);
+        const orderB = Number(b.sort_order ?? (targetIdx + 1) * 10);
+        await Promise.all([
+          state.client.from(table).update({ sort_order: orderB === orderA ? (dir > 0 ? orderA + 10 : orderA - 10) : orderB }).eq('id', a.id),
+          state.client.from(table).update({ sort_order: orderA }).eq('id', b.id)
+        ]);
+        await reloadFn();
+      }
+
+      function renderCrudActions(table, item, idx, list, reloadFn, onEdit) {
+        const wrap = document.createElement('div');
+        wrap.className = 'flex flex-wrap items-center gap-1.5 flex-shrink-0';
+        const btnCls = 'px-2.5 py-1 rounded-lg border border-kf-border bg-white hover:bg-kf-sand text-xs text-kf-walnut cursor-pointer';
+
+        const editBtn = document.createElement('button');
+        editBtn.type = 'button';
+        editBtn.className = btnCls;
+        editBtn.textContent = '編輯';
+        editBtn.addEventListener('click', () => onEdit(item));
+
+        const pubBtn = document.createElement('button');
+        pubBtn.type = 'button';
+        pubBtn.className = btnCls;
+        pubBtn.textContent = item.is_published === false ? '發佈' : '隱藏';
+        pubBtn.addEventListener('click', () => togglePublishRow(table, item.id, item.is_published !== false, reloadFn));
+
+        const upBtn = document.createElement('button');
+        upBtn.type = 'button';
+        upBtn.className = btnCls;
+        upBtn.textContent = '↑';
+        upBtn.disabled = idx === 0;
+        upBtn.addEventListener('click', () => swapSortOrder(table, list, idx, -1, reloadFn));
+
+        const downBtn = document.createElement('button');
+        downBtn.type = 'button';
+        downBtn.className = btnCls;
+        downBtn.textContent = '↓';
+        downBtn.disabled = idx === list.length - 1;
+        downBtn.addEventListener('click', () => swapSortOrder(table, list, idx, 1, reloadFn));
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.className = 'px-2.5 py-1 rounded-lg border border-red-200 bg-red-50 hover:bg-red-100 text-xs text-red-700 cursor-pointer';
+        delBtn.textContent = '刪除';
+        delBtn.addEventListener('click', () => deleteTableRow(table, item.id, item.title || item.name || item.question || '此項目', reloadFn));
+
+        wrap.append(editBtn, pubBtn, upBtn, downBtn, delBtn);
+        return wrap;
+      }
+
+      loadNoticesList = async function () {
+        const container = document.getElementById('adminNoticesList');
+        const countEl = document.getElementById('statNoticesCount');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('notices').select('*').order('published_at', { ascending: false }).order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">無法讀取通告：${esc(error.message)}</p>`; return; }
+        if (countEl) countEl.textContent = String(data?.length || 0);
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">目前尚無已發佈通告。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
+          const dateStr = item.published_at ? new Date(item.published_at).toLocaleDateString('zh-HK') : '';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<div class="flex items-center gap-2 text-xs text-kf-amber font-medium"><span>${esc(item.category || '大堂報告')}</span><span>・</span><span>${item.is_published === false ? '草稿隱藏' : '公開發佈'}</span><span>・</span><span>${esc(dateStr)}</span></div><p class="font-medium text-kf-ink truncate m-0 mt-0.5">${esc(item.title)}</p>`;
+          row.append(info, renderCrudActions('notices', item, idx, data, loadNoticesList, (it) => {
+            const form = document.getElementById('noticeForm');
+            if (!form) return;
+            form.dataset.editId = it.id;
+            form.title.value = it.title || '';
+            form.category.value = it.category || '大堂報告';
+            state.editors.notice.root.innerHTML = it.content_html || `<p>${esc(it.body || it.content || '')}</p>`;
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            showToast('已載入通告', '修改完成後點擊發佈即可更新。', 'info');
+          }));
+          container.appendChild(row);
+        });
+      };
+
+      loadEventsList = async function () {
+        const container = document.getElementById('adminEventsList');
+        const countEl = document.getElementById('statEventsCount');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('events').select('*').order('sort_order', { ascending: true }).order('starts_at', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">無法讀取聚會：${esc(error.message)}</p>`; return; }
+        if (countEl) countEl.textContent = String(data?.length || 0);
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">目前尚無行事曆或特別聚會記錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
+          const dateStr = item.date_label || (item.starts_at ? new Date(item.starts_at).toLocaleDateString('zh-HK') : '');
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<div class="flex items-center gap-2 text-xs text-kf-amber font-medium"><span>${esc(item.category || '年度行事曆')}</span><span>・</span><span>${esc(dateStr)}</span><span>・</span><span>${item.is_published === false ? '隱藏' : '公開'}</span></div><p class="font-medium text-kf-ink truncate m-0 mt-0.5">${esc(item.title)}</p>`;
+          row.append(info, renderCrudActions('events', item, idx, data, loadEventsList, (it) => {
+            const form = document.getElementById('eventForm');
+            if (!form) return;
+            form.dataset.editId = it.id;
+            form.title.value = it.title || '';
+            form.category.value = it.category || '年度行事曆';
+            if (it.starts_at) form.starts_at.value = new Date(it.starts_at).toISOString().slice(0, 16);
+            form.location.value = it.venue || it.location || '';
+            state.editors.event.root.innerHTML = it.description || '';
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            showToast('已載入活動', '修改完成後點擊發佈即可更新。', 'info');
+          }));
+          container.appendChild(row);
+        });
+      };
+
+      loadPrayersList = async function () {
+        const container = document.getElementById('adminPrayersList');
+        const countEl = document.getElementById('statPrayersCount');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('prayer_requests').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">無法讀取代禱事項：${esc(error.message)}</p>`; return; }
+        if (countEl) countEl.textContent = String(data?.length || 0);
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">目前尚無已發佈代禱事項。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<div class="flex items-center gap-2 text-xs text-kf-amber font-medium"><span>${esc(item.category || '大堂代禱事項')}</span><span>・</span><span>${item.is_published === false ? '隱藏' : '公開'}</span></div><p class="font-medium text-kf-ink truncate m-0 mt-0.5">${esc(item.title)}</p>`;
+          row.append(info, renderCrudActions('prayer_requests', item, idx, data, loadPrayersList, (it) => {
+            const form = document.getElementById('prayerFormCms');
+            if (!form) return;
+            form.dataset.editId = it.id;
+            form.title.value = it.title || '';
+            form.category.value = it.category || '大堂代禱事項';
+            state.editors.prayer.root.innerHTML = `<p>${esc(it.content || '')}</p>`;
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            showToast('已載入代禱事項', '修改完成後點擊發佈即可更新。', 'info');
+          }));
+          container.appendChild(row);
+        });
+      };
+
+      async function loadWorshipListAdmin() {
+        const container = document.getElementById('adminWorshipList');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('worship_services').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">${esc(error.message)}</p>`; return; }
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">尚無崇拜時間紀錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          const t = item.end_time ? `${item.start_time}–${item.end_time}` : item.start_time;
+          info.innerHTML = `<span class="text-xs text-kf-amber font-medium">${esc(item.day_label)} ${esc(t)} ${item.is_concurrent ? '（同時進行）' : ''}</span><p class="font-medium text-kf-ink m-0">${esc(item.name)}</p>`;
+          row.append(info, renderCrudActions('worship_services', item, idx, data, loadWorshipListAdmin, (it) => {
+            document.getElementById('worshipIdInput').value = it.id;
+            document.getElementById('worshipNameInput').value = it.name || '';
+            document.getElementById('worshipDayInput').value = it.day_label || '';
+            document.getElementById('worshipStartInput').value = it.start_time || '';
+            document.getElementById('worshipEndInput').value = it.end_time || '';
+            document.getElementById('worshipAudienceInput').value = (it.audience_html || '').replace(/<[^>]*>/g, '');
+            document.getElementById('worshipConcurrentInput').checked = Boolean(it.is_concurrent);
+            document.getElementById('cancelWorshipEditBtn')?.classList.remove('hidden');
+          }));
+          container.appendChild(row);
+        });
+      }
+
+      async function loadMinistriesListAdmin() {
+        const container = document.getElementById('adminMinistriesList');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('ministry_units').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">${esc(error.message)}</p>`; return; }
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">尚無牧養架構紀錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<span class="text-xs text-kf-amber font-medium">${esc(item.audience_label)} · ${esc(item.tagline)}</span><p class="font-medium text-kf-ink m-0">${esc(item.name)}</p>`;
+          row.append(info, renderCrudActions('ministry_units', item, idx, data, loadMinistriesListAdmin, (it) => {
+            document.getElementById('ministryIdInput').value = it.id;
+            document.getElementById('ministryNameInput').value = it.name || '';
+            document.getElementById('ministryAudienceInput').value = it.audience_label || '';
+            document.getElementById('ministryTaglineInput').value = it.tagline || '';
+            document.getElementById('ministrySubsInput').value = JSON.stringify(it.sub_units || []);
+            document.getElementById('ministryDescInput').value = it.description_html || '';
+            document.getElementById('cancelMinistryEditBtn')?.classList.remove('hidden');
+          }));
+          container.appendChild(row);
+        });
+      }
+
+      async function loadStaffListAdmin() {
+        const container = document.getElementById('adminStaffList');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('staff_members').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">${esc(error.message)}</p>`; return; }
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">尚無教牧同工紀錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<span class="text-xs text-kf-amber font-medium">${esc(item.title)}</span><p class="font-medium text-kf-ink m-0">${esc(item.name)}</p>`;
+          row.append(info, renderCrudActions('staff_members', item, idx, data, loadStaffListAdmin, (it) => {
+            document.getElementById('staffIdInput').value = it.id;
+            document.getElementById('staffNameInput').value = it.name || '';
+            document.getElementById('staffTitleInput').value = it.title || '';
+            document.getElementById('staffPhotoInput').value = it.photo_path || '';
+            document.getElementById('staffBioInput').value = it.bio_html || '';
+            document.getElementById('cancelStaffEditBtn')?.classList.remove('hidden');
+          }));
+          container.appendChild(row);
+        });
+      }
+
+      async function loadQaListAdmin() {
+        const container = document.getElementById('adminQaList');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('qa_items').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">${esc(error.message)}</p>`; return; }
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">尚無常見問題紀錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          const hasAns = Boolean(String(item.answer_html || '').trim());
+          info.innerHTML = `<span class="text-xs text-kf-amber font-medium">${hasAns ? '已填寫答案' : '答案待補'}</span><p class="font-medium text-kf-ink m-0">${esc(item.question)}</p>`;
+          row.append(info, renderCrudActions('qa_items', item, idx, data, loadQaListAdmin, (it) => {
+            document.getElementById('qaIdInput').value = it.id;
+            document.getElementById('qaQuestionInput').value = it.question || '';
+            document.getElementById('qaAnswerInput').value = it.answer_html || '';
+            document.getElementById('cancelQaEditBtn')?.classList.remove('hidden');
+          }));
+          container.appendChild(row);
+        });
+      }
+
+      async function loadGivingListAdmin() {
+        const container = document.getElementById('adminGivingList');
+        if (!state.client || !container) return;
+        const { data, error } = await state.client.from('giving_methods').select('*').order('sort_order', { ascending: true });
+        if (error) { container.innerHTML = `<p class="text-xs text-red-600 m-0">${esc(error.message)}</p>`; return; }
+        if (!data?.length) { container.innerHTML = '<p class="text-xs text-kf-inkMuted m-0">尚無奉獻方式紀錄。</p>'; return; }
+        container.innerHTML = '';
+        data.forEach((item, idx) => {
+          const row = document.createElement('div');
+          row.className = 'flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-kf-paper border border-kf-border';
+          const info = document.createElement('div');
+          info.className = 'min-w-0 flex-1';
+          info.innerHTML = `<span class="text-xs text-kf-amber font-medium">${esc(item.bank_name)} · ${esc(item.identifier)}</span><p class="font-medium text-kf-ink m-0">${esc(item.name)}</p>`;
+          row.append(info, renderCrudActions('giving_methods', item, idx, data, loadGivingListAdmin, (it) => {
+            document.getElementById('givingIdInput').value = it.id;
+            document.getElementById('givingTypeInput').value = it.method_type || 'fps';
+            document.getElementById('givingNameInput').value = it.name || '';
+            document.getElementById('givingIdentifierInput').value = it.identifier || '';
+            document.getElementById('givingBankInput').value = it.bank_name || '';
+            document.getElementById('givingAccountInput').value = it.account_name || '';
+            document.getElementById('givingFormUrlInput').value = it.form_url || '';
+            document.getElementById('givingInstructionsInput').value = it.instructions_html || '';
+            document.getElementById('cancelGivingEditBtn')?.classList.remove('hidden');
+          }));
+          container.appendChild(row);
+        });
+      }
+
+      function bindNewStructureForms() {
+        const bindSimpleForm = (formId, cancelId, idInputId, table, buildPayload, reloadFn) => {
+          const form = document.getElementById(formId);
+          const cancelBtn = document.getElementById(cancelId);
+          const resetFn = () => {
+            form?.reset();
+            const idEl = document.getElementById(idInputId);
+            if (idEl) idEl.value = '';
+            cancelBtn?.classList.add('hidden');
+          };
+          cancelBtn?.addEventListener('click', resetFn);
+          form?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!state.user) return showToast('權限提示', '請先登入同工帳號。', 'error');
+            try {
+              const id = document.getElementById(idInputId)?.value.trim();
+              const payload = buildPayload(form);
+              payload.updated_by = state.user.id;
+              let res;
+              if (id) {
+                res = await state.client.from(table).update(payload).eq('id', id);
+              } else {
+                payload.content_key = `${table}_${Date.now()}`;
+                res = await state.client.from(table).insert(payload);
+              }
+              if (res.error) throw res.error;
+              resetFn();
+              showToast('已儲存', '資料已同步至資料庫。', 'success');
+              await reloadFn();
+            } catch (err) {
+              showToast('儲存失敗', err.message || '請檢查欄位格式。', 'error');
+            }
+          });
+        };
+
+        bindSimpleForm('worshipForm', 'cancelWorshipEditBtn', 'worshipIdInput', 'worship_services', (f) => ({
+          name: f.name.value.trim(),
+          day_label: f.day_label.value.trim(),
+          start_time: f.start_time.value.trim(),
+          end_time: f.end_time.value.trim() || null,
+          audience_html: `<p>${esc(f.audience_html.value.trim())}</p>`,
+          is_concurrent: f.is_concurrent.checked
+        }), loadWorshipListAdmin);
+
+        bindSimpleForm('ministryForm', 'cancelMinistryEditBtn', 'ministryIdInput', 'ministry_units', (f) => {
+          let subs = [];
+          const rawSubs = f.sub_units.value.trim();
+          if (rawSubs) subs = JSON.parse(rawSubs);
+          return {
+            name: f.name.value.trim(),
+            audience_label: f.audience_label.value.trim(),
+            tagline: f.tagline.value.trim(),
+            sub_units: subs,
+            description_html: f.description_html.value.trim()
+          };
+        }, loadMinistriesListAdmin);
+
+        bindSimpleForm('staffForm', 'cancelStaffEditBtn', 'staffIdInput', 'staff_members', (f) => ({
+          name: f.name.value.trim(),
+          title: f.title.value.trim(),
+          photo_path: f.photo_path.value.trim(),
+          bio_html: f.bio_html.value.trim()
+        }), loadStaffListAdmin);
+
+        bindSimpleForm('qaForm', 'cancelQaEditBtn', 'qaIdInput', 'qa_items', (f) => ({
+          question: f.question.value.trim(),
+          answer_html: f.answer_html.value.trim()
+        }), loadQaListAdmin);
+
+        bindSimpleForm('givingForm', 'cancelGivingEditBtn', 'givingIdInput', 'giving_methods', (f) => ({
+          method_type: f.method_type.value,
+          name: f.name.value.trim(),
+          identifier: f.identifier.value.trim(),
+          bank_name: f.bank_name.value.trim(),
+          account_name: f.account_name.value.trim(),
+          form_url: f.form_url.value.trim(),
+          instructions_html: f.instructions_html.value.trim()
+        }), loadGivingListAdmin);
+      }
+      bindNewStructureForms();
 
       async function bootAdmin() {
         initQuillEditors();
