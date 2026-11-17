@@ -12,3 +12,397 @@
 .cms-rich-content ul,.cms-rich-content ol { padding-left:1.4rem; margin:.5rem 0; }
 .cms-rich-content blockquote { border-left:3px solid var(--kf-secondary,#8c5f38); padding:.5rem 1rem; margin:.75rem 0; background:#fbf6ee; border-radius:0 6px 6px 0; }
 .cms-rich-content img { max-width:100%; height:auto; border-radius:8px; margin:.85rem 0; border:1px solid var(--kf-border,#e4d8c6); display:block; }
+
+/* 會友專區擴充樣式 (Warm Timber) */
+.member-status-bar { max-width: 760px; margin: 0 auto 1.25rem; }
+.member-login-card { max-width: 560px; margin: 0 auto; }
+.member-panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--kf-border, #E4D8C6);
+}
+.member-subnav { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.member-subnav-link {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  background: #FAF6F0;
+  color: var(--kf-primary, #4A3526);
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.member-subnav-link:hover, .member-subnav-link:focus-visible {
+  background: var(--kf-primary, #4A3526);
+  color: #fff;
+}
+.member-logout-btn { margin-top: 0; }
+.member-module-block {
+  padding: 2rem 0 2.75rem;
+  border-bottom: 1px solid var(--kf-border, #E4D8C6);
+}
+.member-module-block:last-child { border-bottom: 0; }
+.member-module-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.member-module-lead {
+  color: var(--kf-text-muted, #6B5847);
+  margin: 0.35rem 0 0;
+  font-size: 0.98rem;
+}
+.member-helper-note {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #FAF6F0;
+  border-left: 3px solid var(--kf-secondary, #8C5F38);
+  color: var(--kf-primary, #4A3526);
+  font-size: 0.92rem;
+  margin: 0 0 1.5rem;
+}
+.member-rota-controls {
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+  background: #FAF6F0;
+}
+.member-rota-search-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1.25rem;
+}
+.member-field-label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--kf-primary, #4A3526);
+  margin-bottom: 0.45rem;
+}
+.member-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.member-input-row input {
+  flex: 1 1 200px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+}
+.member-input-row .btn[aria-pressed="true"] {
+  background: var(--kf-primary, #4A3526);
+  color: #fff;
+  border-color: var(--kf-primary, #4A3526);
+}
+.member-search-results {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--kf-border, #E4D8C6);
+}
+.member-search-results-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--kf-secondary, #8C5F38);
+  margin: 0 0 0.65rem;
+}
+.member-search-hit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.member-search-hit-btn {
+  width: 100%;
+  text-align: left;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  background: #fff;
+  color: var(--kf-primary, #4A3526);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.member-search-hit-btn:hover, .member-search-hit-btn:focus-visible {
+  border-color: var(--kf-secondary, #8C5F38);
+  background: #FFFDF9;
+}
+.member-rotas-groups { display: grid; gap: 2rem; }
+.member-rota-group-title {
+  font-size: 1.2rem;
+  color: var(--kf-primary, #4A3526);
+  margin: 0 0 0.85rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--kf-border, #E4D8C6);
+}
+.member-rota-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.15rem;
+}
+.member-rota-card {
+  background: #fff;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+.member-rota-card-top { display: grid; gap: 0.4rem; }
+.member-rota-period-badge {
+  display: inline-block;
+  align-self: start;
+  width: fit-content;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: #F3EADC;
+  color: var(--kf-primary, #4A3526);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.member-rota-card h4 { margin: 0.15rem 0; font-size: 1.1rem; color: var(--kf-primary, #4A3526); }
+.member-rota-meta { font-size: 0.85rem; color: var(--kf-text-muted, #6B5847); display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.member-rota-unindexed {
+  font-size: 0.82rem;
+  color: #8C5F38;
+  background: #FAF6F0;
+  padding: 0.4rem 0.65rem;
+  border-radius: 6px;
+  margin: 0;
+}
+.member-rota-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.4rem;
+}
+.member-tool-btn {
+  padding: 0.45rem 0.85rem;
+  border-radius: 6px;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  background: #fff;
+  color: var(--kf-primary, #4A3526);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.member-tool-btn:hover, .member-tool-btn:focus-visible {
+  background: #F3EADC;
+}
+.member-tool-btn.primary {
+  background: var(--kf-primary, #4A3526);
+  color: #fff;
+  border-color: var(--kf-primary, #4A3526);
+}
+.member-tool-btn.primary:hover, .member-tool-btn.primary:focus-visible {
+  background: var(--kf-secondary, #8C5F38);
+  border-color: var(--kf-secondary, #8C5F38);
+}
+.member-tool-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.member-badge {
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.member-badge.pending {
+  background: #F3EADC;
+  color: #725F4D;
+}
+
+/* PDF.js 內嵌檢視器 */
+.member-pdf-viewer, .member-photo-viewer {
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  border: 2px solid var(--kf-secondary, #8C5F38);
+  background: #FFFDF9;
+}
+.member-pdf-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--kf-border, #E4D8C6);
+}
+.member-pdf-doc-title { margin: 0; font-size: 1.15rem; color: var(--kf-primary, #4A3526); }
+.member-pdf-doc-meta { font-size: 0.85rem; color: var(--kf-text-muted, #6B5847); }
+.member-pdf-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.member-page-indicator { font-size: 0.88rem; color: var(--kf-primary, #4A3526); padding: 0 0.35rem; font-weight: 600; }
+.member-highlight-banner {
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  background: #FFF3CD;
+  color: #5C4308;
+  font-size: 0.9rem;
+  margin: 0 0 0.85rem;
+}
+.member-pdf-viewport {
+  width: 100%;
+  overflow: auto;
+  background: #E9E2D8;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  justify-content: center;
+  min-height: 420px;
+  max-height: 82vh;
+}
+.member-pdf-stage {
+  position: relative;
+  box-shadow: 0 6px 20px rgba(74, 53, 38, 0.16);
+  background: #fff;
+  line-height: 0;
+}
+.member-pdf-text-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.rota-pdf-highlight {
+  position: absolute;
+  background: rgba(255, 212, 0, 0.48);
+  outline: 2px solid #D97706;
+  border-radius: 3px;
+  pointer-events: none;
+}
+.member-pdf-notes {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: #FAF6F0;
+  border-radius: 8px;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  font-size: 0.92rem;
+}
+
+/* 講道錄音列表 */
+.member-filter-bar { display: flex; flex-wrap: wrap; gap: 0.85rem; }
+.member-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  color: var(--kf-primary, #4A3526);
+  font-weight: 500;
+}
+.member-filter-item select {
+  padding: 0.45rem 0.75rem;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 6px;
+  background: #fff;
+  font: inherit;
+}
+.member-sermon-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.member-sermon-table th, .member-sermon-table td {
+  padding: 0.9rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--kf-border, #E4D8C6);
+  vertical-align: middle;
+}
+.member-sermon-table th {
+  background: #FAF6F0;
+  color: var(--kf-primary, #4A3526);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.member-sermon-sub {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--kf-text-muted, #6B5847);
+  margin-top: 0.2rem;
+}
+.member-sermon-player-row td {
+  background: #FAF6F0;
+  padding: 1rem 1.25rem;
+}
+
+/* 活動照片相簿 */
+.member-photo-year-group { margin-bottom: 2rem; }
+.member-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.member-photo-card {
+  background: #fff;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.member-photo-cover {
+  aspect-ratio: 16 / 10;
+  background: #F3EADC;
+  overflow: hidden;
+}
+.member-photo-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.member-photo-body {
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+.member-photo-frame-wrap {
+  width: 100%;
+  min-height: 480px;
+  background: #FAF6F0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.member-photo-frame-wrap iframe {
+  width: 100%;
+  height: 520px;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .member-rota-search-grid { grid-template-columns: 1fr; }
+  .member-sermon-table th:nth-child(3), .member-sermon-table td:nth-child(3) { min-width: 140px; }
+}
