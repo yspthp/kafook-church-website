@@ -329,12 +329,80 @@
   }
 
   /* ---------- 2. 講道錄音管理 (sermons) ---------- */
+  const SERMON_EMBED_ERR_MSG = '播放器無法載入。請確認你貼上嘅係 SoundCloud「分享 → 內嵌」入面嘅完整嵌入碼。';
+  let sermonPreviewFailed = false;
+
+  function extractSoundCloudPlayerSrc(rawInput) {
+    const raw = String(rawInput || '').trim();
+    if (!raw) return null;
+    let candidate = '';
+    if (/<iframe/i.test(raw)) {
+      const doc = new DOMParser().parseFromString(raw, 'text/html');
+      const iframe = doc.querySelector('iframe');
+      candidate = String(iframe?.getAttribute('src') || '').trim();
+    } else {
+      candidate = raw;
+    }
+    if (!/^https:\/\/w\.soundcloud\.com\/player\/\?/i.test(candidate)) {
+      return { error: SERMON_EMBED_ERR_MSG, src: null };
+    }
+    return { error: null, src: candidate };
+  }
+
+  function updateSermonPreview() {
+    const box = document.getElementById('sermonPreviewBox');
+    const errEl = document.getElementById('sermonPreviewError');
+    const wrap = document.getElementById('sermonPreviewFrameWrap');
+    const raw = document.getElementById('sermonEmbedInput')?.value.trim() || '';
+    sermonPreviewFailed = false;
+    if (!box || !wrap) return;
+
+    if (!raw) {
+      box.classList.add('hidden');
+      if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+      wrap.replaceChildren();
+      return;
+    }
+
+    box.classList.remove('hidden');
+    const parsed = extractSoundCloudPlayerSrc(raw);
+    if (!parsed || parsed.error || !parsed.src) {
+      sermonPreviewFailed = true;
+      wrap.replaceChildren();
+      if (errEl) {
+        errEl.textContent = parsed?.error || SERMON_EMBED_ERR_MSG;
+        errEl.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (errEl) { errEl.textContent = ''; errEl.classList.add('hidden'); }
+    const iframe = document.createElement('iframe');
+    iframe.width = '100%';
+    iframe.height = '300';
+    iframe.scrolling = 'no';
+    iframe.frameBorder = 'no';
+    iframe.allow = 'autoplay; encrypted-media';
+    iframe.src = parsed.src;
+    iframe.addEventListener('error', () => {
+      sermonPreviewFailed = true;
+      if (errEl) {
+        errEl.textContent = SERMON_EMBED_ERR_MSG;
+        errEl.classList.remove('hidden');
+      }
+    });
+    wrap.replaceChildren(iframe);
+  }
+
   function resetSermonForm() {
     const form = document.getElementById('sermonAdminForm');
     if (!form) return;
     form.reset();
     document.getElementById('sermonIdInput').value = '';
+    const embedEl = document.getElementById('sermonEmbedInput');
+    if (embedEl) embedEl.value = '';
     document.getElementById('sermonPublishedInput').checked = true;
+    updateSermonPreview();
   }
 
   function fillSermonForm(row) {
@@ -342,7 +410,10 @@
     document.getElementById('sermonDateInput').value = row.sermon_date || '';
     document.getElementById('sermonSpeakerInput').value = row.speaker || '';
     document.getElementById('sermonUrlInput').value = row.soundcloud_url || '';
+    const embedEl = document.getElementById('sermonEmbedInput');
+    if (embedEl) embedEl.value = row.soundcloud_player_src || '';
     document.getElementById('sermonPublishedInput').checked = row.is_published !== false;
+    updateSermonPreview();
     document.getElementById('sermonAdminForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -353,7 +424,7 @@
 
     const { data, error } = await client
       .from('sermons')
-      .select('id, content_key, sermon_date, speaker, soundcloud_url, is_published, sort_order, created_at, updated_at')
+      .select('id, content_key, sermon_date, speaker, soundcloud_url, soundcloud_player_src, is_published, sort_order, created_at, updated_at')
       .order('sermon_date', { ascending: false })
       .order('sort_order', { ascending: true });
 
@@ -375,9 +446,11 @@
       const pubBadge = row.is_published
         ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">已發布</span>'
         : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-stone-200 text-stone-700">草稿</span>';
-      const urlBadge = row.soundcloud_url
-        ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">已連結音訊</span>'
-        : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">待上載</span>';
+      const urlBadge = row.soundcloud_player_src
+        ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">已連結播放器</span>'
+        : (row.soundcloud_url
+          ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">僅備用連結</span>'
+          : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">待上載</span>');
 
       card.innerHTML = `
         <div class="flex flex-wrap items-center gap-2.5">
@@ -415,12 +488,23 @@
     const user = bridge().getUser?.();
     if (!client || !user) return toast('請先登入同工帳號', 'error');
 
+    const rawEmbed = document.getElementById('sermonEmbedInput')?.value.trim() || '';
+    let playerSrc = null;
+    if (rawEmbed) {
+      const parsed = extractSoundCloudPlayerSrc(rawEmbed);
+      if (!parsed || parsed.error || !parsed.src || sermonPreviewFailed) {
+        return toast(SERMON_EMBED_ERR_MSG, 'error');
+      }
+      playerSrc = parsed.src;
+    }
+
     const editId = document.getElementById('sermonIdInput').value.trim();
     const existingRow = sermonRows.find((r) => r.id === editId);
     const payload = {
       sermon_date: document.getElementById('sermonDateInput').value,
       speaker: document.getElementById('sermonSpeakerInput').value.trim() || null,
       soundcloud_url: (document.getElementById('sermonUrlInput').value.trim().replace(/([?&])si=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : p2 ? p1 : '')).replace(/[?&]$/, '') || null),
+      soundcloud_player_src: playerSrc,
       sort_order: existingRow ? (Number(existingRow.sort_order) || 10) : 10,
       is_published: document.getElementById('sermonPublishedInput').checked
     };
@@ -595,6 +679,7 @@
 
     document.getElementById('sermonAdminForm')?.addEventListener('submit', saveSermonForm);
     document.getElementById('cancelSermonEditBtn')?.addEventListener('click', resetSermonForm);
+    document.getElementById('sermonEmbedInput')?.addEventListener('input', updateSermonPreview);
 
     document.getElementById('albumAdminForm')?.addEventListener('submit', saveAlbumForm);
     document.getElementById('cancelAlbumEditBtn')?.addEventListener('click', resetAlbumForm);

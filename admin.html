@@ -1335,9 +1335,8 @@
               </div>
 
               <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed space-y-1">
-                <p class="m-0 font-semibold">SoundCloud 播放器會自動顯示錄音時長。你只需填寫日期、講員同貼上秘密連結。</p>
-                <p class="m-0">SoundCloud 免費額度為 2 小時總量。上傳新講道前若容量將滿，請先刪除最舊嘅音軌（刪除後分鐘數即時返還），再上傳並更新該列嘅秘密連結。</p>
-                <p class="m-0">請先於 SoundCloud 將講道音軌設為不公開，再複製包含秘密權杖的分享連結貼至此處（請勿將連結張貼於會友專區以外的公開網頁）。</p>
+                <p class="m-0 font-semibold">請喺 SoundCloud 音軌頁撳「分享 → 內嵌」，複製整段嵌入碼貼上。系統會自動取出播放器網址。秘密連結欄只作備用連結之用。</p>
+                <p class="m-0">SoundCloud 免費額度為 2 小時總量。上傳新講道前若容量將滿，請先刪除最舊嘅音軌（刪除後分鐘數即時返還），再上傳並貼上新音軌嘅嵌入碼（舊音軌嘅嵌入碼會隨刪除而失效）。</p>
               </div>
 
               <form id="sermonAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
@@ -1352,9 +1351,22 @@
                     <input type="text" id="sermonSpeakerInput" required placeholder="例如：林淑櫻牧師、林肇楓牧師" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
                   </label>
                   <label class="block text-sm font-medium text-kf-ink">
-                    SoundCloud 連結
+                    秘密連結（備用連結）
                     <input type="url" id="sermonUrlInput" placeholder="https://soundcloud.com/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
                   </label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    SoundCloud 內嵌程式碼或播放器網址（分享 → 內嵌）
+                    <textarea id="sermonEmbedInput" rows="2" placeholder="貼上完整 &lt;iframe ...&gt; 嵌入碼，或直接貼上 https://w.soundcloud.com/player/?url=..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-xs font-mono"></textarea>
+                  </label>
+                </div>
+
+                <div id="sermonPreviewBox" class="hidden space-y-2 p-3 rounded-xl bg-white border border-kf-border">
+                  <p class="text-xs font-semibold text-kf-ink m-0">播放器即時預覽（儲存前請確認可正常載入）：</p>
+                  <p id="sermonPreviewError" class="hidden text-xs text-red-700 font-medium m-0"></p>
+                  <div id="sermonPreviewFrameWrap" class="w-full overflow-hidden rounded-lg"></div>
                 </div>
 
                 <div class="flex flex-wrap items-center justify-between gap-4">
