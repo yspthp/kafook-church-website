@@ -78,9 +78,25 @@
     el.className = `cms-status ${tone === 'error' ? 'error' : tone === 'success' ? 'success' : ''}`.trim();
   };
 
-  const addScript = (src) => new Promise((resolve, reject) => {
+  const addScript = (src, readyCheck) => new Promise((resolve, reject) => {
+    if (typeof readyCheck === 'function' && readyCheck()) return resolve();
     const existing = document.querySelector(`script[src="${src}"]`);
-    if (existing) return resolve();
+    if (existing) {
+      let tries = 0;
+      const timer = setInterval(() => {
+        tries += 1;
+        if (typeof readyCheck === 'function' && readyCheck()) {
+          clearInterval(timer);
+          resolve();
+        } else if (tries > 100) {
+          clearInterval(timer);
+          reject(new Error(`載入 ${src} 逾時`));
+        }
+      }, 50);
+      existing.addEventListener('load', () => { clearInterval(timer); resolve(); }, { once: true });
+      existing.addEventListener('error', () => { clearInterval(timer); reject(new Error(`載入 ${src} 失敗`)); }, { once: true });
+      return;
+    }
     const script = document.createElement('script');
     script.src = src;
     script.onload = resolve;
@@ -107,7 +123,7 @@
       }
       return window.pdfjsLib;
     }
-    await addScript(PDFJS_CDN);
+    await addScript(PDFJS_CDN, () => Boolean(window.pdfjsLib));
     if (window.pdfjsLib) {
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
     }
@@ -1033,8 +1049,8 @@
     }
 
     try {
-      if (!window.supabase) await addScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-      if (!window.DOMPurify) await addScript('https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js');
+      if (!window.supabase) await addScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2', () => Boolean(window.supabase));
+      if (!window.DOMPurify) await addScript('https://cdn.jsdelivr.net/npm/dompurify@3.1.7/dist/purify.min.js', () => Boolean(window.DOMPurify));
 
       state.client = window.supabase.createClient(config.url, config.anonKey);
       const { data } = await state.client.auth.getSession();
@@ -1043,7 +1059,8 @@
       state.client.auth.onAuthStateChange((_event, session) => {
         syncRoleAndLoad(session?.user || null);
       });
-    } catch (_err) {
+    } catch (err) {
+      console.error('[KF Member Area]', err);
       ['memberRotasList', 'memberSermonsList', 'memberPhotosList'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) setStatus(el, '目前暫時無法連線至會友資料庫，請稍後再試。', 'error');
