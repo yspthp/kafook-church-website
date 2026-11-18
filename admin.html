@@ -350,6 +350,21 @@
               <i class="fa-regular fa-images" aria-hidden="true"></i>
               <span>圖片媒體庫</span>
             </button>
+            <button type="button" data-tab="rotas"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-regular fa-file-pdf" aria-hidden="true"></i>
+              <span>事奉輪值表</span>
+            </button>
+            <button type="button" data-tab="sermons"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-solid fa-headphones" aria-hidden="true"></i>
+              <span>講道錄音</span>
+            </button>
+            <button type="button" data-tab="albums"
+              class="cms-nav-btn px-4 py-2.5 rounded-xl text-sm font-medium transition flex items-center gap-2 bg-transparent text-kf-inkSoft hover:bg-kf-sand border-0 cursor-pointer">
+              <i class="fa-solid fa-photo-film" aria-hidden="true"></i>
+              <span>活動照片</span>
+            </button>
           </nav>
 
           <!-- ================= 分頁一：總覽與頁面文案 ================= -->
@@ -1226,6 +1241,236 @@
             </div>
           </section>
 
+          <!-- 分頁 11：事奉輪值表管理 -->
+          <section id="tab-rotas" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-kf-border shadow-sm p-6 space-y-5">
+              <div>
+                <h3 class="text-lg font-serif font-semibold text-kf-ink m-0">事奉輪值表管理</h3>
+                <p class="text-xs text-kf-inkMuted mt-1 mb-0">上載原版 PDF 至私有儲存桶，系統會自動讀取頁數並於瀏覽器建立搜尋索引（原樣保留星號與隊工名稱）。</p>
+              </div>
+
+              <form id="rotaAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
+                <input type="hidden" id="rotaIdInput">
+                <input type="hidden" id="rotaPdfPathInput">
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    輪值表類別 *
+                    <select id="rotaTypeInput" required class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                      <option value="sanctuary">大堂崇拜事奉輪值表</option>
+                      <option value="youth">青少年崇拜輪值表</option>
+                      <option value="prayer">祈禱會輪值表</option>
+                      <option value="flowers">插花輪值表</option>
+                      <option value="headcount">崇拜點算人數輪值表</option>
+                      <option value="other">其他事奉輪值表</option>
+                    </select>
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    標題 *
+                    <input type="text" id="rotaTitleInput" required placeholder="例如：大堂崇拜事奉輪值表" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    期別（自由文字）*
+                    <input type="text" id="rotaPeriodLabelInput" required placeholder="例如：2027年1-2月、10-12月" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    開始日期（排序用）
+                    <input type="date" id="rotaPeriodStartInput" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    結束日期
+                    <input type="date" id="rotaPeriodEndInput" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    PDF 頁尾更新日期
+                    <input type="text" id="rotaUpdatedOnInput" placeholder="例如：2026年11月6日" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    頁數／排序權重
+                    <div class="mt-1 flex gap-2">
+                      <input type="number" id="rotaPageCountInput" min="1" placeholder="自動讀取" class="w-1/2 px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                      <input type="number" id="rotaSortOrderInput" value="10" placeholder="排序" class="w-1/2 px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                    </div>
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    上載輪值表 PDF 檔案（儲存於私有儲存桶）
+                    <input type="file" id="rotaPdfFileInput" accept="application/pdf" class="mt-1 block w-full text-sm text-kf-inkMuted">
+                    <span id="rotaCurrentPdfLabel" class="block text-xs text-kf-inkMuted mt-1">尚未選擇或上載 PDF 檔案</span>
+                  </label>
+                  <label class="inline-flex items-center gap-2 text-sm font-medium text-kf-ink cursor-pointer">
+                    <input type="checkbox" id="rotaPublishedInput" checked class="rounded border-kf-border">
+                    <span>立即發布至會友專區</span>
+                  </label>
+                </div>
+
+                <div>
+                  <span class="block text-sm font-medium text-kf-ink mb-1">輪值表底部備註（「註」事項）</span>
+                  <div id="rotaNotesEditor" class="bg-white rounded-lg border border-kf-border"></div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button type="submit" class="px-4 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存輪值表</button>
+                  <button type="button" id="cancelRotaEditBtn" class="px-4 py-2 rounded-lg bg-white border border-kf-border text-kf-ink text-sm font-medium cursor-pointer">重設／取消編輯</button>
+                </div>
+              </form>
+
+              <div id="adminRotasList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 分頁 12：講道錄音管理 -->
+          <section id="tab-sermons" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-kf-border shadow-sm p-6 space-y-5">
+              <div>
+                <h3 class="text-lg font-serif font-semibold text-kf-ink m-0">講道錄音管理</h3>
+                <p class="text-xs text-kf-inkMuted mt-1 mb-0">管理主日與特別聚會講道中繼資料與音訊連結。</p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                <strong>如何取得秘密連結與安全提示：</strong>
+                請先於 SoundCloud 將講道音軌設為「Private（不公開）」，再點選音軌的「Share（分享）→ Copy Secret Link」複製包含秘密權杖的連結貼至此處。
+                <strong>請注意：</strong>任何持有該連結的人士皆可直接收聽音訊，因此請勿將連結公開張貼於會友專區以外的網頁。
+              </div>
+
+              <form id="sermonAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
+                <input type="hidden" id="sermonIdInput">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    講道日期 *
+                    <input type="date" id="sermonDateInput" required class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    講員
+                    <input type="text" id="sermonSpeakerInput" placeholder="例如：林淑櫻牧師、林肇楓牧師" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    講題
+                    <input type="text" id="sermonTitleInput" placeholder="講道題目（留空則顯示為待補）" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    經文
+                    <input type="text" id="sermonScriptureInput" placeholder="例如：路加福音 2:52" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    講道系列
+                    <input type="text" id="sermonSeriesInput" placeholder="選填" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    時長
+                    <input type="text" id="sermonDurationInput" placeholder="例如：38 分鐘" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    排序權重
+                    <input type="number" id="sermonSortOrderInput" value="10" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    SoundCloud 秘密音軌連結
+                    <input type="url" id="sermonUrlInput" placeholder="https://soundcloud.com/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="inline-flex items-center gap-2 text-sm font-medium text-kf-ink cursor-pointer">
+                    <input type="checkbox" id="sermonPublishedInput" checked class="rounded border-kf-border">
+                    <span>立即發布至會友專區</span>
+                  </label>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button type="submit" class="px-4 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存講道錄音</button>
+                  <button type="button" id="cancelSermonEditBtn" class="px-4 py-2 rounded-lg bg-white border border-kf-border text-kf-ink text-sm font-medium cursor-pointer">重設／取消編輯</button>
+                </div>
+              </form>
+
+              <div id="adminSermonsList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 分頁 13：活動照片管理 -->
+          <section id="tab-albums" class="cms-tab-panel hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-kf-border shadow-sm p-6 space-y-5">
+              <div>
+                <h3 class="text-lg font-serif font-semibold text-kf-ink m-0">活動照片相簿管理</h3>
+                <p class="text-xs text-kf-inkMuted mt-1 mb-0">管理教會活動 Flickr 相簿連結與封面資訊。</p>
+              </div>
+
+              <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                <strong>Flickr 權限設定提醒：</strong>
+                請務必將 Flickr 相簿私隱設定為「不列出」（Hidden from search），<strong>切勿設為「私人」（Private）</strong>，否則私人相簿將無法嵌入會友專區網頁內顯示。
+              </div>
+
+              <form id="albumAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
+                <input type="hidden" id="albumIdInput">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    相簿名稱 *
+                    <input type="text" id="albumTitleInput" required placeholder="例如：2026年獻堂感恩崇拜" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    活動日期
+                    <input type="date" id="albumDateInput" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    相片數量／排序權重
+                    <div class="mt-1 flex gap-2">
+                      <input type="number" id="albumPhotoCountInput" min="0" placeholder="相片數" class="w-1/2 px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                      <input type="number" id="albumSortOrderInput" value="10" placeholder="排序" class="w-1/2 px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                    </div>
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    Flickr 相簿連結（不列出狀態）
+                    <input type="url" id="albumFlickrUrlInput" placeholder="https://www.flickr.com/photos/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    封面圖片網址（或下方直接上載封面至媒體庫）
+                    <input type="text" id="albumCoverUrlInput" placeholder="https://... 或由媒體庫自動填入" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                  <label class="block text-sm font-medium text-kf-ink">
+                    上載封面圖片至圖片媒體庫（選填）
+                    <input type="file" id="albumCoverFileInput" accept="image/*" class="mt-1 block w-full text-sm text-kf-inkMuted">
+                  </label>
+                  <label class="inline-flex items-center gap-2 text-sm font-medium text-kf-ink cursor-pointer">
+                    <input type="checkbox" id="albumPublishedInput" checked class="rounded border-kf-border">
+                    <span>立即發布至會友專區</span>
+                  </label>
+                </div>
+
+                <div>
+                  <span class="block text-sm font-medium text-kf-ink mb-1">相簿簡介（選填）</span>
+                  <div id="albumDescEditor" class="bg-white rounded-lg border border-kf-border"></div>
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <button type="submit" class="px-4 py-2 rounded-lg bg-kf-walnut hover:bg-kf-walnutLight text-white text-sm font-medium border-0 cursor-pointer">儲存活動相簿</button>
+                  <button type="button" id="cancelAlbumEditBtn" class="px-4 py-2 rounded-lg bg-white border border-kf-border text-kf-ink text-sm font-medium cursor-pointer">重設／取消編輯</button>
+                </div>
+              </form>
+
+              <div id="adminAlbumsList" class="space-y-3 text-sm text-kf-inkSoft">
+                <p class="text-xs text-kf-inkMuted m-0">載入中…</p>
+              </div>
+            </div>
+          </section>
+
         </div>
       </div>
     </section>
@@ -1590,7 +1835,10 @@
           staff: { eyebrow: '關於我們・教牧團隊', title: '教牧與幹事團隊管理' },
           qa: { eyebrow: '新朋友常見問題', title: '常見問題管理' },
           giving: { eyebrow: '奉獻支持', title: '奉獻方式管理' },
-          media: { eyebrow: '公開圖片儲存庫', title: '圖片媒體庫管理' }
+          media: { eyebrow: '公開圖片儲存庫', title: '圖片媒體庫管理' },
+          rotas: { eyebrow: '會友專區・PDF 輪值表', title: '事奉輪值表管理' },
+          sermons: { eyebrow: '會友專區・音訊中繼資料', title: '講道錄音管理' },
+          albums: { eyebrow: '會友專區・相簿中繼資料', title: '活動照片相簿管理' }
         };
 
         document.querySelectorAll('.cms-tab-panel').forEach((panel) => {
@@ -1669,7 +1917,8 @@
           loadStaffListAdmin(),
           loadQaListAdmin(),
           loadGivingListAdmin(),
-          loadSelectedPageContent()
+          loadSelectedPageContent(),
+          window.KF_ADMIN_MEMBER_AREA?.refreshAll?.() || Promise.resolve()
         ]);
       }
 
@@ -2961,6 +3210,14 @@
       }
       bindNewStructureForms();
 
+      window.KF_ADMIN_BRIDGE = {
+        getClient: () => state.client,
+        getUser: () => state.user,
+        showToast,
+        DOCS_BUCKET,
+        MEDIA_BUCKET
+      };
+
       async function bootAdmin() {
         initQuillEditors();
         updateContentKeyOptions();
@@ -2987,5 +3244,7 @@
       }
     })();
   </script>
+  <script src="js/admin-rota-indexer.js"></script>
+  <script src="js/admin-member-area.js"></script>
 </body>
 </html>
