@@ -1408,8 +1408,8 @@
               </div>
 
               <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
-                <strong>Flickr 權限設定提醒：</strong>
-                請務必將 Flickr 相簿私隱設定為「不列出」（Hidden from search），<strong>切勿設為「私人」（Private）</strong>，否則私人相簿將無法嵌入會友專區網頁內顯示。
+                <strong>Flickr 私隱設定提醒：</strong>
+                請於 Flickr 帳戶預設上載設定及逐張相片中啟用「從公開搜尋中隱藏」，並保持相片瀏覽權限為公開（切勿將相片設為「私人」），以便於會友專區內正常嵌入播放，同時避免相片被公開搜尋引擎索引。
               </div>
 
               <form id="albumAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
@@ -1417,7 +1417,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <label class="block text-sm font-medium text-kf-ink">
                     相簿名稱 *
-                    <input type="text" id="albumTitleInput" required placeholder="例如：2026年獻堂感恩崇拜" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                    <input type="text" id="albumTitleInput" required placeholder="例如：2026年獻堂崇拜" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
                   </label>
                   <label class="block text-sm font-medium text-kf-ink">
                     活動日期
@@ -1434,12 +1434,19 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label class="block text-sm font-medium text-kf-ink">
-                    Flickr 相簿連結（不列出狀態）
-                    <input type="url" id="albumFlickrUrlInput" placeholder="https://www.flickr.com/photos/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                    Flickr 相簿連結
+                    <input type="url" id="albumFlickrUrlInput" placeholder="https://www.flickr.com/photos/205153713@N03/albums/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
                   </label>
                   <label class="block text-sm font-medium text-kf-ink">
                     封面圖片網址（或下方直接上載封面至媒體庫）
                     <input type="text" id="albumCoverUrlInput" placeholder="https://... 或由媒體庫自動填入" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
+                  </label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-kf-ink">
+                    Flickr 原始內嵌程式碼（選填覆寫：若需手動貼上 Flickr「分享 → 內嵌」取消勾選頁首及頁尾後的程式碼）
+                    <textarea id="albumFlickrEmbedHtmlInput" rows="2" placeholder="一般情況只需填寫上方相簿連結即可，無須填寫此欄" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-xs font-mono"></textarea>
                   </label>
                 </div>
 
