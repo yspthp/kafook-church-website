@@ -139,7 +139,7 @@
     }
     const signed = await state.client.storage.from('member-documents').createSignedUrl(pdfPath, 300);
     if (signed.error || !signed.data?.signedUrl) {
-      throw new Error('儲存桶中尚無此 PDF 檔案，請由同工上載原始 PDF。');
+      throw new Error('儲存桶中尚無此 PDF 檔案，請由同工於管理後台上載原始 PDF。');
     }
     const res = await fetch(signed.data.signedUrl);
     if (!res.ok) throw new Error('無法讀取 PDF 檔案。');
@@ -341,65 +341,8 @@
     } catch (err) {
       if (statusEl) {
         statusEl.classList.remove('is-hidden');
-        setStatus(statusEl, err.message || '目前無法載入此 PDF 檔案，請由同工上載檔案至儲存桶。', 'error');
+        setStatus(statusEl, err.message || '目前無法載入此 PDF 檔案，請由同工於管理後台上載檔案。', 'error');
       }
-    }
-  }
-
-  async function extractPdfTextAndUploadForRota(doc, file, statusNode) {
-    if (!file || !state.client) return;
-    try {
-      if (statusNode) statusNode.textContent = '正在上載 PDF 並建立搜尋索引…';
-      const targetPath = doc.pdf_path || `rotas/${doc.content_key || doc.id}.pdf`;
-      const upRes = await state.client.storage
-        .from('member-documents')
-        .upload(targetPath, file, { upsert: true, contentType: 'application/pdf' });
-      if (upRes.error) throw upRes.error;
-
-      let pageCount = doc.page_count || 1;
-      let searchText = null;
-      let searchPageMap = null;
-      let searchIndexedAt = null;
-
-      try {
-        const pdfjsLib = await ensurePdfJsLoaded();
-        const buf = await file.arrayBuffer();
-        const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
-        pageCount = pdf.numPages || 1;
-        const pageEntries = [];
-        const allTexts = [];
-        for (let i = 1; i <= pageCount; i += 1) {
-          const p = await pdf.getPage(i);
-          const tc = await p.getTextContent();
-          const pText = tc.items.map((it) => String(it.str || '')).join(' ').trim();
-          pageEntries.push({ page: i, text: pText });
-          allTexts.push(pText);
-        }
-        searchText = allTexts.join('\n\n').trim() || null;
-        searchPageMap = searchText ? pageEntries : null;
-        searchIndexedAt = searchText ? new Date().toISOString() : null;
-      } catch (_extractErr) {
-        searchText = null;
-        searchPageMap = null;
-        searchIndexedAt = null;
-      }
-
-      const { error: dbErr } = await state.client
-        .from('rota_documents')
-        .update({
-          pdf_path: targetPath,
-          page_count: pageCount,
-          search_text: searchText,
-          search_page_map: searchPageMap,
-          search_indexed_at: searchIndexedAt
-        })
-        .eq('id', doc.id);
-
-      if (dbErr) throw dbErr;
-      await loadMemberRotas();
-    } catch (err) {
-      alert(err.message || '上載 PDF 失敗。');
-      if (statusNode) statusNode.textContent = '';
     }
   }
 
@@ -485,7 +428,6 @@
 
     const filterTerm = state.myServiceOnly ? String(state.myServiceName || '').trim() : '';
     const filterLower = filterTerm.toLowerCase();
-    const isStaffUser = ['admin', 'editor', 'staff'].includes(state.role);
 
     container.replaceChildren();
     container.setAttribute('data-source', 'supabase');
@@ -544,30 +486,6 @@
           actions.append(openBtn, dlBtn, printBtn);
         } else {
           actions.append(html('span', { class: 'member-badge pending', 'data-pending': 'rota-pdf-pending' }, '待上載 PDF'));
-          if (doc.notes_html) {
-            const notesBtn = html('button', { type: 'button', class: 'member-tool-btn' }, '查看備註');
-            notesBtn.addEventListener('click', () => openRotaPdfViewer(doc, 1, ''));
-            actions.append(notesBtn);
-          }
-        }
-
-        if (isStaffUser) {
-          const fileInput = html('input', {
-            type: 'file',
-            accept: 'application/pdf',
-            class: 'is-hidden'
-          });
-          const staffUpBtn = html('button', {
-            type: 'button',
-            class: 'member-tool-btn',
-            title: '同工快捷上載此期 PDF 至 member-documents 儲存桶'
-          }, doc.pdf_path ? '上載／更新檔案' : '上載 PDF 檔案');
-          staffUpBtn.addEventListener('click', () => fileInput.click());
-          fileInput.addEventListener('change', () => {
-            const f = fileInput.files?.[0];
-            if (f) extractPdfTextAndUploadForRota(doc, f, staffUpBtn);
-          });
-          actions.append(staffUpBtn, fileInput);
         }
 
         card.append(top, actions);
