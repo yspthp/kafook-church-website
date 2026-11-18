@@ -39,6 +39,7 @@
     fitWidthMode: true,
     highlightTerm: '',
     currentPdfBytes: null,
+    activeLoadToken: 0,
     eventsBound: false
   };
 
@@ -279,6 +280,46 @@
     }
   }
 
+  function resetRotaViewerState() {
+    state.pdfDoc = null;
+    state.currentRota = null;
+    state.currentPdfBytes = null;
+    state.highlightTerm = '';
+    state.currentPage = 1;
+    state.totalPages = 1;
+    state.fitWidthMode = true;
+
+    const canvas = document.getElementById('rotaPdfCanvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.width = 0;
+      canvas.height = 0;
+      canvas.style.width = '0px';
+      canvas.style.height = '0px';
+    }
+    const stage = document.getElementById('rotaPageStage');
+    if (stage) {
+      stage.style.width = '0px';
+      stage.style.height = '0px';
+    }
+    document.getElementById('rotaTextLayer')?.replaceChildren();
+
+    const banner = document.getElementById('rotaViewerHighlightBanner');
+    if (banner) {
+      banner.classList.add('is-hidden');
+      banner.textContent = '';
+    }
+    const pageInd = document.getElementById('rotaPageIndicator');
+    if (pageInd) pageInd.textContent = '第 — / — 頁';
+    const zoomInd = document.getElementById('rotaZoomIndicator');
+    if (zoomInd) zoomInd.textContent = '—';
+    const prevBtn = document.getElementById('rotaPrevPageBtn');
+    const nextBtn = document.getElementById('rotaNextPageBtn');
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+  }
+
   async function openRotaPdfViewer(doc, targetPage = 1, highlightTerm = '') {
     const modal = document.getElementById('rotaPdfViewerModal');
     const titleEl = document.getElementById('rotaViewerTitle');
@@ -286,7 +327,11 @@
     const statusEl = document.getElementById('rotaViewerStatus');
     const notesEl = document.getElementById('rotaViewerNotes');
     const viewportWrap = document.getElementById('rotaCanvasViewport');
-    if (!modal) return;
+    if (!modal || !doc) return;
+
+    const loadToken = ++state.activeLoadToken;
+    resetRotaViewerState();
+    if (viewportWrap) viewportWrap.classList.add('is-hidden');
 
     modal.classList.remove('is-hidden');
     modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -308,16 +353,15 @@
       }
     }
 
-    if (!doc.pdf_path) {
-      if (viewportWrap) viewportWrap.classList.add('is-hidden');
+    const expectedPath = String(doc.pdf_path || '').trim();
+    if (!expectedPath) {
       if (statusEl) {
         statusEl.classList.remove('is-hidden');
-        setStatus(statusEl, '此期輪值表原始 PDF 檔案待上載。', 'muted');
+        setStatus(statusEl, '此期輪值表尚未上載原始 PDF 檔案，目前無法預覽。', 'muted');
       }
       return;
     }
 
-    if (viewportWrap) viewportWrap.classList.remove('is-hidden');
     if (statusEl) {
       statusEl.classList.remove('is-hidden');
       setStatus(statusEl, '正在載入原始 PDF 檔案…', 'muted');
@@ -325,23 +369,43 @@
 
     try {
       const pdfjsLib = await ensurePdfJsLoaded();
-      const bytes = await fetchMemberPdfBytes(doc.pdf_path);
-      state.currentPdfBytes = bytes.slice(0);
-      state.currentRota = doc;
-      state.highlightTerm = highlightTerm || '';
-      state.fitWidthMode = true;
+      const loadedPath = expectedPath;
+      const bytes = await fetchMemberPdfBytes(loadedPath);
+
+      // 完整性檢查：確保載入中未切換文件，且載入路徑與該筆輪值表之 pdf_path 完全一致
+      if (loadToken !== state.activeLoadToken || loadedPath !== String(doc.pdf_path || '').trim()) {
+        resetRotaViewerState();
+        if (viewportWrap) viewportWrap.classList.add('is-hidden');
+        return;
+      }
 
       const loadingTask = pdfjsLib.getDocument({ data: bytes.slice(0) });
-      state.pdfDoc = await loadingTask.promise;
-      state.totalPages = state.pdfDoc.numPages || 1;
+      const pdfDoc = await loadingTask.promise;
+
+      if (loadToken !== state.activeLoadToken || loadedPath !== String(doc.pdf_path || '').trim()) {
+        resetRotaViewerState();
+        if (viewportWrap) viewportWrap.classList.add('is-hidden');
+        return;
+      }
+
+      state.currentPdfBytes = bytes.slice(0);
+      state.currentRota = doc;
+      state.pdfDoc = pdfDoc;
+      state.highlightTerm = highlightTerm || '';
+      state.fitWidthMode = true;
+      state.totalPages = pdfDoc.numPages || 1;
       state.currentPage = Math.min(Math.max(1, Number(targetPage) || 1), state.totalPages);
 
       if (statusEl) statusEl.classList.add('is-hidden');
+      if (viewportWrap) viewportWrap.classList.remove('is-hidden');
       await renderCurrentPdfPage();
-    } catch (err) {
+    } catch (_err) {
+      if (loadToken !== state.activeLoadToken) return;
+      resetRotaViewerState();
+      if (viewportWrap) viewportWrap.classList.add('is-hidden');
       if (statusEl) {
         statusEl.classList.remove('is-hidden');
-        setStatus(statusEl, err.message || '目前無法載入此 PDF 檔案，請由同工於管理後台上載檔案。', 'error');
+        setStatus(statusEl, '此期輪值表尚未於儲存桶找到對應 PDF 檔案，目前無法預覽（請由同工於管理後台上載）。', 'error');
       }
     }
   }
@@ -904,6 +968,7 @@
       if (state.currentRota) printOriginalRotaPdf(state.currentRota);
     });
     document.getElementById('rotaCloseViewerBtn')?.addEventListener('click', () => {
+      resetRotaViewerState();
       document.getElementById('rotaPdfViewerModal')?.classList.add('is-hidden');
     });
 
@@ -922,9 +987,7 @@
     state.rotas = [];
     state.sermons = [];
     state.albums = [];
-    state.pdfDoc = null;
-    state.currentRota = null;
-    state.currentPdfBytes = null;
+    resetRotaViewerState();
     document.getElementById('rotaPdfViewerModal')?.classList.add('is-hidden');
     document.getElementById('memberPhotoViewer')?.classList.add('is-hidden');
     document.getElementById('rotaSearchResults')?.classList.add('is-hidden');
