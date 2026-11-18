@@ -692,7 +692,7 @@
     const table = html('table', { class: 'member-sermon-table', 'aria-label': '講道錄音列表' });
     const thead = html('thead');
     const headRow = html('tr');
-    ['日期', '講員', '講題', '收聽'].forEach((col) => headRow.append(html('th', { scope: 'col' }, col)));
+    ['日期', '講員', '收聽'].forEach((col) => headRow.append(html('th', { scope: 'col' }, col)));
     thead.append(headRow);
 
     const tbody = html('tbody');
@@ -700,13 +700,6 @@
       const tr = html('tr');
       const dateStr = item.sermon_date || '';
       const speakerStr = item.speaker || '（講員待補）';
-
-      const titleTd = html('td');
-      titleTd.append(html('strong', {}, item.title || '（講題待補）'));
-      const subParts = [item.scripture, item.series, item.duration_label].filter(Boolean);
-      if (subParts.length) {
-        titleTd.append(html('span', { class: 'member-sermon-sub' }, subParts.join(' · ')));
-      }
 
       const actionTd = html('td');
       const scUrl = String(item.soundcloud_url || '').trim();
@@ -720,7 +713,7 @@
         }, '展開收聽');
 
         playerRow = html('tr', { class: 'member-sermon-player-row is-hidden' });
-        const playerCell = html('td', { colspan: '4' });
+        const playerCell = html('td', { colspan: '3' });
         playerRow.append(playerCell);
 
         toggleBtn.addEventListener('click', () => {
@@ -734,17 +727,35 @@
             playerRow.classList.remove('is-hidden');
             toggleBtn.setAttribute('aria-expanded', 'true');
             toggleBtn.textContent = '收起播放器';
-            if (!playerCell.querySelector('iframe')) {
-              const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(scUrl)}&color=%234A3526&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+            if (!playerCell.querySelector('iframe') && !playerCell.querySelector('.member-sermon-fallback')) {
+              const cleanScUrl = scUrl
+                .replace(/([?&])si=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : p2 ? p1 : ''))
+                .replace(/[?&]$/, '');
+              const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(cleanScUrl)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
+              const showFallback = () => {
+                const fb = html('div', { class: 'member-sermon-fallback', style: 'display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;' });
+                fb.append(
+                  html('span', {}, `${dateStr} · ${speakerStr}`),
+                  html('a', {
+                    href: cleanScUrl,
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                    class: 'member-tool-btn primary'
+                  }, '前往 SoundCloud')
+                );
+                playerCell.replaceChildren(fb);
+              };
               const iframe = html('iframe', {
                 title: `${dateStr} ${speakerStr} 講道錄音播放器`,
                 width: '100%',
-                height: '166',
+                height: '300',
                 scrolling: 'no',
                 frameborder: 'no',
-                allow: 'autoplay',
+                allow: 'autoplay; encrypted-media',
+                style: 'width:100%;max-width:100%;display:block;border:0;',
                 src: widgetUrl
               });
+              iframe.addEventListener('error', showFallback);
               playerCell.append(iframe);
             }
           }
@@ -757,7 +768,6 @@
       tr.append(
         html('td', {}, dateStr),
         html('td', {}, speakerStr),
-        titleTd,
         actionTd
       );
       tbody.append(tr);
@@ -774,7 +784,7 @@
     try {
       const { data, error } = await state.client
         .from('sermons')
-        .select('*')
+        .select('id, content_key, sermon_date, speaker, soundcloud_url, is_published, sort_order')
         .eq('is_published', true)
         .order('sermon_date', { ascending: false })
         .order('sort_order', { ascending: true });
