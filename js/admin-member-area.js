@@ -332,21 +332,24 @@
   const SERMON_EMBED_ERR_MSG = '播放器無法載入。請確認你貼上嘅係 SoundCloud「分享 → 內嵌」入面嘅完整嵌入碼。';
   let sermonPreviewFailed = false;
 
-  function extractSoundCloudPlayerSrc(rawInput) {
+  function extractSoundCloudEmbedParts(rawInput) {
     const raw = String(rawInput || '').trim();
     if (!raw) return null;
-    let candidate = '';
-    if (/<iframe/i.test(raw)) {
-      const doc = new DOMParser().parseFromString(raw, 'text/html');
-      const iframe = doc.querySelector('iframe');
-      candidate = String(iframe?.getAttribute('src') || '').trim();
-    } else {
-      candidate = raw;
+    const doc = new DOMParser().parseFromString(raw, 'text/html');
+    const iframe = doc.querySelector('iframe');
+    const candidateSrc = String(iframe?.getAttribute('src') || '').trim();
+    const anchors = Array.from(doc.querySelectorAll('a[href]'));
+    const permalinkAnchor = anchors.find((a) => /soundcloud\.com\/.+\/s-[\w-]+/i.test(String(a.getAttribute('href') || '')));
+    const candidatePermalink = String(permalinkAnchor?.getAttribute('href') || '').trim();
+
+    if (
+      !/^https:\/\/w\.soundcloud\.com\/player\//i.test(candidateSrc) ||
+      !candidateSrc.includes('secret_token=') ||
+      !/soundcloud\.com\/.+\/s-[\w-]+/i.test(candidatePermalink)
+    ) {
+      return { error: SERMON_EMBED_ERR_MSG, src: null, url: null };
     }
-    if (!/^https:\/\/w\.soundcloud\.com\/player\/\?/i.test(candidate)) {
-      return { error: SERMON_EMBED_ERR_MSG, src: null };
-    }
-    return { error: null, src: candidate };
+    return { error: null, src: candidateSrc, url: candidatePermalink };
   }
 
   function updateSermonPreview() {
@@ -365,7 +368,7 @@
     }
 
     box.classList.remove('hidden');
-    const parsed = extractSoundCloudPlayerSrc(raw);
+    const parsed = extractSoundCloudEmbedParts(raw);
     if (!parsed || parsed.error || !parsed.src) {
       sermonPreviewFailed = true;
       wrap.replaceChildren();
@@ -409,9 +412,12 @@
     document.getElementById('sermonIdInput').value = row.id || '';
     document.getElementById('sermonDateInput').value = row.sermon_date || '';
     document.getElementById('sermonSpeakerInput').value = row.speaker || '';
-    document.getElementById('sermonUrlInput').value = row.soundcloud_url || '';
     const embedEl = document.getElementById('sermonEmbedInput');
-    if (embedEl) embedEl.value = row.soundcloud_player_src || '';
+    if (embedEl) {
+      embedEl.value = (row.soundcloud_player_src && row.soundcloud_url)
+        ? `<iframe width="100%" height="300" scrolling="no" frameborder="no" allow="autoplay" src="${row.soundcloud_player_src}"></iframe><div><a href="${row.soundcloud_url}">SoundCloud</a></div>`
+        : (row.soundcloud_player_src || '');
+    }
     document.getElementById('sermonPublishedInput').checked = row.is_published !== false;
     updateSermonPreview();
     document.getElementById('sermonAdminForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -490,12 +496,14 @@
 
     const rawEmbed = document.getElementById('sermonEmbedInput')?.value.trim() || '';
     let playerSrc = null;
+    let permalinkUrl = null;
     if (rawEmbed) {
-      const parsed = extractSoundCloudPlayerSrc(rawEmbed);
-      if (!parsed || parsed.error || !parsed.src || sermonPreviewFailed) {
+      const parsed = extractSoundCloudEmbedParts(rawEmbed);
+      if (!parsed || parsed.error || !parsed.src || !parsed.url || sermonPreviewFailed) {
         return toast(SERMON_EMBED_ERR_MSG, 'error');
       }
       playerSrc = parsed.src;
+      permalinkUrl = parsed.url;
     }
 
     const editId = document.getElementById('sermonIdInput').value.trim();
@@ -503,7 +511,7 @@
     const payload = {
       sermon_date: document.getElementById('sermonDateInput').value,
       speaker: document.getElementById('sermonSpeakerInput').value.trim() || null,
-      soundcloud_url: (document.getElementById('sermonUrlInput').value.trim().replace(/([?&])si=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : p2 ? p1 : '')).replace(/[?&]$/, '') || null),
+      soundcloud_url: permalinkUrl,
       soundcloud_player_src: playerSrc,
       sort_order: existingRow ? (Number(existingRow.sort_order) || 10) : 10,
       is_published: document.getElementById('sermonPublishedInput').checked
