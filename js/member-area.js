@@ -131,7 +131,7 @@
     return window.pdfjsLib;
   }
 
-  /* ---------- 3A. 事奉輪值表：PDF.js 檢視器、原檔下載、原檔列印、按需即時搜尋與高亮 ---------- */
+  /* ---------- 3A. 事奉輪值表：PDF.js 檢視器、原檔下載、原檔列印、搜尋與高亮 ---------- */
   async function fetchMemberPdfBytes(pdfPath) {
     if (!pdfPath || !state.client) throw new Error('尚未設定 PDF 儲存路徑');
     const { data, error } = await state.client.storage.from('member-documents').download(pdfPath);
@@ -140,7 +140,7 @@
     }
     const signed = await state.client.storage.from('member-documents').createSignedUrl(pdfPath, 300);
     if (signed.error || !signed.data?.signedUrl) {
-      throw new Error('儲存桶中尚無此 PDF 檔案，請由同工於管理後台上載原始 PDF。');
+      throw new Error('儲存桶中尚無此 PDF 檔案，請由同工上載原始 PDF。');
     }
     const res = await fetch(signed.data.signedUrl);
     if (!res.ok) throw new Error('無法讀取 PDF 檔案。');
@@ -421,6 +421,7 @@
       const loadedPath = expectedPath;
       const bytes = await fetchMemberPdfBytes(loadedPath);
 
+      // 完整性檢查：確保載入中未切換文件，且載入路徑與該筆輪值表之 pdf_path 完全一致
       if (loadToken !== state.activeLoadToken || loadedPath !== String(doc.pdf_path || '').trim()) {
         resetRotaViewerState();
         if (viewportWrap) viewportWrap.classList.add('is-hidden');
@@ -788,50 +789,142 @@
   }
 
   /* ---------- 3C. 活動照片 ---------- */
-  function openPhotoAlbumViewer(album) {
-    const viewer = document.getElementById('memberPhotoViewer');
-    const titleEl = document.getElementById('photoViewerTitle');
-    const metaEl = document.getElementById('photoViewerMeta');
-    const extLink = document.getElementById('photoViewerExternalLink');
-    const frameWrap = document.getElementById('photoViewerFrameWrap');
-    const descEl = document.getElementById('photoViewerDesc');
-    if (!viewer || !frameWrap) return;
+  const FLICKR_EMBED_SCRIPT_SRC = 'https://embedr.flickr.com/assets/client-code.js';
+  let flickrHydrationTimer = null;
 
-    const rawUrl = String(album.flickr_album_url || '').trim();
-    if (!rawUrl) return;
-
-    viewer.classList.remove('is-hidden');
-    viewer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-    if (titleEl) titleEl.textContent = album.title || '活動相簿';
-    const metaParts = [];
-    if (album.event_date) metaParts.push(album.event_date);
-    if (album.photo_count) metaParts.push(`共 ${album.photo_count} 張照片`);
-    if (metaEl) metaEl.textContent = metaParts.join(' · ');
-    if (extLink) extLink.href = rawUrl;
-
-    const embedSrc = rawUrl.endsWith('/player') || rawUrl.includes('/player/')
-      ? rawUrl
-      : `${rawUrl.replace(/\/+$/, '')}/player`;
-
-    frameWrap.replaceChildren(html('iframe', {
-      title: `${album.title || '活動相簿'} Flickr 嵌入檢視器`,
-      src: embedSrc,
-      allowfullscreen: 'true',
-      webkitallowfullscreen: 'true',
-      mozallowfullscreen: 'true'
-    }));
-
-    if (descEl) {
-      const cleanDesc = rich(album.description_html || '');
-      if (cleanDesc) {
-        descEl.innerHTML = cleanDesc;
-        descEl.classList.remove('is-hidden');
-      } else {
-        descEl.innerHTML = '';
-        descEl.classList.add('is-hidden');
-      }
+  function parseFlickrAlbumUrl(url) {
+    const raw = String(url || '').trim();
+    if (!raw || !/^https?:\/\//i.test(raw)) return null;
+    const m = raw.match(/flickr\.com\/photos\/([^/?#]+)\/(?:albums|sets)\/(\d+)/i);
+    if (m) {
+      return {
+        nsid: m[1],
+        photosetId: m[2],
+        canonicalUrl: `https://www.flickr.com/photos/${m[1]}/albums/${m[2]}/`,
+        rawUrl: raw
+      };
     }
+    const mEmbed = raw.match(/embedr\.flickr\.com\/photosets\/(\d+)/i);
+    if (mEmbed) {
+      return {
+        nsid: null,
+        photosetId: mEmbed[1],
+        canonicalUrl: raw,
+        rawUrl: raw
+      };
+    }
+    return { nsid: null, photosetId: null, canonicalUrl: raw, rawUrl: raw };
+  }
+
+  function sanitizeFlickrEmbedHtml(rawHtml) {
+    const str = String(rawHtml || '').trim();
+    if (!str) return '';
+    if (window.DOMPurify) {
+      return window.DOMPurify.sanitize(str, {
+        ADD_TAGS: ['iframe'],
+        ADD_ATTR: [
+          'data-flickr-embed',
+          'data-header',
+          'data-footer',
+          'data-context',
+          'target',
+          'rel',
+          'title',
+          'width',
+          'height',
+          'src',
+          'href',
+          'alt',
+          'loading',
+          'allowfullscreen',
+          'referrerpolicy'
+        ]
+      });
+    }
+    return str.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, '');
+  }
+
+  function buildFallback1Iframe(stageEl, album, parsed) {
+    if (!stageEl || !parsed?.photosetId) return false;
+    const iframe = html('iframe', {
+      class: 'member-flickr-fallback-iframe',
+      src: `https://embedr.flickr.com/photosets/${parsed.photosetId}`,
+      title: `${album.title || '活動相簿'} 相簿播放器`,
+      loading: 'lazy',
+      allowfullscreen: 'true',
+      referrerpolicy: 'strict-origin-when-cross-origin'
+    });
+    iframe.addEventListener('error', () => {
+      buildFallback2LinkCard(stageEl, album, parsed);
+    });
+    stageEl.replaceChildren(iframe);
+    stageEl.setAttribute('data-embed-mode', 'fallback-iframe');
+    return true;
+  }
+
+  function buildFallback2LinkCard(stageEl, album, parsed) {
+    if (!stageEl) return;
+    const box = html('div', { class: 'member-photo-fallback-box' });
+    box.append(
+      html('p', { class: 'member-photo-fallback-text' }, `${album.title || '活動相簿'}${album.event_date ? `（${album.event_date}）` : ''}`),
+      html('a', {
+        href: parsed?.rawUrl || album.flickr_album_url,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        class: 'btn btn-walnut'
+      }, '前往 Flickr 相簿')
+    );
+    stageEl.replaceChildren(box);
+    stageEl.setAttribute('data-embed-mode', 'fallback-link');
+  }
+
+  function verifyOrFallbackAllStages() {
+    const stages = document.querySelectorAll('#memberPhotosList [data-flickr-stage]');
+    stages.forEach((stageEl) => {
+      if (stageEl.querySelector('iframe')) {
+        stageEl.setAttribute('data-embed-mode', 'hydrated');
+        return;
+      }
+      const albumId = stageEl.getAttribute('data-album-id');
+      const album = state.albums.find((a) => String(a.id || a.content_key) === albumId);
+      if (!album) return;
+      const parsed = parseFlickrAlbumUrl(album.flickr_album_url);
+      if (!buildFallback1Iframe(stageEl, album, parsed)) {
+        buildFallback2LinkCard(stageEl, album, parsed);
+      }
+    });
+  }
+
+  function triggerFlickrHydration() {
+    if (flickrHydrationTimer) {
+      clearTimeout(flickrHydrationTimer);
+      flickrHydrationTimer = null;
+    }
+    const anchors = document.querySelectorAll('#memberPhotosList a[data-flickr-embed="true"]');
+    if (!anchors.length) return;
+
+    document.querySelectorAll('script[data-flickr-embed-script], script[src*="embedr.flickr.com/assets/client-code.js"]').forEach((s) => s.remove());
+    try {
+      delete window.flickrEmbed;
+      delete window.fEmbed;
+    } catch (_e) {}
+
+    const script = document.createElement('script');
+    script.id = 'flickrEmbedClientScript';
+    script.setAttribute('data-flickr-embed-script', 'true');
+    script.async = true;
+    script.charset = 'utf-8';
+    script.src = FLICKR_EMBED_SCRIPT_SRC;
+
+    script.addEventListener('load', () => {
+      flickrHydrationTimer = setTimeout(verifyOrFallbackAllStages, 2200);
+    });
+    script.addEventListener('error', () => {
+      verifyOrFallbackAllStages();
+    });
+
+    document.body.appendChild(script);
+    flickrHydrationTimer = setTimeout(verifyOrFallbackAllStages, 4000);
   }
 
   function renderMemberPhotos() {
@@ -849,8 +942,15 @@
       return;
     }
 
+    const sortedAlbums = [...state.albums].sort((a, b) => {
+      const da = String(a.event_date || '');
+      const db = String(b.event_date || '');
+      if (da !== db) return db.localeCompare(da);
+      return (Number(a.sort_order) || 0) - (Number(b.sort_order) || 0);
+    });
+
     const byYear = new Map();
-    state.albums.forEach((album) => {
+    sortedAlbums.forEach((album) => {
       const yr = album.event_date ? String(album.event_date).slice(0, 4) : '其他年份';
       const label = /^\d{4}$/.test(yr) ? `${yr} 年` : '其他年份';
       if (!byYear.has(label)) byYear.set(label, []);
@@ -861,46 +961,110 @@
       const yearSec = html('div', { class: 'member-photo-year-group' });
       yearSec.append(html('h3', { class: 'member-rota-group-title' }, yearLabel));
 
-      const grid = html('div', { class: 'member-photo-grid' });
+      const grid = html('div', { class: 'member-photo-album-list' });
       albums.forEach((album) => {
-        const card = html('article', { class: 'member-photo-card' });
-        const cover = html('div', { class: 'member-photo-cover' });
-        const coverSrc = resolveMediaUrl(album.cover_photo_url) || 'images/placeholders/neutral-photo.svg';
-        cover.append(html('img', {
-          src: coverSrc,
-          alt: album.title || '活動相簿封面',
-          loading: 'lazy'
-        }));
+        const albumKey = String(album.id || album.content_key || album.title || '');
+        const card = html('article', {
+          class: 'card member-photo-card member-photo-stage-card',
+          'data-album-card': albumKey
+        });
 
-        const body = html('div', { class: 'member-photo-body' });
-        body.append(html('h4', { style: 'margin:0;color:var(--kf-primary);' }, album.title));
-        const meta = html('div', { class: 'member-rota-meta' });
-        if (album.event_date) meta.append(html('span', {}, album.event_date));
-        if (album.photo_count != null) meta.append(html('span', {}, `共 ${album.photo_count} 張照片`));
-        if (meta.childNodes.length) body.append(meta);
+        const header = html('div', { class: 'member-photo-card-header' });
+        header.append(html('h4', { class: 'member-photo-card-title' }, album.title || '活動相簿'));
+
+        const parsed = parseFlickrAlbumUrl(album.flickr_album_url);
+        const metaRow = html('div', { class: 'member-photo-card-meta' });
+        if (album.event_date) {
+          metaRow.append(html('span', { class: 'member-photo-date' }, album.event_date));
+        }
+        if (album.photo_count != null) {
+          metaRow.append(html('span', { class: 'member-photo-count' }, `共 ${album.photo_count} 張`));
+        }
+        if (parsed) {
+          metaRow.append(html('a', {
+            href: parsed.rawUrl,
+            target: '_blank',
+            rel: 'noopener noreferrer',
+            class: 'member-photo-secondary-link'
+          }, '於 Flickr 開啟'));
+        }
+        if (metaRow.childNodes.length) header.append(metaRow);
+        card.append(header);
 
         if (album.description_html) {
-          const desc = html('div', { class: 'cms-rich-content', style: 'font-size:0.88rem;color:var(--kf-text-muted);' });
+          const desc = html('div', { class: 'cms-rich-content member-photo-desc' });
           desc.innerHTML = rich(album.description_html);
-          body.append(desc);
+          card.append(desc);
         }
 
-        const actions = html('div', { class: 'member-rota-actions', style: 'margin-top:auto;' });
-        if (album.flickr_album_url && /^https?:\/\//i.test(String(album.flickr_album_url).trim())) {
-          const openBtn = html('button', { type: 'button', class: 'member-tool-btn primary' }, '瀏覽相簿');
-          openBtn.addEventListener('click', () => openPhotoAlbumViewer(album));
-          actions.append(openBtn);
-        } else {
-          actions.append(html('span', { class: 'member-badge pending' }, '待建立'));
+        if (!parsed) {
+          const pendingWrap = html('div', { class: 'member-photo-pending-wrap' });
+          pendingWrap.append(html('span', { class: 'member-badge pending' }, '待建立'));
+          card.append(pendingWrap);
+          grid.append(card);
+          return;
         }
-        body.append(actions);
-        card.append(cover, body);
+
+        const stageWrap = html('div', {
+          class: 'member-photo-stage',
+          'data-flickr-stage': 'true',
+          'data-album-id': albumKey
+        });
+
+        const customEmbed = sanitizeFlickrEmbedHtml(album.flickr_embed_html);
+        if (customEmbed) {
+          stageWrap.innerHTML = customEmbed;
+          stageWrap.querySelectorAll('a[data-flickr-embed]').forEach((a) => {
+            a.setAttribute('data-header', 'false');
+            a.setAttribute('data-footer', 'false');
+          });
+          stageWrap.setAttribute('data-embed-mode', 'override-html');
+        } else if (parsed.nsid && parsed.photosetId) {
+          const coverSrc = resolveMediaUrl(album.cover_photo_url) || 'images/placeholders/neutral-photo.svg';
+          const anchor = html('a', {
+            'data-flickr-embed': 'true',
+            'data-header': 'false',
+            'data-footer': 'false',
+            href: parsed.canonicalUrl,
+            title: album.title || '活動相簿',
+            target: '_blank',
+            rel: 'noopener noreferrer'
+          });
+          anchor.append(html('img', {
+            src: coverSrc,
+            width: '1024',
+            height: '683',
+            alt: album.title || '活動相簿封面',
+            loading: 'lazy'
+          }));
+          stageWrap.append(anchor);
+          stageWrap.setAttribute('data-embed-mode', 'primary-anchor');
+        } else if (parsed.photosetId) {
+          buildFallback1Iframe(stageWrap, album, parsed);
+        } else {
+          buildFallback2LinkCard(stageWrap, album, parsed);
+        }
+
+        card.append(stageWrap);
+
+        card.append(html('p', { class: 'member-photo-stage-hint' }, '用左右箭頭或鍵盤 ← → 逐張瀏覽；撳「瀏覽完整相簿」可一次過睇晒全部相片。'));
+
+        const fullBtn = html('a', {
+          href: parsed.rawUrl,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          class: 'btn btn-walnut member-photo-full-btn'
+        }, '瀏覽完整相簿');
+        card.append(fullBtn);
+
         grid.append(card);
       });
 
       yearSec.append(grid);
       container.append(yearSec);
     });
+
+    triggerFlickrHydration();
   }
 
   async function loadMemberPhotos() {
@@ -1025,28 +1189,23 @@
       if (state.currentRota) printOriginalRotaPdf(state.currentRota);
     });
     document.getElementById('rotaCloseViewerBtn')?.addEventListener('click', () => {
-      resetRotaViewerState();
       document.getElementById('rotaPdfViewerModal')?.classList.add('is-hidden');
     });
 
     document.getElementById('sermonSpeakerFilter')?.addEventListener('change', renderMemberSermons);
     document.getElementById('sermonYearFilter')?.addEventListener('change', renderMemberSermons);
 
-    document.getElementById('photoViewerCloseBtn')?.addEventListener('click', () => {
-      const viewer = document.getElementById('memberPhotoViewer');
-      const wrap = document.getElementById('photoViewerFrameWrap');
-      viewer?.classList.add('is-hidden');
-      wrap?.replaceChildren();
-    });
+
   }
 
   function clearMemberDataOnLogout() {
     state.rotas = [];
     state.sermons = [];
     state.albums = [];
-    resetRotaViewerState();
+    state.pdfDoc = null;
+    state.currentRota = null;
+    state.currentPdfBytes = null;
     document.getElementById('rotaPdfViewerModal')?.classList.add('is-hidden');
-    document.getElementById('memberPhotoViewer')?.classList.add('is-hidden');
     document.getElementById('rotaSearchResults')?.classList.add('is-hidden');
     const rList = document.getElementById('memberRotasList');
     const sList = document.getElementById('memberSermonsList');
@@ -1097,8 +1256,7 @@
       state.client.auth.onAuthStateChange((_event, session) => {
         syncRoleAndLoad(session?.user || null);
       });
-    } catch (err) {
-      console.error('[KF Member Area]', err);
+    } catch (_err) {
       ['memberRotasList', 'memberSermonsList', 'memberPhotosList'].forEach((id) => {
         const el = document.getElementById(id);
         if (el) setStatus(el, '目前暫時無法連線至會友資料庫，請稍後再試。', 'error');
