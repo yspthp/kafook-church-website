@@ -1,6 +1,6 @@
 /* 五旬節聖潔會迦福堂 — 會友專區擴充模組 (js/member-area.js)
  * 包含：
- *   3A. 事奉輪值表（PDF.js 畫布檢視器、原檔下載、原檔列印、關鍵字深層連結與高亮、「我的事奉」捷徑）
+ *   3A. 事奉輪值表（PDF.js 畫布檢視器、原檔下載、原檔列印、按需即時搜尋與頁內高亮、「我的事奉」捷徑）
  *   3B. 講道錄音（SoundCloud 延遲載入播放器、講員與年份篩選、待上載狀態）
  *   3C. 活動照片（Flickr 不列出相簿嵌入檢視器、年份分組、待建立狀態）
  */
@@ -131,7 +131,7 @@
     return window.pdfjsLib;
   }
 
-  /* ---------- 3A. 事奉輪值表：PDF.js 檢視器、原檔下載、原檔列印、搜尋與高亮 ---------- */
+  /* ---------- 3A. 事奉輪值表：PDF.js 檢視器、原檔下載、原檔列印、按需即時搜尋與高亮 ---------- */
   async function fetchMemberPdfBytes(pdfPath) {
     if (!pdfPath || !state.client) throw new Error('尚未設定 PDF 儲存路徑');
     const { data, error } = await state.client.storage.from('member-documents').download(pdfPath);
@@ -195,6 +195,55 @@
     }
   }
 
+  function normaliseForMatch(str) {
+    return String(str || '')
+      .replace(/\*/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
+  function getRotaCacheKey(doc) {
+    const p = String(doc?.pdf_path || '').trim();
+    const u = String(doc?.updated_at || doc?.updated_on_label || '');
+    return `kf_rota_txt:${p}:${u}`;
+  }
+
+  async function extractRotaPagesOnDemand(doc) {
+    const pdfPath = String(doc?.pdf_path || '').trim();
+    if (!pdfPath) return null;
+
+    const cacheKey = getRotaCacheKey(doc);
+    try {
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed?.pages)) return parsed.pages;
+      }
+    } catch (_e) {}
+
+    try {
+      const pdfjsLib = await ensurePdfJsLoaded();
+      const bytes = await fetchMemberPdfBytes(pdfPath);
+      const pdf = await pdfjsLib.getDocument({ data: bytes.slice(0) }).promise;
+      const numPages = pdf.numPages || 1;
+      const pages = [];
+      for (let i = 1; i <= numPages; i += 1) {
+        const page = await pdf.getPage(i);
+        const tc = await page.getTextContent();
+        const text = tc.items.map((it) => String(it.str ?? '')).join(' ').replace(/[ \t]+/g, ' ').trim();
+        pages.push({ page: i, text });
+      }
+      try {
+        sessionStorage.setItem(cacheKey, JSON.stringify({ pages }));
+      } catch (_e) {}
+      return pages;
+    } catch (_err) {
+      // 無法讀取儲存桶中的 PDF 時略過搜尋，仍保留卡片顯示
+      return null;
+    }
+  }
+
   async function renderCurrentPdfPage() {
     if (!state.pdfDoc) return;
     const canvas = document.getElementById('rotaPdfCanvas');
@@ -243,13 +292,13 @@
     const term = String(state.highlightTerm || '').trim();
     if (term) {
       const textContent = await pdfPage.getTextContent();
-      const termLower = term.toLowerCase();
+      const termNorm = normaliseForMatch(term);
       let matchCount = 0;
       let firstMark = null;
 
       textContent.items.forEach((item) => {
         const str = String(item.str || '');
-        if (!str || !str.toLowerCase().includes(termLower)) return;
+        if (!str || !normaliseForMatch(str).includes(termNorm)) return;
         matchCount += 1;
         const tx = window.pdfjsLib.Util.transform(viewport.transform, item.transform);
         const fontHeight = Math.hypot(tx[2], tx[3]) || 14;
@@ -372,7 +421,6 @@
       const loadedPath = expectedPath;
       const bytes = await fetchMemberPdfBytes(loadedPath);
 
-      // 完整性檢查：確保載入中未切換文件，且載入路徑與該筆輪值表之 pdf_path 完全一致
       if (loadToken !== state.activeLoadToken || loadedPath !== String(doc.pdf_path || '').trim()) {
         resetRotaViewerState();
         if (viewportWrap) viewportWrap.classList.add('is-hidden');
@@ -410,33 +458,33 @@
     }
   }
 
-  function findRotaMatches(term) {
-    const q = String(term || '').trim();
-    if (!q) return [];
-    const qLower = q.toLowerCase();
+  async function findRotaMatches(term) {
+    const qNorm = normaliseForMatch(term);
+    if (!qNorm) return [];
     const hits = [];
 
-    state.rotas.forEach((doc) => {
-      if (!doc.search_text) return;
-      const pages = Array.isArray(doc.search_page_map) && doc.search_page_map.length
-        ? doc.search_page_map
-        : [{ page: 1, text: doc.search_text }];
-
+    const docsWithPdf = state.rotas.filter((d) => String(d.pdf_path || '').trim());
+    const results = await Promise.all(docsWithPdf.map(async (doc) => {
+      const pages = await extractRotaPagesOnDemand(doc);
+      if (!pages) return [];
+      const docHits = [];
       pages.forEach((pObj) => {
-        const pageText = String(pObj?.text || '');
-        if (pageText.toLowerCase().includes(qLower)) {
-          hits.push({
+        if (normaliseForMatch(pObj?.text || '').includes(qNorm)) {
+          docHits.push({
             doc,
             page: Number(pObj.page) || 1,
-            term: q
+            term: String(term || '').trim()
           });
         }
       });
-    });
+      return docHits;
+    }));
+
+    results.forEach((arr) => hits.push(...arr));
     return hits;
   }
 
-  function renderRotaSearchResults(term) {
+  async function renderRotaSearchResults(term) {
     const box = document.getElementById('rotaSearchResults');
     const clearBtn = document.getElementById('rotaSearchClearBtn');
     if (!box) return;
@@ -451,13 +499,20 @@
     }
 
     box.classList.remove('is-hidden');
-    box.replaceChildren();
+    box.replaceChildren(html('p', { class: 'member-search-results-title' }, `正在搜尋輪值表 PDF 中的「${q}」…`));
 
-    const hits = findRotaMatches(q);
+    const hits = await findRotaMatches(q);
+    if (state.myServiceOnly) {
+      if (String(state.myServiceName || '').trim() !== q) return;
+    } else if (String(state.searchQuery || '').trim() !== q) {
+      return;
+    }
+
+    box.replaceChildren();
     const title = html('p', { class: 'member-search-results-title' },
       hits.length
-        ? `搜尋「${q}」共找到 ${hits.length} 筆結果（點選即可開啟該頁 PDF 並標示關鍵字）：`
-        : `在已建立索引的輪值表中找不到「${q}」。`
+        ? `搜尋「${q}」共找到 ${hits.length} 份／頁相符結果（點選即可開啟該頁 PDF 並標示關鍵字）：`
+        : `在已上載的輪值表 PDF 中找不到「${q}」。`
     );
     box.append(title);
 
@@ -481,7 +536,7 @@
     }
   }
 
-  function renderRotaGroups() {
+  async function renderRotaGroups() {
     const container = document.getElementById('memberRotasList');
     if (!container) return;
 
@@ -491,7 +546,13 @@
     }
 
     const filterTerm = state.myServiceOnly ? String(state.myServiceName || '').trim() : '';
-    const filterLower = filterTerm.toLowerCase();
+    const filterNorm = normaliseForMatch(filterTerm);
+
+    let matchedDocIds = null;
+    if (filterNorm) {
+      const hits = await findRotaMatches(filterTerm);
+      matchedDocIds = new Set(hits.map((h) => h.doc.id));
+    }
 
     container.replaceChildren();
     container.setAttribute('data-source', 'supabase');
@@ -500,8 +561,8 @@
 
     ROTA_TYPE_ORDER.forEach((rType) => {
       let groupDocs = state.rotas.filter((d) => (d.rota_type || 'other') === rType);
-      if (filterLower) {
-        groupDocs = groupDocs.filter((d) => String(d.search_text || '').toLowerCase().includes(filterLower));
+      if (matchedDocIds) {
+        groupDocs = groupDocs.filter((d) => matchedDocIds.has(d.id));
       }
       if (!groupDocs.length) return;
 
@@ -530,10 +591,6 @@
         if (doc.page_count) meta.append(html('span', {}, `共 ${doc.page_count} 頁`));
         if (meta.childNodes.length) top.append(meta);
 
-        if (!doc.search_text) {
-          top.append(html('p', { class: 'member-rota-unindexed' }, '此輪值表尚未建立搜尋索引，但仍可直接開啟檢視 PDF。'));
-        }
-
         const actions = html('div', { class: 'member-rota-actions' });
         const activeTerm = filterTerm || String(state.searchQuery || '').trim();
 
@@ -561,7 +618,7 @@
     });
 
     if (!anyRendered) {
-      container.append(html('p', { class: 'cms-status' }, `在已建立索引的輪值表中找不到「${filterTerm}」的事奉紀錄。`));
+      container.append(html('p', { class: 'cms-status' }, `在已上載的輪值表 PDF 中找不到「${filterTerm}」。`));
     }
   }
 
@@ -571,18 +628,18 @@
     try {
       const { data, error } = await state.client
         .from('rota_documents')
-        .select('*')
+        .select('id, content_key, rota_type, title, period_label, period_start, period_end, pdf_path, page_count, updated_on_label, notes_html, is_published, sort_order, updated_at')
         .eq('is_published', true)
         .order('period_start', { ascending: false })
         .order('sort_order', { ascending: true });
 
       if (error) throw error;
       state.rotas = Array.isArray(data) ? data : [];
-      renderRotaGroups();
+      await renderRotaGroups();
       if (state.myServiceOnly && state.myServiceName) {
-        renderRotaSearchResults(state.myServiceName);
+        await renderRotaSearchResults(state.myServiceName);
       } else if (state.searchQuery) {
-        renderRotaSearchResults(state.searchQuery);
+        await renderRotaSearchResults(state.searchQuery);
       }
     } catch (_err) {
       container.replaceChildren(html('p', { class: 'cms-status error' }, '目前暫時無法載入事奉輪值表，請稍後再試。'));

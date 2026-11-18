@@ -1,5 +1,5 @@
 /* 五旬節聖潔會迦福堂 — 管理後台會友專區三大分頁控制器 (js/admin-member-area.js)
- * Phase 5：事奉輪值表 / 講道錄音 / 活動照片
+ * 事奉輪值表 / 講道錄音 / 活動照片
  * 沿用 Warm Timber 設計、Quill 富文本編輯器、DOMPurify 與 cms-media / member-documents 儲存桶模式
  */
 (function () {
@@ -49,6 +49,32 @@
       bridge().showToast(msg, type);
     } else {
       console.log('[KF Admin Member]', type, msg);
+    }
+  }
+
+  const PDFJS_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  const PDFJS_WORKER_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  async function readPdfPageCount(file) {
+    if (!file) return null;
+    try {
+      if (!window.pdfjsLib) {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = PDFJS_CDN;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.append(s);
+        });
+      }
+      if (window.pdfjsLib && !window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER_CDN;
+      }
+      const buf = await file.arrayBuffer();
+      const pdf = await window.pdfjsLib.getDocument({ data: buf }).promise;
+      return pdf.numPages || 1;
+    } catch (_e) {
+      return null;
     }
   }
 
@@ -165,7 +191,7 @@
 
     const { data, error } = await client
       .from('rota_documents')
-      .select('*')
+      .select('id, content_key, rota_type, title, period_label, period_start, period_end, pdf_path, page_count, updated_on_label, notes_html, is_published, sort_order, updated_at')
       .order('sort_order', { ascending: true })
       .order('period_start', { ascending: false });
 
@@ -185,9 +211,6 @@
       const card = document.createElement('div');
       card.className = 'p-4 rounded-xl border border-kf-border bg-kf-bg flex flex-col gap-3';
 
-      const idxStatus = doc.search_text
-        ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">已建立搜尋索引</span>'
-        : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">未建立搜尋索引</span>';
       const pdfStatus = doc.pdf_path
         ? `<span class="text-xs text-kf-inkMuted">PDF：${esc(doc.pdf_path)}（${doc.page_count || '?'} 頁）</span>`
         : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-stone-200 text-stone-700">待上載 PDF</span>';
@@ -202,7 +225,6 @@
               <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-kf-sand text-kf-walnut">${esc(ROTA_LABELS[doc.rota_type] || doc.rota_type)}</span>
               <span class="text-xs font-semibold text-kf-ink">${esc(doc.period_label)}</span>
               ${pubBadge}
-              ${idxStatus}
             </div>
             <h4 class="text-sm font-semibold text-kf-ink m-0">${esc(doc.title)}</h4>
             <div class="flex flex-wrap gap-3 mt-1 text-xs text-kf-inkMuted">
@@ -228,11 +250,6 @@
       actWrap.append(
         mkBtn('編輯', 'bg-white border-kf-border text-kf-ink hover:bg-kf-sand', () => fillRotaForm(doc, false)),
         mkBtn('複製上一期', 'bg-white border-kf-border text-kf-walnut hover:bg-kf-sand', () => fillRotaForm(doc, true)),
-        mkBtn('重建搜尋索引', 'bg-amber-50 border-amber-300 text-amber-900 hover:bg-amber-100', async () => {
-          if (!window.KF_ROTA_INDEXER) return toast('搜尋索引工具尚未載入', 'error');
-          const res = await window.KF_ROTA_INDEXER.rebuildRotaSearchIndex(client, doc, (msg, tone) => toast(msg, tone === 'warning' ? 'error' : tone));
-          if (res?.ok || res?.warning) await loadRotasAdmin();
-        }),
         mkBtn(doc.is_published ? '設為草稿' : '發布', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => togglePublish('rota_documents', doc.id, !doc.is_published, loadRotasAdmin)),
         mkBtn('上移', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => swapSortOrder('rota_documents', rotaRows, idx, -1, loadRotasAdmin)),
         mkBtn('下移', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => swapSortOrder('rota_documents', rotaRows, idx, 1, loadRotasAdmin)),
@@ -264,7 +281,7 @@
 
     let pdfPath = document.getElementById('rotaPdfPathInput').value.trim() || null;
     const pageCountVal = document.getElementById('rotaPageCountInput').value.trim();
-    let pageCount = pageCountVal ? Number(pageCountVal) : null;
+    const pageCount = pageCountVal ? Number(pageCountVal) : null;
 
     const payload = {
       rota_type: rotaType,
@@ -279,7 +296,7 @@
     };
 
     if (pdfFile) {
-      toast('正在上載 PDF 並讀取頁數與搜尋索引…', 'info');
+      toast('正在上載 PDF 並讀取頁數…', 'info');
       const safeName = pdfFile.name.replace(/[^\w.\-]+/g, '-');
       const targetPath = `rotas/${Date.now()}-${safeName}`;
       const upRes = await client.storage
@@ -289,25 +306,8 @@
 
       pdfPath = targetPath;
       payload.pdf_path = pdfPath;
-
-      if (window.KF_ROTA_INDEXER) {
-        try {
-          const extracted = await window.KF_ROTA_INDEXER.extractPdfIndexFromFile(pdfFile);
-          pageCount = extracted.pageCount;
-          payload.page_count = pageCount;
-          payload.search_text = extracted.searchText;
-          payload.search_page_map = extracted.searchPageMap;
-          payload.search_indexed_at = extracted.searchIndexedAt;
-          if (!extracted.searchText) {
-            toast('PDF 已上載，但未能提取可搜尋文字（原檔仍可正常開啟）。', 'error');
-          }
-        } catch (_idxErr) {
-          payload.search_text = null;
-          payload.search_page_map = null;
-          payload.search_indexed_at = null;
-          toast('PDF 已上載，但搜尋索引提取失敗（原檔仍可正常開啟）。', 'error');
-        }
-      }
+      const detectedPages = await readPdfPageCount(pdfFile);
+      if (detectedPages) payload.page_count = detectedPages;
     } else {
       payload.pdf_path = pdfPath;
       if (pageCount !== null) payload.page_count = pageCount;
@@ -523,7 +523,7 @@
           </div>
           <h4 class="text-sm font-semibold text-kf-ink m-0">${esc(row.title)}</h4>
           <p class="text-xs text-kf-inkMuted mt-1 mb-0">
-            ${[row.photo_count != null ? `共 ${row.photo_count} 張照片` : '', `排序：${row.sort_order ?? 0}`].filter(Boolean).join(' · ')}
+            ${[row.photo_count != null ? `共 ${row.photo_count} 張照片` : '', `排序：${row.sort_order ?? 0}`].filter(Boolean).map(esc).join(' · ')}
           </p>
         </div>
         <div class="flex flex-wrap gap-1.5" data-actions></div>
