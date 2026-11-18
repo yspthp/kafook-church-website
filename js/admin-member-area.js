@@ -335,19 +335,13 @@
     form.reset();
     document.getElementById('sermonIdInput').value = '';
     document.getElementById('sermonPublishedInput').checked = true;
-    document.getElementById('sermonSortOrderInput').value = '10';
   }
 
   function fillSermonForm(row) {
     document.getElementById('sermonIdInput').value = row.id || '';
     document.getElementById('sermonDateInput').value = row.sermon_date || '';
-    document.getElementById('sermonTitleInput').value = row.title || '';
     document.getElementById('sermonSpeakerInput').value = row.speaker || '';
-    document.getElementById('sermonScriptureInput').value = row.scripture || '';
-    document.getElementById('sermonSeriesInput').value = row.series || '';
-    document.getElementById('sermonDurationInput').value = row.duration_label || '';
     document.getElementById('sermonUrlInput').value = row.soundcloud_url || '';
-    document.getElementById('sermonSortOrderInput').value = String(row.sort_order ?? 10);
     document.getElementById('sermonPublishedInput').checked = row.is_published !== false;
     document.getElementById('sermonAdminForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -359,7 +353,7 @@
 
     const { data, error } = await client
       .from('sermons')
-      .select('*')
+      .select('id, content_key, sermon_date, speaker, soundcloud_url, is_published, sort_order, created_at, updated_at')
       .order('sermon_date', { ascending: false })
       .order('sort_order', { ascending: true });
 
@@ -377,7 +371,7 @@
     listEl.replaceChildren();
     sermonRows.forEach((row, idx) => {
       const card = document.createElement('div');
-      card.className = 'p-4 rounded-xl border border-kf-border bg-kf-bg flex flex-wrap items-start justify-between gap-3';
+      card.className = 'p-4 rounded-xl border border-kf-border bg-kf-bg flex flex-wrap items-center justify-between gap-3';
       const pubBadge = row.is_published
         ? '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">已發布</span>'
         : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-stone-200 text-stone-700">草稿</span>';
@@ -386,17 +380,11 @@
         : '<span class="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">待上載</span>';
 
       card.innerHTML = `
-        <div>
-          <div class="flex flex-wrap items-center gap-2 mb-1">
-            <span class="text-xs font-semibold text-kf-walnut">${esc(row.sermon_date)}</span>
-            <span class="text-xs text-kf-inkSoft">${esc(row.speaker || '（講員待補）')}</span>
-            ${pubBadge}
-            ${urlBadge}
-          </div>
-          <h4 class="text-sm font-semibold text-kf-ink m-0">${esc(row.title || '（講題待補）')}</h4>
-          <p class="text-xs text-kf-inkMuted mt-1 mb-0">
-            ${[row.scripture, row.series, row.duration_label, `排序：${row.sort_order ?? 0}`].filter(Boolean).map(esc).join(' · ')}
-          </p>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="text-sm font-semibold text-kf-walnut">${esc(row.sermon_date)}</span>
+          <span class="text-sm font-semibold text-kf-ink">${esc(row.speaker || '（講員待補）')}</span>
+          ${pubBadge}
+          ${urlBadge}
         </div>
         <div class="flex flex-wrap gap-1.5" data-actions></div>
       `;
@@ -415,7 +403,7 @@
         mkBtn(row.is_published ? '設為草稿' : '發布', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => togglePublish('sermons', row.id, !row.is_published, loadSermonsAdmin)),
         mkBtn('上移', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => swapSortOrder('sermons', sermonRows, idx, -1, loadSermonsAdmin)),
         mkBtn('下移', 'bg-white border-kf-border text-kf-inkSoft hover:bg-kf-sand', () => swapSortOrder('sermons', sermonRows, idx, 1, loadSermonsAdmin)),
-        mkBtn('刪除', 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100', () => deleteRow('sermons', row.id, `${row.sermon_date} ${row.title || row.speaker}`, loadSermonsAdmin))
+        mkBtn('刪除', 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100', () => deleteRow('sermons', row.id, `${row.sermon_date} ${row.speaker || '講道錄音'}`, loadSermonsAdmin))
       );
       listEl.append(card);
     });
@@ -428,15 +416,12 @@
     if (!client || !user) return toast('請先登入同工帳號', 'error');
 
     const editId = document.getElementById('sermonIdInput').value.trim();
+    const existingRow = sermonRows.find((r) => r.id === editId);
     const payload = {
       sermon_date: document.getElementById('sermonDateInput').value,
-      title: document.getElementById('sermonTitleInput').value.trim() || null,
       speaker: document.getElementById('sermonSpeakerInput').value.trim() || null,
-      scripture: document.getElementById('sermonScriptureInput').value.trim() || null,
-      series: document.getElementById('sermonSeriesInput').value.trim() || null,
-      duration_label: document.getElementById('sermonDurationInput').value.trim() || null,
-      soundcloud_url: document.getElementById('sermonUrlInput').value.trim() || null,
-      sort_order: Number(document.getElementById('sermonSortOrderInput').value) || 0,
+      soundcloud_url: (document.getElementById('sermonUrlInput').value.trim().replace(/([?&])si=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : p2 ? p1 : '')).replace(/[?&]$/, '') || null),
+      sort_order: existingRow ? (Number(existingRow.sort_order) || 10) : 10,
       is_published: document.getElementById('sermonPublishedInput').checked
     };
 
