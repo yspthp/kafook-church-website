@@ -1335,13 +1335,13 @@
               </div>
 
               <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed space-y-1">
-                <p class="m-0 font-semibold">請喺 SoundCloud 音軌頁撳「分享 → 內嵌」，複製整段嵌入碼貼上。系統會自動取出播放器網址。秘密連結欄只作備用連結之用。</p>
-                <p class="m-0">SoundCloud 免費額度為 2 小時總量。上傳新講道前若容量將滿，請先刪除最舊嘅音軌（刪除後分鐘數即時返還），再上傳並貼上新音軌嘅嵌入碼（舊音軌嘅嵌入碼會隨刪除而失效）。</p>
+                <p class="m-0 font-semibold">請喺 SoundCloud 音軌頁撳「分享 → 內嵌」，複製整段嵌入碼貼上。系統會自動取出播放器網址同秘密連結。SoundCloud 播放器會自動顯示錄音時長。</p>
+                <p class="m-0">SoundCloud 免費額度為 2 小時總量。上傳新講道前若容量將滿，請先刪除最舊嘅音軌（刪除後分鐘數即時返還），再上傳並貼上新嘅嵌入碼。舊嵌入碼會隨舊音軌失效。</p>
               </div>
 
               <form id="sermonAdminForm" class="space-y-4 p-5 rounded-xl bg-kf-bg border border-kf-border">
                 <input type="hidden" id="sermonIdInput">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label class="block text-sm font-medium text-kf-ink">
                     日期 *
                     <input type="date" id="sermonDateInput" required class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
@@ -1350,16 +1350,12 @@
                     講員 *
                     <input type="text" id="sermonSpeakerInput" required placeholder="例如：林淑櫻牧師、林肇楓牧師" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
                   </label>
-                  <label class="block text-sm font-medium text-kf-ink">
-                    秘密連結（備用連結）
-                    <input type="url" id="sermonUrlInput" placeholder="https://soundcloud.com/..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-sm">
-                  </label>
                 </div>
 
                 <div>
                   <label class="block text-sm font-medium text-kf-ink">
-                    SoundCloud 內嵌程式碼或播放器網址（分享 → 內嵌）
-                    <textarea id="sermonEmbedInput" rows="2" placeholder="貼上完整 &lt;iframe ...&gt; 嵌入碼，或直接貼上 https://w.soundcloud.com/player/?url=..." class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-xs font-mono"></textarea>
+                    SoundCloud 嵌入碼（分享 → 內嵌）
+                    <textarea id="sermonEmbedInput" rows="3" placeholder="請貼上 SoundCloud「分享 → 內嵌」複製嘅整段嵌入碼（包含 &lt;iframe ...&gt; 與音軌連結）" class="mt-1 w-full px-3 py-2 rounded-lg border border-kf-border bg-white text-xs font-mono"></textarea>
                   </label>
                 </div>
 
