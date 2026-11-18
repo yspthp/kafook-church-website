@@ -354,6 +354,58 @@
   background: #FAF6F0;
   padding: 1rem 1.25rem;
 }
+.member-sermon-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  margin-top: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  background: #FFFDF9;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  border-radius: 8px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.member-sermon-mute-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0.35rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--kf-border, #E4D8C6);
+  background: #FAF6F0;
+  color: var(--kf-primary, #4A3526);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.member-sermon-mute-btn:hover,
+.member-sermon-mute-btn:focus-visible {
+  background: #F3EADC;
+  border-color: var(--kf-secondary, #8C5F38);
+}
+.member-sermon-volume-slider {
+  flex: 1 1 130px;
+  min-width: 100px;
+  max-width: 240px;
+  height: 28px;
+  accent-color: var(--kf-primary, #4A3526);
+  cursor: pointer;
+}
+.member-sermon-volume-readout {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--kf-primary, #4A3526);
+  min-width: 4.5rem;
+}
+.member-sermon-play-status {
+  margin-left: auto;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--kf-secondary, #8C5F38);
+}
 
 /* 活動照片相簿（Warm Timber 觀賞舞台與卡片） */
 .member-photos-container {
