@@ -27,6 +27,7 @@
     role: 'guest',
     rotas: [],
     sermons: [],
+    sermonVolumeState: {},
     albums: [],
     myServiceOnly: false,
     myServiceName: '',
@@ -648,6 +649,20 @@
   }
 
   /* ---------- 3B. 講道錄音 ---------- */
+  const SOUNDCLOUD_API_JS = 'https://w.soundcloud.com/player/api.js';
+  let scApiPromise = null;
+
+  function ensureSoundCloudApiLoaded() {
+    if (window.SC && typeof window.SC.Widget === 'function') {
+      return Promise.resolve(window.SC);
+    }
+    if (!scApiPromise) {
+      scApiPromise = addScript(SOUNDCLOUD_API_JS, () => Boolean(window.SC && typeof window.SC.Widget === 'function'))
+        .then(() => window.SC);
+    }
+    return scApiPromise;
+  }
+
   function populateSermonFilters() {
     const speakerSel = document.getElementById('sermonSpeakerFilter');
     const yearSel = document.getElementById('sermonYearFilter');
@@ -729,6 +744,11 @@
             toggleBtn.setAttribute('aria-expanded', 'true');
             toggleBtn.textContent = '收起播放器';
             if (!playerCell.querySelector('iframe') && !playerCell.querySelector('.member-sermon-fallback')) {
+              const rowKey = String(item.id || item.content_key || `${dateStr}_${speakerStr}`);
+              const savedVol = state.sermonVolumeState[rowKey];
+              const initVol = savedVol ? Number(savedVol.volume) : 100;
+              const initMuted = savedVol ? Boolean(savedVol.muted) : false;
+
               const showFallback = () => {
                 const fb = html('div', { class: 'member-sermon-fallback', style: 'display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;' });
                 fb.append(html('span', {}, `${dateStr} · ${speakerStr}`));
@@ -742,6 +762,7 @@
                 }
                 playerCell.replaceChildren(fb);
               };
+
               const iframe = html('iframe', {
                 title: `${dateStr} ${speakerStr} 講道錄音播放器`,
                 width: '100%',
@@ -753,7 +774,106 @@
                 src: playerSrc
               });
               iframe.addEventListener('error', showFallback);
-              playerCell.append(iframe);
+
+              const controlsRow = html('div', { class: 'member-sermon-controls' });
+              const muteBtn = html('button', {
+                type: 'button',
+                class: 'member-sermon-mute-btn',
+                'aria-label': initMuted || initVol === 0 ? '取消靜音' : '靜音',
+                'aria-pressed': initMuted || initVol === 0 ? 'true' : 'false'
+              }, initMuted || initVol === 0 ? '🔇' : '🔊');
+
+              const slider = html('input', {
+                type: 'range',
+                min: '0',
+                max: '100',
+                value: String(initMuted ? 0 : initVol),
+                class: 'member-sermon-volume-slider',
+                'aria-label': '音量控制'
+              });
+
+              const readout = html('span', { class: 'member-sermon-volume-readout' }, `音量 ${initMuted ? 0 : initVol}`);
+              const playStatus = html('span', { class: 'member-sermon-play-status', 'aria-live': 'polite' });
+
+              controlsRow.append(muteBtn, slider, readout, playStatus);
+              playerCell.append(iframe, controlsRow);
+
+              ensureSoundCloudApiLoaded().then((SC) => {
+                if (!playerCell.contains(iframe)) return;
+                const widget = SC.Widget(iframe);
+                const syncMuteBtn = (volNum) => {
+                  const isMuted = volNum <= 0;
+                  muteBtn.textContent = isMuted ? '🔇' : '🔊';
+                  muteBtn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
+                  muteBtn.setAttribute('aria-label', isMuted ? '取消靜音' : '靜音');
+                };
+
+                widget.bind(SC.Widget.Events.READY, () => {
+                  widget.getVolume((reportedVol) => {
+                    const rawVol = Number(reportedVol);
+                    console.log('[KF Sermons] SC.Widget READY getVolume:', dateStr, speakerStr, rawVol);
+                    if (savedVol) {
+                      const targetVol = savedVol.muted ? 0 : Number(savedVol.volume);
+                      widget.setVolume(targetVol);
+                      slider.value = String(targetVol);
+                      readout.textContent = `音量 ${targetVol}`;
+                      syncMuteBtn(targetVol);
+                    } else if (Number.isFinite(rawVol) && rawVol < 100) {
+                      widget.setVolume(100);
+                      state.sermonVolumeState[rowKey] = { volume: 100, muted: false, prevVolume: 100 };
+                      slider.value = '100';
+                      readout.textContent = '音量 100';
+                      syncMuteBtn(100);
+                      console.log('[KF Sermons] Applied setVolume(100) for:', dateStr, speakerStr);
+                    } else {
+                      const v = Number.isFinite(rawVol) ? Math.round(rawVol) : 100;
+                      state.sermonVolumeState[rowKey] = { volume: v, muted: v === 0, prevVolume: v || 100 };
+                      slider.value = String(v);
+                      readout.textContent = `音量 ${v}`;
+                      syncMuteBtn(v);
+                    }
+                  });
+                });
+
+                widget.bind(SC.Widget.Events.PLAY, () => { playStatus.textContent = '播放中'; });
+                widget.bind(SC.Widget.Events.PAUSE, () => { playStatus.textContent = '已暫停'; });
+                widget.bind(SC.Widget.Events.FINISH, () => { playStatus.textContent = '播放完畢'; });
+
+                slider.addEventListener('input', () => {
+                  const val = Math.min(100, Math.max(0, Number(slider.value) || 0));
+                  readout.textContent = `音量 ${val}`;
+                  syncMuteBtn(val);
+                  const prev = state.sermonVolumeState[rowKey]?.prevVolume || 100;
+                  state.sermonVolumeState[rowKey] = {
+                    volume: val,
+                    muted: val === 0,
+                    prevVolume: val > 0 ? val : prev
+                  };
+                  widget.setVolume(val);
+                });
+
+                muteBtn.addEventListener('click', () => {
+                  const cur = state.sermonVolumeState[rowKey] || { volume: 100, muted: false, prevVolume: 100 };
+                  const currentlyMuted = cur.muted || Number(slider.value) === 0;
+                  if (currentlyMuted) {
+                    const restore = cur.prevVolume > 0 ? cur.prevVolume : 100;
+                    state.sermonVolumeState[rowKey] = { volume: restore, muted: false, prevVolume: restore };
+                    slider.value = String(restore);
+                    readout.textContent = `音量 ${restore}`;
+                    syncMuteBtn(restore);
+                    widget.setVolume(restore);
+                  } else {
+                    const curVal = Number(slider.value) || cur.volume || 100;
+                    state.sermonVolumeState[rowKey] = { volume: 0, muted: true, prevVolume: curVal > 0 ? curVal : 100 };
+                    slider.value = '0';
+                    readout.textContent = '音量 0';
+                    syncMuteBtn(0);
+                    widget.setVolume(0);
+                  }
+                });
+              }).catch(() => {
+                controlsRow.classList.add('is-hidden');
+              });
             }
           }
         });
