@@ -703,9 +703,10 @@
 
       const actionTd = html('td');
       const scUrl = String(item.soundcloud_url || '').trim();
+      const playerSrc = String(item.soundcloud_player_src || '').trim();
       let playerRow = null;
 
-      if (scUrl && /^https?:\/\//i.test(scUrl)) {
+      if (playerSrc && /^https:\/\/w\.soundcloud\.com\/player\//i.test(playerSrc)) {
         const toggleBtn = html('button', {
           type: 'button',
           class: 'member-tool-btn primary',
@@ -728,21 +729,17 @@
             toggleBtn.setAttribute('aria-expanded', 'true');
             toggleBtn.textContent = '收起播放器';
             if (!playerCell.querySelector('iframe') && !playerCell.querySelector('.member-sermon-fallback')) {
-              const cleanScUrl = scUrl
-                .replace(/([?&])si=[^&]*(&|$)/, (m, p1, p2) => (p1 === '?' && p2 ? '?' : p2 ? p1 : ''))
-                .replace(/[?&]$/, '');
-              const widgetUrl = `https://w.soundcloud.com/player/?url=${encodeURIComponent(cleanScUrl)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`;
               const showFallback = () => {
                 const fb = html('div', { class: 'member-sermon-fallback', style: 'display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;' });
-                fb.append(
-                  html('span', {}, `${dateStr} · ${speakerStr}`),
-                  html('a', {
-                    href: cleanScUrl,
+                fb.append(html('span', {}, `${dateStr} · ${speakerStr}`));
+                if (scUrl && /^https?:\/\//i.test(scUrl)) {
+                  fb.append(html('a', {
+                    href: scUrl,
                     target: '_blank',
                     rel: 'noopener noreferrer',
                     class: 'member-tool-btn primary'
-                  }, '前往 SoundCloud')
-                );
+                  }, '前往 SoundCloud'));
+                }
                 playerCell.replaceChildren(fb);
               };
               const iframe = html('iframe', {
@@ -753,7 +750,7 @@
                 frameborder: 'no',
                 allow: 'autoplay; encrypted-media',
                 style: 'width:100%;max-width:100%;display:block;border:0;',
-                src: widgetUrl
+                src: playerSrc
               });
               iframe.addEventListener('error', showFallback);
               playerCell.append(iframe);
@@ -761,6 +758,13 @@
           }
         });
         actionTd.append(toggleBtn);
+      } else if (scUrl && /^https?:\/\//i.test(scUrl)) {
+        actionTd.append(html('a', {
+          href: scUrl,
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          class: 'member-tool-btn'
+        }, '前往 SoundCloud'));
       } else {
         actionTd.append(html('span', { class: 'member-badge pending', 'data-pending': 'sermon-audio-pending' }, '待上載'));
       }
@@ -784,7 +788,7 @@
     try {
       const { data, error } = await state.client
         .from('sermons')
-        .select('id, content_key, sermon_date, speaker, soundcloud_url, is_published, sort_order')
+        .select('id, content_key, sermon_date, speaker, soundcloud_url, soundcloud_player_src, is_published, sort_order')
         .eq('is_published', true)
         .order('sermon_date', { ascending: false })
         .order('sort_order', { ascending: true });
