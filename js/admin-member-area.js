@@ -1,5 +1,5 @@
 /* 五旬節聖潔會迦福堂 — 管理後台會友專區三大分頁控制器 (js/admin-member-area.js)
- * 事奉輪值表 / 講道錄音 / 活動照片
+ * Phase 5：事奉輪值表 / 講道錄音 / 活動照片
  * 沿用 Warm Timber 設計、Quill 富文本編輯器、DOMPurify 與 cms-media / member-documents 儲存桶模式
  */
 (function () {
@@ -191,7 +191,7 @@
 
     const { data, error } = await client
       .from('rota_documents')
-      .select('id, content_key, rota_type, title, period_label, period_start, period_end, pdf_path, page_count, updated_on_label, notes_html, is_published, sort_order, updated_at')
+      .select('*')
       .order('sort_order', { ascending: true })
       .order('period_start', { ascending: false });
 
@@ -281,7 +281,7 @@
 
     let pdfPath = document.getElementById('rotaPdfPathInput').value.trim() || null;
     const pageCountVal = document.getElementById('rotaPageCountInput').value.trim();
-    const pageCount = pageCountVal ? Number(pageCountVal) : null;
+    let pageCount = pageCountVal ? Number(pageCountVal) : null;
 
     const payload = {
       rota_type: rotaType,
@@ -471,6 +471,8 @@
     document.getElementById('albumTitleInput').value = row.title || '';
     document.getElementById('albumDateInput').value = row.event_date || '';
     document.getElementById('albumFlickrUrlInput').value = row.flickr_album_url || '';
+    const embedInput = document.getElementById('albumFlickrEmbedHtmlInput');
+    if (embedInput) embedInput.value = row.flickr_embed_html || '';
     document.getElementById('albumCoverUrlInput').value = row.cover_photo_url || '';
     document.getElementById('albumPhotoCountInput').value = row.photo_count ?? '';
     document.getElementById('albumSortOrderInput').value = String(row.sort_order ?? 10);
@@ -523,7 +525,7 @@
           </div>
           <h4 class="text-sm font-semibold text-kf-ink m-0">${esc(row.title)}</h4>
           <p class="text-xs text-kf-inkMuted mt-1 mb-0">
-            ${[row.photo_count != null ? `共 ${row.photo_count} 張照片` : '', `排序：${row.sort_order ?? 0}`].filter(Boolean).map(esc).join(' · ')}
+            ${[row.photo_count != null ? `共 ${row.photo_count} 張照片` : '', `排序：${row.sort_order ?? 0}`].filter(Boolean).join(' · ')}
           </p>
         </div>
         <div class="flex flex-wrap gap-1.5" data-actions></div>
@@ -568,6 +570,7 @@
     }
 
     const photoCountVal = document.getElementById('albumPhotoCountInput').value.trim();
+    const embedHtmlVal = document.getElementById('albumFlickrEmbedHtmlInput')?.value.trim() || null;
     const payload = {
       title: document.getElementById('albumTitleInput').value.trim(),
       event_date: document.getElementById('albumDateInput').value || null,
@@ -578,6 +581,9 @@
       sort_order: Number(document.getElementById('albumSortOrderInput').value) || 0,
       is_published: document.getElementById('albumPublishedInput').checked
     };
+    if (embedHtmlVal !== null || 'flickr_embed_html' in (albumRows.find((r) => r.id === editId) || {})) {
+      payload.flickr_embed_html = embedHtmlVal;
+    }
 
     if (!editId) {
       payload.content_key = `album_${Date.now()}`;
